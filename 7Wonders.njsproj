@@ -33,14 +33,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
-    <Compile Include="routes\users.js" />
     <Compile Include="bin\www" />
     <Content Include="package.json" />
     <Content Include="public\index.html" />
     <Content Include="test\index.html" />
     <Content Include="README.md" />
-    <Content Include="views\index.pug" />
-    <Content Include="views\layout.pug" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
