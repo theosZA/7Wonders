@@ -3,5 +3,10 @@
 
 function TestClientCtrl(uuid)
 {
-  this.userID = uuid.v4();
+  this.generateUserId = function ()
+  {
+    this.userId = uuid.v4();
+  }
+
+  this.generateUserId();
 }

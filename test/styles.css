@@ -1,0 +1,35 @@
+﻿body {
+  background-color: sandybrown;
+  color: black;
+  font-family: Verdana, sans-serif;
+}
+
+button {
+  border-color: brown;
+  background-color: sienna;
+  color: white;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+div.user-id-section {
+  display: flex;
+  align-items: center;
+}
+
+div.user-id-label {
+  font-weight: bold;
+}
+
+div.user-id {
+  margin: 0px 10px;
+  padding: 2px;
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  background-color: #dddddd;
+  color: #999999;
+  font-family: Courier New, Courier, monospace;
+}
