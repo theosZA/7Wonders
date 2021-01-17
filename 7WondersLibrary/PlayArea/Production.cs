@@ -15,6 +15,11 @@ namespace _7Wonders
                                                           .ToList();
         }
 
+        public Production(Production production)
+        {
+            resourceProductionOptions = new List<ResourceCollection>(production.resourceProductionOptions);
+        }
+
         public bool Any()
         {
             return resourceProductionOptions.Any() && resourceProductionOptions.First().Any();

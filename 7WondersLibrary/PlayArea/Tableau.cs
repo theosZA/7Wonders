@@ -25,6 +25,17 @@ namespace _7Wonders
             availableWonderStages = wonderElement.GetChildElements("Stage").Select((stageElement, i) => new WonderStage($"{wonderName} {i + 1}", stageElement)).ToList();
         }
 
+        public Tableau(Tableau tableau)
+        {
+            cityName = tableau.cityName;
+            cityProduction = new Production(tableau.cityProduction);
+            availableWonderStages = new List<WonderStage>(tableau.availableWonderStages);
+            builtWonderStages = new List<WonderStage>(tableau.builtWonderStages);
+            builtCards = new List<Card>(tableau.builtCards);
+            resourceProductionOptions = new ResourceOptions(tableau.resourceProductionOptions);
+            resourceTradeOptions = new ResourceOptions(tableau.resourceTradeOptions);
+        }
+
         public void WriteToConsole()
         {
             ConsoleHelper.ClearConsoleColours();

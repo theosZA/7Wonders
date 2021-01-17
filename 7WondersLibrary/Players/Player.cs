@@ -28,6 +28,18 @@ namespace _7Wonders
             this.tableau = tableau;
         }
 
+        public Player(Player player)
+        {
+            Name = player.Name;
+            Coins = player.Coins;
+            MilitaryDefeats = player.MilitaryDefeats;
+            militaryVictoryPoints = player.militaryVictoryPoints;
+            tableau = new Tableau(player.tableau);
+            hand = new List<Card>(player.hand);
+            leftNeighbour = player.leftNeighbour;
+            rightNeighbour = player.rightNeighbour;
+        }
+
         public void SetNeighbours(Player leftNeighbour, Player rightNeighbour)
         {
             this.leftNeighbour = leftNeighbour;
@@ -146,6 +158,26 @@ namespace _7Wonders
             ConsoleHelper.WriteCardsToConsole(hand);
 
             Console.WriteLine();
+        }
+
+        protected Player GetNeighbourClone(Direction direction)
+        {
+            return new DefaultPlayer(direction == Direction.Left ? leftNeighbour : rightNeighbour);
+        }
+
+        protected int GetAge()
+        {
+            return hand[0].Age;
+        }
+
+        protected int GetResourceCount(Resource resource)
+        {
+            int count = 1;
+            while (tableau.HasResources(new ResourceCollection(resource, count)))
+            {
+                ++count;
+            }
+            return count - 1;
         }
 
         private IEnumerable<IAction> GetAllActions()

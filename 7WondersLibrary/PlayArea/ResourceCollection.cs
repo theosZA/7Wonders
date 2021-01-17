@@ -13,6 +13,11 @@ namespace _7Wonders
         public ResourceCollection()
         { }
 
+        public ResourceCollection(Resource resource, int count)
+        {
+            resources = new Dictionary<Resource, int> { { resource, count } };
+        }
+
         public ResourceCollection(ResourceCollection source)
         {
             resources = new Dictionary<Resource, int>(source.resources);

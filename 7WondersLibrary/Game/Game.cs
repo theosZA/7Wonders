@@ -13,7 +13,7 @@ namespace _7Wonders
     {
         public bool IsGameOver => age == 3 && players.CardsInHand == 0;
 
-        public Game(int playerCount, int robotCount)
+        public Game(IEnumerable<PlayerType> playerTypes)
         {
             var cardsXmlDocument = new XmlDocument();
             cardsXmlDocument.Load("Cards.xml");
@@ -27,7 +27,7 @@ namespace _7Wonders
             // For now we just use one common tableau, replicated across all our players. TBD implement all city boards.
             var tableaus = Enumerable.Range(0, 7).Select(i => new Tableau(cityElements.First())).ToList();
 
-            players = new PlayerCollection(playerCount, robotCount, tableaus);
+            players = new PlayerCollection(playerTypes, tableaus);
 
             StartAge(1);
         }

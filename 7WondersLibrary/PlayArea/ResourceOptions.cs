@@ -9,6 +9,16 @@ namespace _7Wonders
     /// </summary>
     internal class ResourceOptions
     {
+        public ResourceOptions()
+        {
+            resourceOptions = new List<ResourceCollection> { new ResourceCollection() };
+        }
+
+        public ResourceOptions(ResourceOptions source)
+        {
+            resourceOptions = new List<ResourceCollection>(source.resourceOptions);
+        }
+
         public void AddProduction(Production production)
         {
             if (production.Any())
@@ -22,6 +32,6 @@ namespace _7Wonders
             return resourceOptions.Any(x => resources <= x);
         }
 
-        private List<ResourceCollection> resourceOptions = new List<ResourceCollection> { new ResourceCollection() };
+        private List<ResourceCollection> resourceOptions;
     }
 }

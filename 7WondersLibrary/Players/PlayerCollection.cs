@@ -6,10 +6,11 @@ namespace _7Wonders
 {
     internal class PlayerCollection
     {
-        public PlayerCollection(int playerCount, int robotCount, IList<Tableau> tableaus)
+        public PlayerCollection(IEnumerable<PlayerType> playerTypes, IList<Tableau> tableaus)
         {
             tableaus.Shuffle();
-            players = tableaus.Take(playerCount).Select((tableau, i) => CreatePlayer($"Player {i + 1}", tableau, isRobot: i < robotCount)).ToArray();
+            players = playerTypes.Select((playerType, i) => PlayerFactory.CreatePlayer(playerType, $"Player {i + 1}", tableaus[i]))
+                                 .ToArray();
             for (int i = 0; i < players.Length; ++i)
             {
                 players[i].SetNeighbours(GetLeftNeighbour(i), GetRightNeighbour(i));

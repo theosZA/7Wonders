@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _7Wonders;
+using System;
 
 namespace _7WondersTester
 {
@@ -6,9 +7,14 @@ namespace _7WondersTester
     {
         static void Main(string[] args)
         {
-            const int playerCount = 7;
-            const int humanCount = 0;
-            var game = new _7Wonders.Game(playerCount, playerCount - humanCount);
+            var playerTypes = new[] { PlayerType.Default,
+                                      PlayerType.Robot,
+                                      PlayerType.Robot,
+                                      PlayerType.Default,
+                                      PlayerType.Robot,
+                                      PlayerType.Default,
+                                      PlayerType.Robot };
+            var game = new Game(playerTypes);
             for (int age = 1; age <= 3; ++age)
             {
                 for (int i = 0; i < 6; ++i)
