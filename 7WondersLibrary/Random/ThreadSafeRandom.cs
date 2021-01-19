@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace _7Wonders
 {
-    internal static class ThreadSafeRandom
+    public static class ThreadSafeRandom
     {
         public static Random ThisThreadsRandom
         {

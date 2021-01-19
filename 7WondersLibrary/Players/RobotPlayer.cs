@@ -5,11 +5,15 @@ namespace _7Wonders
 {
     internal class RobotPlayer : Player
     {
-        public RobotPlayer(string name, Tableau tableau) : base(name, tableau)
-        { }
+        public RobotPlayer(string name, Tableau tableau, IEnumerable<int> weights) : base(name, tableau)
+        {
+            this.weights = weights.ToArray();
+        }
 
-        public RobotPlayer(Player player) : base(player)
-        { }
+        public RobotPlayer(RobotPlayer player) : base(player)
+        {
+            weights = (int[])player.weights.Clone();
+        }
 
         override protected IAction GetAction(IEnumerable<IAction> possibleActions)
         {
@@ -27,14 +31,16 @@ namespace _7Wonders
             switch (GetAge())
             {
                 case 1:
-                    return production * 8 + actingPlayerClone.Military * 2 + actingPlayerClone.VictoryPoints;
+                    return production * weights[0] + actingPlayerClone.Military * weights[1] + actingPlayerClone.VictoryPoints * weights[2];
 
                 case 2:
-                    return production * 5 + actingPlayerClone.Military * 3 + actingPlayerClone.VictoryPoints;
+                    return production * weights[3] + actingPlayerClone.Military * weights[4] + actingPlayerClone.VictoryPoints * weights[5];
 
                 default:
-                    return production * 2 + actingPlayerClone.Military * 4 + actingPlayerClone.VictoryPoints;
+                    return production * weights[6] + actingPlayerClone.Military * weights[7] + actingPlayerClone.VictoryPoints * weights[8];
             }
         }
+
+        int[] weights;
     }
 }

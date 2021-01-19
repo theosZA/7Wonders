@@ -6,11 +6,11 @@ namespace _7Wonders
 {
     internal class PlayerCollection
     {
-        public PlayerCollection(IEnumerable<PlayerType> playerTypes, IList<Tableau> tableaus)
+        public PlayerCollection(int playerCount, IPlayerFactory playerFactory, IList<Tableau> tableaus)
         {
-            tableaus.Shuffle();
-            players = playerTypes.Select((playerType, i) => PlayerFactory.CreatePlayer(playerType, $"Player {i + 1}", tableaus[i]))
-                                 .ToArray();
+            players = tableaus.TakeRandom(playerCount)
+                              .Select((tableau, i) => playerFactory.CreatePlayer(i, tableau))
+                              .ToArray();
             for (int i = 0; i < players.Length; ++i)
             {
                 players[i].SetNeighbours(GetLeftNeighbour(i), GetRightNeighbour(i));
@@ -20,6 +20,20 @@ namespace _7Wonders
         public int Count => players.Length;
 
         public int CardsInHand => players[0].CardsInHand;   // Players should always have the same number of cards in hand.
+
+        public IEnumerable<int> VictoryPoints => players.Select(player => player.VictoryPoints);
+
+        public IEnumerable<int> Positions
+        {
+            get
+            {
+                var leaderboard = Leaderboard.ToList();
+                foreach (var player in players)
+                {
+                    yield return leaderboard.IndexOf(player) + 1; // position 1-7
+                }
+            }
+        }
 
         public IReadOnlyCollection<Player> Leaderboard => players.OrderByDescending(player => player.VictoryPoints).ThenByDescending(player => player.Coins).ToList();
 
@@ -132,15 +146,6 @@ namespace _7Wonders
                 }
             }
             return militaryResults;
-        }
-
-        private static Player CreatePlayer(string playerName, Tableau tableau, bool isRobot)
-        {
-            if (isRobot)
-            {
-                return new RobotPlayer(playerName, tableau);
-            }
-            return new ConsolePlayer(playerName, tableau);
         }
 
         private Player GetLeftNeighbour(int playerIndex)

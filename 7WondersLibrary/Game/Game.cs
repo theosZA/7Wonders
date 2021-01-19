@@ -13,7 +13,11 @@ namespace _7Wonders
     {
         public bool IsGameOver => age == 3 && players.CardsInHand == 0;
 
-        public Game(IEnumerable<PlayerType> playerTypes)
+        public int[] VictoryPoints => players.VictoryPoints.ToArray();
+
+        public int[] Positions => players.Positions.ToArray();
+
+        public Game(int playerCount, IPlayerFactory playerFactory)
         {
             var cardsXmlDocument = new XmlDocument();
             cardsXmlDocument.Load("Cards.xml");
@@ -27,7 +31,7 @@ namespace _7Wonders
             // For now we just use one common tableau, replicated across all our players. TBD implement all city boards.
             var tableaus = Enumerable.Range(0, 7).Select(i => new Tableau(cityElements.First())).ToList();
 
-            players = new PlayerCollection(playerTypes, tableaus);
+            players = new PlayerCollection(playerCount, playerFactory, tableaus);
 
             StartAge(1);
         }
@@ -94,9 +98,10 @@ namespace _7Wonders
             var cardsForDeck = ageCards.Where(card => card.Colour != Colour.Purple).ToList();
             if (age == 3)
             {
-                var guildCards = ageCards.Where(card => card.Colour == Colour.Purple).ToList();
-                guildCards.Shuffle();
-                cardsForDeck.AddRange(guildCards.Take(players.Count + 2));
+                var guildCards = ageCards.Where(card => card.Colour == Colour.Purple)
+                                         .Shuffle()
+                                         .Take(players.Count + 2);
+                cardsForDeck.AddRange(guildCards);
             }
             return new Deck(cardsForDeck);
         }

@@ -9,9 +9,7 @@ namespace _7Wonders
     {
         public Deck(IEnumerable<Card> cards)
         {
-            var newDeck = new List<Card>(cards);
-            newDeck.Shuffle();
-            this.cards = new Queue<Card>(newDeck);
+            this.cards = new Queue<Card>(cards.Shuffle());
         }
 
         public Card DrawNextCard()
