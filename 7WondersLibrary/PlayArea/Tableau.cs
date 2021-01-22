@@ -147,17 +147,17 @@ namespace _7Wonders
             return builtWonderStages.Sum(wonderStage => wonderStage.VictoryPoints);
         }
 
-        public int CalculateCivilianVictoryPoints(Player self, Player leftNeighbour, Player rightNeighbour)
+        public int CalculateCivilianVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             return CalculateVictoryPointsForColour(Colour.Blue, self, leftNeighbour, rightNeighbour);
         }
 
-        public int CalculateCommercialVictoryPoints(Player self, Player leftNeighbour, Player rightNeighbour)
+        public int CalculateCommercialVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             return CalculateVictoryPointsForColour(Colour.Yellow, self, leftNeighbour, rightNeighbour);
         }
 
-        public int CalculateGuildVictoryPoints(Player self, Player leftNeighbour, Player rightNeighbour)
+        public int CalculateGuildVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             return CalculateVictoryPointsForColour(Colour.Purple, self, leftNeighbour, rightNeighbour);
         }
@@ -183,7 +183,7 @@ namespace _7Wonders
             return completeSetsScore + squareSymbolsScore;
         }
 
-        private int CalculateVictoryPointsForColour(Colour colour, Player self, Player leftNeighbour, Player rightNeighbour)
+        private int CalculateVictoryPointsForColour(Colour colour, PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             return builtCards.Sum(card => card.Colour == colour ? card.EvaluateVictoryPoints(self, leftNeighbour, rightNeighbour) : 0);
         }

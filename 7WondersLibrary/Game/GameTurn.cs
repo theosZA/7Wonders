@@ -8,16 +8,14 @@ namespace _7Wonders
     /// </summary>
     public struct GameTurn
     {
-        public IReadOnlyDictionary<Player, IAction> playerActions;
+        public IReadOnlyCollection<IAction> playerActions;
         public IReadOnlyCollection<MilitaryResult> militaryResults;
 
         public void WriteToConsole()
         {
             foreach (var action in playerActions)
             {
-                ConsoleHelper.ClearConsoleColours();
-                Console.Write($"{action.Key.Name}: ");
-                action.Value.WriteToConsole();
+                action.WriteToConsole();    // TBD: The player taking the action isn't indicated
             }
 
             if (militaryResults != null)

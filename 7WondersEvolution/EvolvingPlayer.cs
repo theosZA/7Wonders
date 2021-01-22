@@ -21,7 +21,7 @@ namespace _7WondersEvolution
 
         public EvolvingPlayer()
         {
-            Weights = CreateRandomWeights(9).ToArray();
+            Weights = CreateRandomWeights(RobotPlayer.WeightsRequired).ToArray();
             Generation = 1;
         }
 

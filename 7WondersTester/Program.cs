@@ -9,30 +9,14 @@ namespace _7WondersTester
     {
         static void Main(string[] args)
         {
-            /*
-            var playerTypes = new[] { PlayerType.Default,
-                                      PlayerType.Robot,
-                                      PlayerType.Robot,
-                                      PlayerType.Default,
-                                      PlayerType.Robot,
-                                      PlayerType.Default,
-                                      PlayerType.Robot };
-            var playerNames = new[] { "Dumbo",
-                                      "Joe",
-                                      "James",
-                                      "Dunce",
-                                      "Jeremiah",
-                                      "Dimwit",
-                                      "Jesse" };
-            var playerFactory = new SimplePlayerFactory(playerTypes, playerNames);*/
+            int robots = 3;
+            var playerAgents = Enumerable.Range(0, robots)
+                                         .Select(i => new RobotPlayer($"Robot {i + 1}", CreateRandomWeights(RobotPlayer.WeightsRequired)))
+                                         .Cast<PlayerAgent>()
+                                         .ToList();
+            playerAgents.Add(new ConsolePlayer("YOU"));
 
-            int playerCount = 7;
-            var weightsPerPlayer = Enumerable.Range(0, playerCount)
-                                             .Select(i => CreateRandomWeights(9).ToArray());
-            var playerNames = weightsPerPlayer.Select(weights => string.Join("-", weights));
-            var playerFactory = new GeneticPlayerFactory(weightsPerPlayer, playerNames);
-
-            var game = new Game(playerCount, playerFactory);
+            var game = new Game(playerAgents);
             for (int age = 1; age <= 3; ++age)
             {
                 for (int i = 0; i < 6; ++i)

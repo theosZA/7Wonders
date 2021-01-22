@@ -32,6 +32,11 @@
             this.txtGeneration = new System.Windows.Forms.TextBox();
             this.btnCreatePlayers = new System.Windows.Forms.Button();
             this.dgvPlayers = new System.Windows.Forms.DataGridView();
+            this.colGeneration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColDna = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGames = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPosition = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colVPs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nudGamesPlayed = new System.Windows.Forms.NumericUpDown();
             this.lblGamesPlayed = new System.Windows.Forms.Label();
             this.btnPlay = new System.Windows.Forms.Button();
@@ -42,11 +47,6 @@
             this.nudGenerations = new System.Windows.Forms.NumericUpDown();
             this.lblAverageVPs = new System.Windows.Forms.Label();
             this.txtAverageVPs = new System.Windows.Forms.TextBox();
-            this.colGeneration = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColDna = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colGames = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPosition = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colVPs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGamesPlayed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPlayers)).BeginInit();
@@ -98,14 +98,48 @@
             this.dgvPlayers.Size = new System.Drawing.Size(768, 786);
             this.dgvPlayers.TabIndex = 3;
             // 
+            // colGeneration
+            // 
+            this.colGeneration.HeaderText = "Generation";
+            this.colGeneration.Name = "colGeneration";
+            // 
+            // ColDna
+            // 
+            this.ColDna.HeaderText = "DNA";
+            this.ColDna.Name = "ColDna";
+            this.ColDna.ReadOnly = true;
+            // 
+            // colGames
+            // 
+            this.colGames.HeaderText = "Games";
+            this.colGames.Name = "colGames";
+            this.colGames.ReadOnly = true;
+            // 
+            // colPosition
+            // 
+            this.colPosition.HeaderText = "Avg Position";
+            this.colPosition.Name = "colPosition";
+            this.colPosition.ReadOnly = true;
+            // 
+            // colVPs
+            // 
+            this.colVPs.HeaderText = "Avg VPs";
+            this.colVPs.Name = "colVPs";
+            this.colVPs.ReadOnly = true;
+            // 
             // nudGamesPlayed
             // 
             this.nudGamesPlayed.Location = new System.Drawing.Point(384, 18);
+            this.nudGamesPlayed.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
             this.nudGamesPlayed.Name = "nudGamesPlayed";
             this.nudGamesPlayed.Size = new System.Drawing.Size(44, 20);
             this.nudGamesPlayed.TabIndex = 4;
             this.nudGamesPlayed.Value = new decimal(new int[] {
-            20,
+            500,
             0,
             0,
             0});
@@ -142,11 +176,16 @@
             // nudPlayers
             // 
             this.nudPlayers.Location = new System.Drawing.Point(133, 18);
+            this.nudPlayers.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
             this.nudPlayers.Name = "nudPlayers";
             this.nudPlayers.Size = new System.Drawing.Size(48, 20);
             this.nudPlayers.TabIndex = 8;
             this.nudPlayers.Value = new decimal(new int[] {
-            40,
+            100,
             0,
             0,
             0});
@@ -172,11 +211,16 @@
             // nudGenerations
             // 
             this.nudGenerations.Location = new System.Drawing.Point(610, 15);
+            this.nudGenerations.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
             this.nudGenerations.Name = "nudGenerations";
             this.nudGenerations.Size = new System.Drawing.Size(47, 20);
             this.nudGenerations.TabIndex = 11;
             this.nudGenerations.Value = new decimal(new int[] {
-            1,
+            100,
             0,
             0,
             0});
@@ -197,35 +241,6 @@
             this.txtAverageVPs.ReadOnly = true;
             this.txtAverageVPs.Size = new System.Drawing.Size(68, 20);
             this.txtAverageVPs.TabIndex = 13;
-            // 
-            // colGeneration
-            // 
-            this.colGeneration.HeaderText = "Generation";
-            this.colGeneration.Name = "colGeneration";
-            // 
-            // ColDna
-            // 
-            this.ColDna.HeaderText = "DNA";
-            this.ColDna.Name = "ColDna";
-            this.ColDna.ReadOnly = true;
-            // 
-            // colGames
-            // 
-            this.colGames.HeaderText = "Games";
-            this.colGames.Name = "colGames";
-            this.colGames.ReadOnly = true;
-            // 
-            // colPosition
-            // 
-            this.colPosition.HeaderText = "Avg Position";
-            this.colPosition.Name = "colPosition";
-            this.colPosition.ReadOnly = true;
-            // 
-            // colVPs
-            // 
-            this.colVPs.HeaderText = "Avg VPs";
-            this.colVPs.Name = "colVPs";
-            this.colVPs.ReadOnly = true;
             // 
             // Form1
             // 

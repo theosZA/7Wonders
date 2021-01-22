@@ -45,7 +45,7 @@ namespace _7Wonders
             EvaluatedGains = cardElement.GetChildElements("Gain").Select(gainElement => new Gain(gainElement)).ToList();
         }
 
-        public int EvaluateVictoryPoints(Player actingPlayer, Player leftNeightbour, Player rightNeighbour)
+        public int EvaluateVictoryPoints(PlayerState actingPlayer, PlayerState leftNeightbour, PlayerState rightNeighbour)
         {
             return VictoryPoints + EvaluatedGains.Sum(gain => gain.GetVictoryPointsGained(actingPlayer, leftNeightbour, rightNeighbour));
         }

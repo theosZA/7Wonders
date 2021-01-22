@@ -31,7 +31,7 @@ namespace _7Wonders
             lookAt = gainElement.GetAttribute_EnumSet<RelativePlayer>("lookAt");
         }
 
-        public int GetCoinsGained(Player actingPlayer, Player leftNeighbour, Player rightNeighbour)
+        public int GetCoinsGained(PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             if (coinsPerMatch == 0)
             {
@@ -40,7 +40,7 @@ namespace _7Wonders
             return coinsPerMatch * GetMatches(actingPlayer, leftNeighbour, rightNeighbour);
         }
 
-        public int GetVictoryPointsGained(Player actingPlayer, Player leftNeighbour, Player rightNeighbour)
+        public int GetVictoryPointsGained(PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             if (victoryPointsPerMatch == 0)
             {
@@ -49,7 +49,7 @@ namespace _7Wonders
             return victoryPointsPerMatch * GetMatches(actingPlayer, leftNeighbour, rightNeighbour);
         }
 
-        private int GetMatches(Player actingPlayer, Player leftNeighbour, Player rightNeighbour)
+        private int GetMatches(PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             int count = 0;
             if (lookAt.Contains(RelativePlayer.Self))
@@ -67,7 +67,7 @@ namespace _7Wonders
             return count;
         }
 
-        private int GetMatches(Player player)
+        private int GetMatches(PlayerState player)
         {
             switch (gainSource)
             {

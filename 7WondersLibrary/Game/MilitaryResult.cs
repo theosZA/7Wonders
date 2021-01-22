@@ -9,10 +9,11 @@ namespace _7Wonders
     public struct MilitaryResult
     {
         public Player winningPlayer;
-        public Player losingPlayer;
         public int winningVictoryPoints;
-        public int losingVictoryPoints;
         public int winningMilitary;
+
+        public Player losingPlayer;
+        public int losingVictoryPoints;
         public int losingMilitary;
 
         public static MilitaryResult? EvaluateMilitaryBattle(Player playerA, Player playerB, int scoreForVictory, int scoreForDefeat)
@@ -26,10 +27,11 @@ namespace _7Wonders
             return new MilitaryResult
             {
                 winningPlayer = militaryA > militaryB ? playerA : playerB,
-                losingPlayer = militaryA > militaryB ? playerB : playerA,
                 winningVictoryPoints = scoreForVictory,
-                losingVictoryPoints = scoreForDefeat,
                 winningMilitary = Math.Max(militaryA, militaryB),
+
+                losingPlayer = militaryA > militaryB ? playerB : playerA,
+                losingVictoryPoints = scoreForDefeat,
                 losingMilitary = Math.Min(militaryA, militaryB)
             };
         }

@@ -17,7 +17,7 @@ namespace _7Wonders
 
         public int[] Positions => players.Positions.ToArray();
 
-        public Game(int playerCount, IPlayerFactory playerFactory)
+        public Game(IReadOnlyCollection<PlayerAgent> playerAgents)
         {
             var cardsXmlDocument = new XmlDocument();
             cardsXmlDocument.Load("Cards.xml");
@@ -31,7 +31,7 @@ namespace _7Wonders
             // For now we just use one common tableau, replicated across all our players. TBD implement all city boards.
             var tableaus = Enumerable.Range(0, 7).Select(i => new Tableau(cityElements.First())).ToList();
 
-            players = new PlayerCollection(playerCount, playerFactory, tableaus);
+            players = new PlayerCollection(playerAgents, tableaus);
 
             StartAge(1);
         }
@@ -52,7 +52,7 @@ namespace _7Wonders
         {
             // Actions
 
-            var actions = players.GetActions();
+            var actions = players.GetActions().ToList();
             players.ApplyActions(actions, discards);
 
             // Check for end of age
@@ -60,7 +60,7 @@ namespace _7Wonders
             IReadOnlyCollection<MilitaryResult> militaryResults = null;
             if (players.CardsInHand == 1)
             {
-                militaryResults = EndAge();
+                militaryResults = EndAge().ToList();
                 if (age < 3)
                 {
                     StartAge(age + 1);
@@ -86,9 +86,9 @@ namespace _7Wonders
             players.DealDeck(deck);
         }
 
-        private IReadOnlyCollection<MilitaryResult> EndAge()
+        private IEnumerable<MilitaryResult> EndAge()
         {
-            players.DiscardHands(discards);
+            discards.AddRange(players.DiscardHands());
             return players.EvaluateMilitaryBattles(scoreForVictory: (2 * age) - 1, scoreForDefeat: -1);
         }
 

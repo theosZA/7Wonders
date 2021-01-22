@@ -13,8 +13,7 @@ namespace _7WondersEvolution
 
         private void btnCreatePlayers_Click(object sender, EventArgs e)
         {
-            players = new PlayerPool((int)nudPlayers.Value);
-            OnNewGeneration();
+            CreatePlayers();
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -24,9 +23,15 @@ namespace _7WondersEvolution
 
         private void btnNextGeneration_Click(object sender, EventArgs e)
         {
+            if (players == null)
+            {
+                CreatePlayers();
+                Refresh();
+            }
             if (!players.AnyGamesPlayed)
             {
                 PlayGames();
+                Refresh();
             }
 
             for (int i = 0; i < (int)nudGenerations.Value; ++i)
@@ -36,6 +41,12 @@ namespace _7WondersEvolution
                 PlayGames();
                 Refresh();
             }
+        }
+
+        private void CreatePlayers()
+        {
+            players = new PlayerPool((int)nudPlayers.Value);
+            OnNewGeneration();
         }
 
         private void PlayGames()

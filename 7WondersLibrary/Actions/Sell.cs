@@ -13,11 +13,11 @@ namespace _7Wonders
             this.card = card;
         }
 
-        public void Apply(Player actingPlayer, Player leftNeighbour, Player rightNeighbour, IList<Card> discards)
+        public void Apply(PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour, IList<Card> hand, IList<Card> discards)
         {
-            actingPlayer.RemoveCardFromHand(card);
-            actingPlayer.AddCoins(3);
+            hand.Remove(card);
             discards.Add(card);
+            actingPlayer.AddCoins(3);
         }
 
         public void WriteToConsole()

@@ -16,9 +16,9 @@ namespace _7Wonders
             this.coinsToRightNeighbour = coinsToRightNeighbour;
         }
 
-        public void Apply(Player actingPlayer, Player leftNeighbour, Player rightNeighbour, IList<Card> discards)
+        public void Apply(PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour, IList<Card> hand, IList<Card> discards)
         {
-            actingPlayer.RemoveCardFromHand(cardToDiscard);
+            hand.Remove(cardToDiscard);
             discards.Add(cardToDiscard);
             actingPlayer.PayCoins(wonderStage.Cost.Coins);
             actingPlayer.PayCoins(coinsToLeftNeighbour);

@@ -46,15 +46,26 @@ namespace _7WondersEvolution
 
         private void PlayGameWithRandomPlayers(int playerCount)
         {
-            PlayGame(players.TakeRandom(playerCount).ToList());
+            // Pick only from the players who've played the fewest games so far (to balance it out).
+            int fewestGames = players.Min(player => player.Games);
+            var currentPlayers = players.Where(player => player.Games == fewestGames)
+                                        .TakeRandom(playerCount)
+                                        .ToList();
+            // If we need additional, take at random from the rest. They should all be no more than a game ahead.
+            if (currentPlayers.Count < playerCount)
+            {
+                currentPlayers.AddRange(players.Except(currentPlayers)
+                                               .TakeRandom(playerCount - currentPlayers.Count));
+            }
+            // Play with the picked players.
+            PlayGame(currentPlayers);
         }
 
         private static void PlayGame(IList<EvolvingPlayer> gamePlayers)
         {
-            var weightsPerPlayer = gamePlayers.Select(player => player.Weights);
-            var playerNames = gamePlayers.Select(player => player.Name);
-            var playerFactory = new GeneticPlayerFactory(weightsPerPlayer, playerNames);
-            var game = new Game(gamePlayers.Count, playerFactory);
+            var playerAgents = gamePlayers.Select(evolvingPlayer => new RobotPlayer(evolvingPlayer.Name, evolvingPlayer.Weights))
+                                          .ToList();
+            var game = new Game(playerAgents);
             while (!game.IsGameOver)
             {
                 game.PlayTurn();

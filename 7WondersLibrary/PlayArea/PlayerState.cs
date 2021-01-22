@@ -4,17 +4,9 @@ using System.Linq;
 
 namespace _7Wonders
 {
-    public abstract class Player
+    public class PlayerState
     {
-        protected abstract IAction GetAction(IEnumerable<IAction> possibleActions);
-
-        public string Name { get; }
-
-        public int VictoryPoints => CalculateVictoryPoints();
-
         public int Coins { get; private set; } = 3;
-
-        public int CardsInHand => hand?.Count ?? 0;
 
         public int Military => tableau.Military;
 
@@ -22,48 +14,29 @@ namespace _7Wonders
 
         public int WonderStagesBuilt => tableau.WonderStagesBuilt;
 
-        public Player(string name, Tableau tableau)
+        public PlayerState(Tableau tableau)
         {
-            Name = name;
             this.tableau = tableau;
         }
 
-        public Player(Player player)
+        public PlayerState(PlayerState source)
         {
-            Name = player.Name;
-            Coins = player.Coins;
-            MilitaryDefeats = player.MilitaryDefeats;
-            militaryVictoryPoints = player.militaryVictoryPoints;
-            tableau = new Tableau(player.tableau);
-            hand = new List<Card>(player.hand);
-            leftNeighbour = player.leftNeighbour;
-            rightNeighbour = player.rightNeighbour;
+            Coins = source.Coins;
+            MilitaryDefeats = source.MilitaryDefeats;
+            militaryVictoryPoints = source.militaryVictoryPoints;
+            tableau = new Tableau(source.tableau);
         }
 
-        public void SetNeighbours(Player leftNeighbour, Player rightNeighbour)
+        public int CalculateVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
-            this.leftNeighbour = leftNeighbour;
-            this.rightNeighbour = rightNeighbour;
-        }
+            int treasuryVictoryPoints = Coins / 3;
+            int wonderVictoryPoints = tableau.CalculateWonderVictoryPoints();
+            int civilianVictoryPoints = tableau.CalculateCivilianVictoryPoints(this, leftNeighbour, rightNeighbour);
+            int scienceVictoryPoints = tableau.CalculateScienceVictoryPoints();
+            int commercialVictoryPoints = tableau.CalculateCommercialVictoryPoints(this, leftNeighbour, rightNeighbour);
+            int guildVictoryPoints = tableau.CalculateGuildVictoryPoints(this, leftNeighbour, rightNeighbour);
 
-        public IAction GetAction()
-        {
-            return GetAction(GetAllActions());
-        }
-
-        public IList<Card> SwapHand(IList<Card> newHand)
-        {
-            var oldHand = hand;
-            hand = newHand;
-            return oldHand;
-        }
-
-        public void RemoveCardFromHand(Card card)
-        {
-            if (!hand.Remove(card))
-            {
-                throw new InvalidOperationException($"Can't play card {card.Name} because it's not in hand");
-            }
+            return militaryVictoryPoints + treasuryVictoryPoints + wonderVictoryPoints + civilianVictoryPoints + scienceVictoryPoints + commercialVictoryPoints + guildVictoryPoints;
         }
 
         public void AddCardToTableau(Card card)
@@ -104,11 +77,8 @@ namespace _7Wonders
             }
         }
 
-        public void WriteStateToConsole()
+        public void WriteStateToConsole(IEnumerable<Card> hand, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
-            ConsoleHelper.ClearConsoleColours();
-            Console.WriteLine(Name);
-
             // Score
             int treasuryVictoryPoints = Coins / 3;
             int wonderVictoryPoints = tableau.CalculateWonderVictoryPoints();
@@ -117,7 +87,8 @@ namespace _7Wonders
             int commercialVictoryPoints = tableau.CalculateCommercialVictoryPoints(this, leftNeighbour, rightNeighbour);
             int guildVictoryPoints = tableau.CalculateGuildVictoryPoints(this, leftNeighbour, rightNeighbour);
 
-            Console.Write($"Score: {VictoryPoints} (");
+            ConsoleHelper.ClearConsoleColours();
+            Console.Write($"Score: {CalculateVictoryPoints(leftNeighbour, rightNeighbour)} (");
             ConsoleHelper.SetConsoleColours(Colour.Red);
             Console.Write(militaryVictoryPoints);
             ConsoleHelper.ClearConsoleColours();
@@ -160,17 +131,7 @@ namespace _7Wonders
             Console.WriteLine();
         }
 
-        protected Player GetNeighbourClone(Direction direction)
-        {
-            return new DefaultPlayer(direction == Direction.Left ? leftNeighbour : rightNeighbour);
-        }
-
-        protected int GetAge()
-        {
-            return hand[0].Age;
-        }
-
-        protected int GetResourceCount(Resource resource)
+        public int GetResourceCount(Resource resource)
         {
             int count = 1;
             while (tableau.HasResources(new ResourceCollection(resource, count)))
@@ -180,7 +141,7 @@ namespace _7Wonders
             return count - 1;
         }
 
-        private IEnumerable<IAction> GetAllActions()
+        public IEnumerable<IAction> GetAllActions(IEnumerable<Card> hand, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             var actions = new List<IAction>();
 
@@ -197,7 +158,7 @@ namespace _7Wonders
                     {   // May be able to build the card using trades. Create all possible trade options.
                         var requiredResources = new ResourceCollection(card.Cost.Resources);
                         var resourcesToConsider = new Stack<Resource>(requiredResources.GetResources());
-                        var possibleTradeActions = CreateBuildActionsWithTrade(card, requiredResources, new ResourceCollection(), new ResourceCollection(), resourcesToConsider);
+                        var possibleTradeActions = CreateBuildActionsWithTrade(card, requiredResources, new ResourceCollection(), new ResourceCollection(), resourcesToConsider, leftNeighbour.tableau, rightNeighbour.tableau);
                         var tradeActionsToAdd = new List<Build>();
                         foreach (var possibleTradeAction in possibleTradeActions)
                         {
@@ -226,7 +187,7 @@ namespace _7Wonders
                     {   // May be able to build the wonder stage using trades. Create all possible trade options.
                         var requiredResources = new ResourceCollection(wonderStage.Cost.Resources);
                         var resourcesToConsider = new Stack<Resource>(requiredResources.GetResources());
-                        var possibleTradeActions = CreateBuildWonderStageActionsWithTrade(wonderStage, card, requiredResources, new ResourceCollection(), new ResourceCollection(), resourcesToConsider);
+                        var possibleTradeActions = CreateBuildWonderStageActionsWithTrade(wonderStage, card, requiredResources, new ResourceCollection(), new ResourceCollection(), resourcesToConsider, leftNeighbour.tableau, rightNeighbour.tableau);
                         var tradeActionsToAdd = new List<BuildWonderStage>();
                         foreach (var possibleTradeAction in possibleTradeActions)
                         {
@@ -250,7 +211,8 @@ namespace _7Wonders
             return actions;
         }
 
-        private IEnumerable<Build> CreateBuildActionsWithTrade(Card card, ResourceCollection requiredResources, ResourceCollection resourcesFromLeftNeighbour, ResourceCollection resourcesFromRightNeighbour, Stack<Resource> resourcesToConsider)
+        private IEnumerable<Build> CreateBuildActionsWithTrade(Card card, ResourceCollection requiredResources, ResourceCollection resourcesFromLeftNeighbour, ResourceCollection resourcesFromRightNeighbour, Stack<Resource> resourcesToConsider,
+                                                               Tableau leftNeighbour, Tableau rightNeighbour)
         {
             if (resourcesToConsider.Count == 0)
             {
@@ -258,7 +220,7 @@ namespace _7Wonders
                 {
                     return Enumerable.Empty<Build>();
                 }
-                if (tableau.HasResources(requiredResources) && leftNeighbour.tableau.HasResourcesForTrade(resourcesFromLeftNeighbour) && rightNeighbour.tableau.HasResourcesForTrade(resourcesFromRightNeighbour))
+                if (tableau.HasResources(requiredResources) && leftNeighbour.HasResourcesForTrade(resourcesFromLeftNeighbour) && rightNeighbour.HasResourcesForTrade(resourcesFromRightNeighbour))
                 {
                     int coinsToLeftNeighbour = CostForTrade(Direction.Left, resourcesFromLeftNeighbour);
                     int coinsToRightNeighbour = CostForTrade(Direction.Right, resourcesFromRightNeighbour);
@@ -281,7 +243,7 @@ namespace _7Wonders
                         requiredResources.Remove(currentResource, leftNeighbourContribution + rightNeighbourContribution);
                         resourcesFromLeftNeighbour.Add(currentResource, leftNeighbourContribution);
                         resourcesFromRightNeighbour.Add(currentResource, rightNeighbourContribution);
-                        newActions.AddRange(CreateBuildActionsWithTrade(card, requiredResources, resourcesFromLeftNeighbour, resourcesFromRightNeighbour, resourcesToConsider));
+                        newActions.AddRange(CreateBuildActionsWithTrade(card, requiredResources, resourcesFromLeftNeighbour, resourcesFromRightNeighbour, resourcesToConsider, leftNeighbour, rightNeighbour));
                         requiredResources.Add(currentResource, leftNeighbourContribution + rightNeighbourContribution);
                         resourcesFromLeftNeighbour.Remove(currentResource, leftNeighbourContribution);
                         resourcesFromRightNeighbour.Remove(currentResource, rightNeighbourContribution);
@@ -292,7 +254,8 @@ namespace _7Wonders
             }
         }
 
-        private IEnumerable<BuildWonderStage> CreateBuildWonderStageActionsWithTrade(WonderStage wonderStage, Card cardToDiscard, ResourceCollection requiredResources, ResourceCollection resourcesFromLeftNeighbour, ResourceCollection resourcesFromRightNeighbour, Stack<Resource> resourcesToConsider)
+        private IEnumerable<BuildWonderStage> CreateBuildWonderStageActionsWithTrade(WonderStage wonderStage, Card cardToDiscard, ResourceCollection requiredResources, ResourceCollection resourcesFromLeftNeighbour, ResourceCollection resourcesFromRightNeighbour, Stack<Resource> resourcesToConsider,
+                                                                                     Tableau leftNeighbour, Tableau rightNeighbour)
         {
             if (resourcesToConsider.Count == 0)
             {
@@ -300,7 +263,7 @@ namespace _7Wonders
                 {
                     return Enumerable.Empty<BuildWonderStage>();
                 }
-                if (tableau.HasResources(requiredResources) && leftNeighbour.tableau.HasResourcesForTrade(resourcesFromLeftNeighbour) && rightNeighbour.tableau.HasResourcesForTrade(resourcesFromRightNeighbour))
+                if (tableau.HasResources(requiredResources) && leftNeighbour.HasResourcesForTrade(resourcesFromLeftNeighbour) && rightNeighbour.HasResourcesForTrade(resourcesFromRightNeighbour))
                 {
                     int coinsToLeftNeighbour = CostForTrade(Direction.Left, resourcesFromLeftNeighbour);
                     int coinsToRightNeighbour = CostForTrade(Direction.Right, resourcesFromRightNeighbour);
@@ -323,7 +286,7 @@ namespace _7Wonders
                         requiredResources.Remove(currentResource, leftNeighbourContribution + rightNeighbourContribution);
                         resourcesFromLeftNeighbour.Add(currentResource, leftNeighbourContribution);
                         resourcesFromRightNeighbour.Add(currentResource, rightNeighbourContribution);
-                        newActions.AddRange(CreateBuildWonderStageActionsWithTrade(wonderStage, cardToDiscard, requiredResources, resourcesFromLeftNeighbour, resourcesFromRightNeighbour, resourcesToConsider));
+                        newActions.AddRange(CreateBuildWonderStageActionsWithTrade(wonderStage, cardToDiscard, requiredResources, resourcesFromLeftNeighbour, resourcesFromRightNeighbour, resourcesToConsider, leftNeighbour, rightNeighbour));
                         requiredResources.Add(currentResource, leftNeighbourContribution + rightNeighbourContribution);
                         resourcesFromLeftNeighbour.Remove(currentResource, leftNeighbourContribution);
                         resourcesFromRightNeighbour.Remove(currentResource, rightNeighbourContribution);
@@ -337,18 +300,6 @@ namespace _7Wonders
         private int CostForTrade(Direction direction, ResourceCollection resourcesToTrade)
         {
             return resourcesToTrade.Sum((resource, count) => count * tableau.TradeCost(resource, direction));
-        }
-
-        private int CalculateVictoryPoints()
-        {
-            int treasuryVictoryPoints = Coins / 3;
-            int wonderVictoryPoints = tableau.CalculateWonderVictoryPoints();
-            int civilianVictoryPoints = tableau.CalculateCivilianVictoryPoints(this, leftNeighbour, rightNeighbour);
-            int scienceVictoryPoints = tableau.CalculateScienceVictoryPoints();
-            int commercialVictoryPoints = tableau.CalculateCommercialVictoryPoints(this, leftNeighbour, rightNeighbour);
-            int guildVictoryPoints = tableau.CalculateGuildVictoryPoints(this, leftNeighbour, rightNeighbour);
-
-            return militaryVictoryPoints + treasuryVictoryPoints + wonderVictoryPoints + civilianVictoryPoints + scienceVictoryPoints + commercialVictoryPoints + guildVictoryPoints;
         }
 
         private bool CanAfford(Cost cost)
@@ -370,9 +321,5 @@ namespace _7Wonders
         private int militaryVictoryPoints = 0;
 
         private Tableau tableau;
-        private IList<Card> hand;
-
-        private Player leftNeighbour;
-        private Player rightNeighbour;
     }
 }
