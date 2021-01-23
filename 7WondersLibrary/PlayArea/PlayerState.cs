@@ -162,18 +162,9 @@ namespace _7Wonders
                     else
                     {   // May be able to build the card using trades. Create all possible trade options.
                         var requiredResources = new ResourceCollection(card.Cost.Resources);
-                        var resourcesToConsider = new Stack<Resource>(requiredResources.GetResources());
-                        var possibleTradeActions = CreateBuildActionsWithTrade(card, requiredResources, new ResourceCollection(), new ResourceCollection(), resourcesToConsider, leftNeighbour.tableau, rightNeighbour.tableau);
-                        var tradeActionsToAdd = new List<Build>();
-                        foreach (var possibleTradeAction in possibleTradeActions)
-                        {
-                            // Ensure that there isn't an equal or better trade action already set to be added.
-                            if (!tradeActionsToAdd.Any(existingTradeAction => possibleTradeAction.IsWorseOrEqualThan(existingTradeAction)))
-                            {
-                                tradeActionsToAdd.Add(possibleTradeAction);
-                            }
-                        }
-                        actions.AddRange(tradeActionsToAdd);
+                        var possibleTradeCosts = CalculatePossibleTradeCosts(requiredResources, leftNeighbour, rightNeighbour);
+                        var tradeActions = possibleTradeCosts.Select(trade => new Build(card, trade.costToLeftNeighbour, trade.costToRightNeighbour));
+                        actions.AddRange(tradeActions);
                     }
                 }
             }
@@ -191,18 +182,9 @@ namespace _7Wonders
                     else
                     {   // May be able to build the wonder stage using trades. Create all possible trade options.
                         var requiredResources = new ResourceCollection(wonderStage.Cost.Resources);
-                        var resourcesToConsider = new Stack<Resource>(requiredResources.GetResources());
-                        var possibleTradeActions = CreateBuildWonderStageActionsWithTrade(wonderStage, card, requiredResources, new ResourceCollection(), new ResourceCollection(), resourcesToConsider, leftNeighbour.tableau, rightNeighbour.tableau);
-                        var tradeActionsToAdd = new List<BuildWonderStage>();
-                        foreach (var possibleTradeAction in possibleTradeActions)
-                        {
-                            // Ensure that there isn't an equal or better trade action already set to be added.
-                            if (!tradeActionsToAdd.Any(existingTradeAction => possibleTradeAction.IsWorseOrEqualThan(existingTradeAction)))
-                            {
-                                tradeActionsToAdd.Add(possibleTradeAction);
-                            }
-                        }
-                        actions.AddRange(tradeActionsToAdd);
+                        var possibleTradeCosts = CalculatePossibleTradeCosts(requiredResources, leftNeighbour, rightNeighbour);
+                        var tradeActions = possibleTradeCosts.Select(trade => new BuildWonderStage(wonderStage, card, trade.costToLeftNeighbour, trade.costToRightNeighbour));
+                        actions.AddRange(tradeActions);
                     }
                 }
             }
@@ -216,90 +198,16 @@ namespace _7Wonders
             return actions;
         }
 
-        private IEnumerable<Build> CreateBuildActionsWithTrade(Card card, ResourceCollection requiredResources, ResourceCollection resourcesFromLeftNeighbour, ResourceCollection resourcesFromRightNeighbour, Stack<Resource> resourcesToConsider,
-                                                               Tableau leftNeighbour, Tableau rightNeighbour)
+        private IEnumerable<(int costToLeftNeighbour, int costToRightNeighbour)> CalculatePossibleTradeCosts(ResourceCollection requiredResources, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
-            if (resourcesToConsider.Count == 0)
-            {
-                if (!resourcesFromLeftNeighbour.Any() && !resourcesFromRightNeighbour.Any())
-                {
-                    return Enumerable.Empty<Build>();
-                }
-                if (tableau.HasResources(requiredResources) && leftNeighbour.HasResourcesForTrade(resourcesFromLeftNeighbour) && rightNeighbour.HasResourcesForTrade(resourcesFromRightNeighbour))
-                {
-                    int coinsToLeftNeighbour = CostForTrade(Direction.Left, resourcesFromLeftNeighbour);
-                    int coinsToRightNeighbour = CostForTrade(Direction.Right, resourcesFromRightNeighbour);
-                    if (coinsToLeftNeighbour + coinsToRightNeighbour <= Coins)
-                    {
-                        return new[] { new Build(card, coinsToLeftNeighbour, coinsToRightNeighbour) };
-                    }
-                }
-                return Enumerable.Empty<Build>();
-            }
-            else
-            {
-                var newActions = new List<Build>();
-                var currentResource = resourcesToConsider.Pop();
-                int resourceCount = requiredResources.GetResourceCount(currentResource);
-                for (int leftNeighbourContribution = 0; leftNeighbourContribution <= resourceCount; ++leftNeighbourContribution)
-                {
-                    for (int rightNeighbourContribution = 0; rightNeighbourContribution <= resourceCount - leftNeighbourContribution; ++rightNeighbourContribution)
-                    {
-                        requiredResources.Remove(currentResource, leftNeighbourContribution + rightNeighbourContribution);
-                        resourcesFromLeftNeighbour.Add(currentResource, leftNeighbourContribution);
-                        resourcesFromRightNeighbour.Add(currentResource, rightNeighbourContribution);
-                        newActions.AddRange(CreateBuildActionsWithTrade(card, requiredResources, resourcesFromLeftNeighbour, resourcesFromRightNeighbour, resourcesToConsider, leftNeighbour, rightNeighbour));
-                        requiredResources.Add(currentResource, leftNeighbourContribution + rightNeighbourContribution);
-                        resourcesFromLeftNeighbour.Remove(currentResource, leftNeighbourContribution);
-                        resourcesFromRightNeighbour.Remove(currentResource, rightNeighbourContribution);
-                    }
-                }
-                resourcesToConsider.Push(currentResource);
-                return newActions;
-            }
-        }
+            var distributions = DistributionHelper.CalculateAllResourceDistributions(requiredResources);
 
-        private IEnumerable<BuildWonderStage> CreateBuildWonderStageActionsWithTrade(WonderStage wonderStage, Card cardToDiscard, ResourceCollection requiredResources, ResourceCollection resourcesFromLeftNeighbour, ResourceCollection resourcesFromRightNeighbour, Stack<Resource> resourcesToConsider,
-                                                                                     Tableau leftNeighbour, Tableau rightNeighbour)
-        {
-            if (resourcesToConsider.Count == 0)
-            {
-                if (!resourcesFromLeftNeighbour.Any() && !resourcesFromRightNeighbour.Any())
-                {
-                    return Enumerable.Empty<BuildWonderStage>();
-                }
-                if (tableau.HasResources(requiredResources) && leftNeighbour.HasResourcesForTrade(resourcesFromLeftNeighbour) && rightNeighbour.HasResourcesForTrade(resourcesFromRightNeighbour))
-                {
-                    int coinsToLeftNeighbour = CostForTrade(Direction.Left, resourcesFromLeftNeighbour);
-                    int coinsToRightNeighbour = CostForTrade(Direction.Right, resourcesFromRightNeighbour);
-                    if (coinsToLeftNeighbour + coinsToRightNeighbour <= Coins)
-                    {
-                        return new[] { new BuildWonderStage(wonderStage, cardToDiscard, coinsToLeftNeighbour, coinsToRightNeighbour) };
-                    }
-                }
-                return Enumerable.Empty<BuildWonderStage>();
-            }
-            else
-            {
-                var newActions = new List<BuildWonderStage>();
-                var currentResource = resourcesToConsider.Pop();
-                int resourceCount = requiredResources.GetResourceCount(currentResource);
-                for (int leftNeighbourContribution = 0; leftNeighbourContribution <= resourceCount; ++leftNeighbourContribution)
-                {
-                    for (int rightNeighbourContribution = 0; rightNeighbourContribution <= resourceCount - leftNeighbourContribution; ++rightNeighbourContribution)
-                    {
-                        requiredResources.Remove(currentResource, leftNeighbourContribution + rightNeighbourContribution);
-                        resourcesFromLeftNeighbour.Add(currentResource, leftNeighbourContribution);
-                        resourcesFromRightNeighbour.Add(currentResource, rightNeighbourContribution);
-                        newActions.AddRange(CreateBuildWonderStageActionsWithTrade(wonderStage, cardToDiscard, requiredResources, resourcesFromLeftNeighbour, resourcesFromRightNeighbour, resourcesToConsider, leftNeighbour, rightNeighbour));
-                        requiredResources.Add(currentResource, leftNeighbourContribution + rightNeighbourContribution);
-                        resourcesFromLeftNeighbour.Remove(currentResource, leftNeighbourContribution);
-                        resourcesFromRightNeighbour.Remove(currentResource, rightNeighbourContribution);
-                    }
-                }
-                resourcesToConsider.Push(currentResource);
-                return newActions;
-            }
+            return distributions.Where(distribution => distribution.ResourcesFromLeftNeighbour.Any() || distribution.ResourcesFromRightNeighbour.Any()) // must include at least 1 trade
+                                .Where(distribution => distribution.SatisfiedBy(tableau, leftNeighbour.tableau, rightNeighbour.tableau))                // resources must be available from the respective tableaus  
+                                .Select(distribution => (CostForTrade(Direction.Left, distribution.ResourcesFromLeftNeighbour),
+                                                         CostForTrade(Direction.Right, distribution.ResourcesFromRightNeighbour)))
+                                .Where(costPair => costPair.Item1 + costPair.Item2 <= Coins)                                                            // must be able to afford the trades
+                                .MinimalElements();                                                                                                     // only include the cheapest trades
         }
 
         private int CostForTrade(Direction direction, ResourceCollection resourcesToTrade)

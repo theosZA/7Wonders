@@ -31,7 +31,7 @@ namespace _7Wonders
             var text = new StringBuilder();
             if (Coins >= 1)
             {
-                text.Append($"{Coins} {TextHelper.Pluralize("coin", Coins)})");
+                text.Append($"{Coins} {TextHelper.Pluralize("coin", Coins)}");
             }
             if (Resources.Any())
             {

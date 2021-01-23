@@ -51,6 +51,7 @@
     <Compile Include="Enums\ScienceSymbol.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\TupleExtensions.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
     <Compile Include="Game\CardCollection.cs" />
     <Compile Include="Game\Deck.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Game\GameTurn.cs" />
     <Compile Include="Game\MilitaryResult.cs" />
     <Compile Include="Helpers\ConsoleHelper.cs" />
+    <Compile Include="Helpers\DistributionHelper.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="PlayArea\Card.cs" />
     <Compile Include="PlayArea\Cost.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="PlayArea\PlayerState.cs" />
     <Compile Include="PlayArea\Production.cs" />
     <Compile Include="PlayArea\ResourceCollection.cs" />
+    <Compile Include="PlayArea\ResourceDistribution.cs" />
     <Compile Include="PlayArea\ResourceOptions.cs" />
     <Compile Include="PlayArea\Tableau.cs" />
     <Compile Include="Game\StartingTableauCollection.cs" />

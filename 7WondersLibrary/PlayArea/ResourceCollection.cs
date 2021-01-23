@@ -18,6 +18,11 @@ namespace _7Wonders
             resources = new Dictionary<Resource, int> { { resource, count } };
         }
 
+        public ResourceCollection(IEnumerable<(Resource resource, int count)> resourceCounts)
+        {
+            resources = resourceCounts.ToDictionary(x => x.resource, x => x.count);
+        }
+
         public ResourceCollection(ResourceCollection source)
         {
             resources = new Dictionary<Resource, int>(source.resources);
