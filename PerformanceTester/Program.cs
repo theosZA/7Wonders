@@ -11,6 +11,8 @@ namespace PerformanceTester
         static void Main(string[] args)
         {
             const int playerCount = 7;
+            var availableTableaus = new StartingTableauCollection("..\\..\\..\\Cities.xml");
+            var allCards = new CardCollection("..\\..\\..\\Cards.xml");
 
             // Time games for 10 seconds.
             Console.WriteLine("Playing games for 10 seconds...");
@@ -25,7 +27,7 @@ namespace PerformanceTester
                                                  .Select(i => new RobotPlayer($"Robot {i + 1}", CreateRandomWeights(RobotPlayer.WeightsRequired)))
                                                  .Cast<PlayerAgent>()
                                                  .ToList();
-                    var game = new Game(playerAgents);
+                    var game = new Game(playerAgents, availableTableaus, allCards);
                     while (!game.IsGameOver)
                     {
                         game.PlayTurn();

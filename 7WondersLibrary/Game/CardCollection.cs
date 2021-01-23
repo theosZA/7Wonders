@@ -9,11 +9,18 @@ namespace _7Wonders
     /// Only one of each card is in the collection, but calling GetCardsForAge() can
     /// return multiples of the same card instance if there are enough players.
     /// </summary>
-    internal class CardCollection
+    public class CardCollection
     {
+        public CardCollection(string cardsXmlFileName)
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(cardsXmlFileName);
+            cards = ReadCardsFromXml(xmlDocument.DocumentElement).ToList();
+        }
+
         public CardCollection(XmlElement cardsElement)
         {
-            cards = cardsElement.GetChildElements("Card").Select(cardElement => new Card(cardElement)).ToList();
+            cards = ReadCardsFromXml(cardsElement).ToList();
         }
 
         public IEnumerable<Card> GetCardsForAge(int age, int playerCount)
@@ -25,6 +32,11 @@ namespace _7Wonders
                     yield return card;
                 }
             }
+        }
+
+        private static IEnumerable<Card> ReadCardsFromXml(XmlElement cardsElement)
+        {
+            return cardsElement.GetChildElements("Card").Select(cardElement => new Card(cardElement));
         }
 
         private IReadOnlyCollection<Card> cards;

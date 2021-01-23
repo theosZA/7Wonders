@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 
 namespace _7Wonders
 {
@@ -17,22 +16,10 @@ namespace _7Wonders
 
         public int[] Positions => players.Positions.ToArray();
 
-        public Game(IReadOnlyCollection<PlayerAgent> playerAgents)
+        public Game(IReadOnlyCollection<PlayerAgent> playerAgents, StartingTableauCollection availableTableaus, CardCollection allCards)
         {
-            var cardsXmlDocument = new XmlDocument();
-            cardsXmlDocument.Load("Cards.xml");
-            allCards = new CardCollection((XmlElement)cardsXmlDocument.SelectSingleNode("Cards"));
-
-            var citiesXmlDocument = new XmlDocument();
-            citiesXmlDocument.Load("Cities.xml");
-            var citiesElement = (XmlElement)citiesXmlDocument.SelectSingleNode("Cities");
-            var cityElements = citiesElement.GetChildElements("City");
-
-            // For now we just use one common tableau, replicated across all our players. TBD implement all city boards.
-            var tableaus = Enumerable.Range(0, 7).Select(i => new Tableau(cityElements.First())).ToList();
-
-            players = new PlayerCollection(playerAgents, tableaus);
-
+            this.allCards = allCards;
+            players = new PlayerCollection(playerAgents, availableTableaus.GetCopyOfTableaus().ToList());
             StartAge(1);
         }
 

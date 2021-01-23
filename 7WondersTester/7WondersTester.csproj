@@ -50,10 +50,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Cards.xml" />
-    <Content Include="Cities.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\7WondersLibrary\7WondersLibrary.csproj">
       <Project>{4f1620ee-9a50-4f71-825d-7eeb076c819b}</Project>
       <Name>7WondersLibrary</Name>

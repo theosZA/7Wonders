@@ -19,11 +19,11 @@ namespace _7WondersEvolution
                                 .ToList();
         }
 
-        public void PlayGamesWithRandomPlayers(int gameCount, int playerCount)
+        public void PlayGamesWithRandomPlayers(int gameCount, int playerCount, StartingTableauCollection availableTableaus, CardCollection allCards)
         {
             for (int i = 0; i < gameCount; ++i)
             {
-                PlayGameWithRandomPlayers(playerCount);
+                PlayGameWithRandomPlayers(playerCount, availableTableaus, allCards);
             }
         }
 
@@ -44,7 +44,7 @@ namespace _7WondersEvolution
             players = newPlayers;
         }
 
-        private void PlayGameWithRandomPlayers(int playerCount)
+        private void PlayGameWithRandomPlayers(int playerCount, StartingTableauCollection availableTableaus, CardCollection allCards)
         {
             // Pick only from the players who've played the fewest games so far (to balance it out).
             int fewestGames = players.Min(player => player.Games);
@@ -58,14 +58,14 @@ namespace _7WondersEvolution
                                                .TakeRandom(playerCount - currentPlayers.Count));
             }
             // Play with the picked players.
-            PlayGame(currentPlayers);
+            PlayGame(currentPlayers, availableTableaus, allCards);
         }
 
-        private static void PlayGame(IList<EvolvingPlayer> gamePlayers)
+        private static void PlayGame(IList<EvolvingPlayer> gamePlayers, StartingTableauCollection availableTableaus, CardCollection allCards)
         {
             var playerAgents = gamePlayers.Select(evolvingPlayer => new RobotPlayer(evolvingPlayer.Name, evolvingPlayer.Weights))
                                           .ToList();
-            var game = new Game(playerAgents);
+            var game = new Game(playerAgents, availableTableaus, allCards);
             while (!game.IsGameOver)
             {
                 game.PlayTurn();

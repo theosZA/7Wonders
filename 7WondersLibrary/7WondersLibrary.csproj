@@ -67,6 +67,7 @@
     <Compile Include="PlayArea\ResourceCollection.cs" />
     <Compile Include="PlayArea\ResourceOptions.cs" />
     <Compile Include="PlayArea\Tableau.cs" />
+    <Compile Include="Game\StartingTableauCollection.cs" />
     <Compile Include="PlayArea\TradeBonus.cs" />
     <Compile Include="PlayArea\WonderStage.cs" />
     <Compile Include="PlayerAgents\ConsolePlayer.cs" />

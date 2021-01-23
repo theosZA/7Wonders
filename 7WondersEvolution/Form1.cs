@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _7Wonders;
+using System;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -9,6 +10,9 @@ namespace _7WondersEvolution
         public Form1()
         {
             InitializeComponent();
+
+            availableTableaus = new StartingTableauCollection("..\\..\\..\\Cities.xml");
+            allCards = new CardCollection("..\\..\\..\\Cards.xml");
         }
 
         private void btnCreatePlayers_Click(object sender, EventArgs e)
@@ -52,7 +56,7 @@ namespace _7WondersEvolution
         private void PlayGames()
         {
             int gamesToPlay = (int)nudGamesPlayed.Value;
-            players.PlayGamesWithRandomPlayers(gamesToPlay, playerCount: 7);
+            players.PlayGamesWithRandomPlayers(gamesToPlay, playerCount: 7, availableTableaus, allCards);
             OnGamesPlayed();
         }
 
@@ -81,6 +85,8 @@ namespace _7WondersEvolution
         }
 
         private PlayerPool players;
+        private StartingTableauCollection availableTableaus;
+        private CardCollection allCards;
 
         private int generation = 0;
     }

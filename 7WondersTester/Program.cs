@@ -16,7 +16,10 @@ namespace _7WondersTester
                                          .ToList();
             playerAgents.Add(new ConsolePlayer("YOU"));
 
-            var game = new Game(playerAgents);
+            var availableTableaus = new StartingTableauCollection("..\\..\\..\\Cities.xml");
+            var allCards = new CardCollection("..\\..\\..\\Cards.xml");
+
+            var game = new Game(playerAgents, availableTableaus, allCards);
             for (int age = 1; age <= 3; ++age)
             {
                 for (int i = 0; i < 6; ++i)
