@@ -1,4 +1,4 @@
-﻿using _7Wonders;
+using _7Wonders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -37,7 +37,7 @@ namespace PerformanceTester
             }
             stopwatch.Stop();
 
-            Console.WriteLine($"{gameCount} games played in {stopwatch.ElapsedMilliseconds / 1000.0:0.000} seconds: {gameCount / (stopwatch.ElapsedMilliseconds / 1000.0):0.000} games/second");
+            Console.WriteLine($"{gameCount} games played in {stopwatch.ElapsedMilliseconds / 1000.0:0.000} seconds: {gameCount / (stopwatch.Elapsed.TotalMilliseconds / 1000.0):0.000} games/second");
         }
 
         private static IEnumerable<int> CreateRandomWeights(int count)
