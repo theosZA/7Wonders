@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7WondersLibrary", "7Wonders
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7WondersEvolution", "7WondersEvolution\7WondersEvolution.csproj", "{92950C9A-72E9-463F-B948-1160D7DBEC2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTester", "PerformanceTester\PerformanceTester.csproj", "{F6C4B9B2-6F31-4AA0-91C6-8F334FE8BC53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{92950C9A-72E9-463F-B948-1160D7DBEC2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92950C9A-72E9-463F-B948-1160D7DBEC2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92950C9A-72E9-463F-B948-1160D7DBEC2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6C4B9B2-6F31-4AA0-91C6-8F334FE8BC53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6C4B9B2-6F31-4AA0-91C6-8F334FE8BC53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6C4B9B2-6F31-4AA0-91C6-8F334FE8BC53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6C4B9B2-6F31-4AA0-91C6-8F334FE8BC53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
