@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +19,7 @@ namespace _7Wonders
         {
             cityName = cityElement.GetAttribute("name");
             cityProduction = new Production(cityElement.GetChildElements("Production"));
-            AddProduction(cityProduction, availableForTrade: false);
+            AddProduction(cityProduction, availableForTrade: true);
             var wonderElement = cityElement.GetChildElement("Wonder");
             var wonderName = wonderElement.GetAttribute_String("name");
             availableWonderStages = wonderElement.GetChildElements("Stage").Select((stageElement, i) => new WonderStage($"{wonderName} {i + 1}", stageElement)).ToList();
