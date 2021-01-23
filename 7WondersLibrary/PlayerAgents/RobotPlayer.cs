@@ -32,6 +32,8 @@ namespace _7Wonders
 
             action.Apply(actingPlayer, leftNeighbour, rightNeighbour, hand, discards: new List<Card>());
 
+            var scienceSymbolCounts = actingPlayer.GetScienceCount();
+
             int offset = weightsPerTurn * turn;
             return weights[offset + 0] * actingPlayer.GetResourceCount(Resource.Clay)
                  + weights[offset + 1] * actingPlayer.GetResourceCount(Resource.Ore)
@@ -40,11 +42,14 @@ namespace _7Wonders
                  + weights[offset + 4] * actingPlayer.GetResourceCount(Resource.Glass)
                  + weights[offset + 5] * actingPlayer.GetResourceCount(Resource.Loom)
                  + weights[offset + 6] * actingPlayer.GetResourceCount(Resource.Papyrus)
-                 + weights[offset + 7] * actingPlayer.Military
-                 + weights[offset + 8] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
+                 + weights[offset + 7] * scienceSymbolCounts.Min()
+                 + weights[offset + 8] * scienceSymbolCounts.Max()
+                 + weights[offset + 9] * (scienceSymbolCounts.Sum() - scienceSymbolCounts.Min() - scienceSymbolCounts.Max())
+                 + weights[offset + 10] * actingPlayer.Military
+                 + weights[offset + 11] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
         }
 
-        const int weightsPerTurn = 9;
+        const int weightsPerTurn = 12;
         int[] weights;
     }
 }

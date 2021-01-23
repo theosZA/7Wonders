@@ -164,28 +164,43 @@ namespace _7Wonders
 
         public int CalculateScienceVictoryPoints()
         {
+            return CalculateScienceVictoryPoints(CalculateScience());
+        }
+
+        /// <summary>
+        /// Counts how many of each symbol we have, accounting for wilds to maximize our score.
+        /// </summary>
+        /// <returns>A sequence of symbol counts, in order of the ScienceSymbol enum. There will always be exactly 3 values.</returns>
+        public IReadOnlyCollection<int> CalculateScience()
+        {
             // Count how many of each symbol we have.
-            var symbolCount = Enumerable.Range(0, 3).Select(i => builtCards.Count(card => card.Science.HasValue && card.Science.Value == (ScienceSymbol)i)).ToArray();
+            var symbolCount = ScienceSymbolHelper.GetAllBasicScienceSymbols().Select(scienceSymbol => builtCards.Count(card => card.Science == scienceSymbol))
+                                                                             .ToArray();
 
             // What should we be counting the wilds as?
-            int wildCount = builtCards.Count(card => card.Science.HasValue && card.Science.Value == ScienceSymbol.Wild);
+            int wildCount = builtCards.Count(card => card.Science == ScienceSymbol.Wild);
             // TBD - For now, force all to whatever we have the least of.
             var leastIndex = symbolCount.ToList().IndexOf(symbolCount.Min());
             symbolCount[leastIndex] += wildCount;
 
-            // 7 points for each complete set.
-            int completeSets = symbolCount.Min();
-            int completeSetsScore = 7 * completeSets;
-
-            // n^2 points for each symbol where n is the number of that symbol in the tableau.
-            int squareSymbolsScore = symbolCount.Sum(n => n * n);
-
-            return completeSetsScore + squareSymbolsScore;
+            return symbolCount;
         }
 
         private int CalculateVictoryPointsForColour(Colour colour, PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             return builtCards.Sum(card => card.Colour == colour ? card.EvaluateVictoryPoints(self, leftNeighbour, rightNeighbour) : 0);
+        }
+
+        private static int CalculateScienceVictoryPoints(IReadOnlyCollection<int> scienceSymbolCounts)
+        {
+            // 7 points for each complete set.
+            int completeSets = scienceSymbolCounts.Min();
+            int completeSetsScore = 7 * completeSets;
+
+            // n^2 points for each symbol where n is the number of that symbol in the tableau.
+            int squareSymbolsScore = scienceSymbolCounts.Sum(n => n * n);
+
+            return completeSetsScore + squareSymbolsScore;
         }
 
         private void AddProduction(Production production, bool availableForTrade)

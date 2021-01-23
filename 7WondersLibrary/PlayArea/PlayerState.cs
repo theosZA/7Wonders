@@ -141,6 +141,11 @@ namespace _7Wonders
             return count - 1;
         }
 
+        public IReadOnlyCollection<int> GetScienceCount()
+        {
+            return tableau.CalculateScience();
+        }
+
         public IEnumerable<IAction> GetAllActions(IEnumerable<Card> hand, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
             var actions = new List<IAction>();

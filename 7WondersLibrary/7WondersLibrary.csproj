@@ -72,7 +72,7 @@
     <Compile Include="PlayerAgents\ConsolePlayer.cs" />
     <Compile Include="PlayerAgents\DefaultPlayer.cs" />
     <Compile Include="PlayerAgents\PlayerAgent.cs" />
-    <Compile Include="Game\PlayerCollection.cs" />
+    <Compile Include="Player\PlayerCollection.cs" />
     <Compile Include="Enums\PlayerType.cs" />
     <Compile Include="PlayerAgents\RobotPlayer.cs" />
     <Compile Include="Player\Player.cs" />
