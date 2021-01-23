@@ -2,55 +2,85 @@
 
 namespace _7Wonders
 {
-    internal static class DistributionHelper
+    internal class DistributionHelper
     {
-        /// <summary>
-        /// Finds all possible ways of dividing the required resources between 3 players.
-        /// </summary>
-        public static IEnumerable<ResourceDistribution> CalculateAllResourceDistributions(ResourceCollection requiredResources)
+        public IEnumerable<ResourceDistribution> ResourceDistributions
         {
-            var distributions = new List<ResourceDistribution>();
-            RecursiveAddResourceDistributions(distributions, requiredResources, new Stack<Resource>(requiredResources.GetResources()),
-                                              new Stack<(Resource resource, int countFromActivePlayer, int countFromLeftNeighbour, int countFromRightNeighbour)>());
-            return distributions;
-        }
-
-        /// <summary>
-        /// Finds all distributions of three non-negative integers which sum to the given total.
-        /// </summary>
-        private static IEnumerable<(int, int, int)> CalculateAllTripleDistributions(int total)
-        {
-            for (int i = 0; i <= total; ++i)
+            get
             {
-                for (int j = 0; j <= total - i; ++j)
+                if (resourceDistributions == null)
                 {
-                    int k = total - i - j;
-                    yield return (i, j, k);
+                    CalculateAllResourceDistributions();
                 }
+                return resourceDistributions;
             }
         }
 
-        private static void RecursiveAddResourceDistributions(IList<ResourceDistribution> distributions, ResourceCollection requiredResources, Stack<Resource> resourcesToConsider,
-                                                              Stack<(Resource resource, int countFromActivePlayer, int countFromLeftNeighbour, int countFromRightNeighbour)> resourceCounts)
+        public DistributionHelper(ResourceCollection requiredResources, Tableau activePlayer, Tableau leftNeighbour, Tableau rightNeighbour)
+        {
+            this.requiredResources = requiredResources;
+            this.activePlayer = activePlayer;
+            this.leftNeighbour = leftNeighbour;
+            this.rightNeighbour = rightNeighbour;
+        }
+
+        /// <summary>
+        /// Finds all possible ways of dividing the required resources between 3 players.
+        /// </summary>
+        private void CalculateAllResourceDistributions()
+        {
+            resourceDistributions = new List<ResourceDistribution>();
+            RecursiveAddResourceDistributions(new Stack<Resource>(requiredResources.GetResources()),
+                                              new Stack<(Resource resource, int countFromActivePlayer, int countFromLeftNeighbour, int countFromRightNeighbour)>());
+        }
+
+        /// <summary>
+        /// Finds all possible ways of dividing the required resources between 3 players given that the resources not in resourcesToConsider have already been
+        /// divided as determined by resourceCounts.
+        /// </summary>
+        private void RecursiveAddResourceDistributions(Stack<Resource> resourcesToConsider, Stack<(Resource resource, int countFromActivePlayer, int countFromLeftNeighbour, int countFromRightNeighbour)> resourceCounts)
         {
             if (resourcesToConsider.Count == 0)
             {
-                distributions.Add(new ResourceDistribution(resourceCounts));
+                resourceDistributions.Add(new ResourceDistribution(resourceCounts));
                 return;
             }
 
             var resource = resourcesToConsider.Pop();
-            
             int count = requiredResources.GetResourceCount(resource);
-            var distributionsOfThisResource = CalculateAllTripleDistributions(count);
-            foreach (var distributionOfThisResource in distributionsOfThisResource)
+            foreach (var distributionOfThisResource in CalculateAllTripleDistributions(resource, count))
             {
                 resourceCounts.Push((resource, distributionOfThisResource.Item1, distributionOfThisResource.Item2, distributionOfThisResource.Item3));
-                RecursiveAddResourceDistributions(distributions, requiredResources, resourcesToConsider, resourceCounts);
+                RecursiveAddResourceDistributions(resourcesToConsider, resourceCounts);
                 resourceCounts.Pop();
             }
 
             resourcesToConsider.Push(resource);
         }
+
+        /// <summary>
+        /// Finds all theoretically possible distributions of the given resource among the three players.
+        /// </summary>
+        private IEnumerable<(int, int, int)> CalculateAllTripleDistributions(Resource resource, int total)
+        {
+            for (int rightCount = 0; rightCount <= total && rightNeighbour.HasResourcesForTrade(new ResourceCollection(resource, rightCount)); ++rightCount)
+            {
+                for (int leftCount = 0; leftCount <= total - rightCount && leftNeighbour.HasResourcesForTrade(new ResourceCollection(resource, leftCount)); ++leftCount)
+                {
+                    int activeCount = total - (leftCount + rightCount);
+                    if (activePlayer.HasResources(new ResourceCollection(resource, activeCount)))
+                    {
+                        yield return (activeCount, leftCount, rightCount);
+                    }
+                }
+            }
+        }
+
+        private ResourceCollection requiredResources;
+        private Tableau activePlayer;
+        private Tableau leftNeighbour;
+        private Tableau rightNeighbour;
+
+        private IList<ResourceDistribution> resourceDistributions;
     }
 }

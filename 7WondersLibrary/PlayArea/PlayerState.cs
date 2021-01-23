@@ -200,8 +200,7 @@ namespace _7Wonders
 
         private IEnumerable<(int costToLeftNeighbour, int costToRightNeighbour)> CalculatePossibleTradeCosts(ResourceCollection requiredResources, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
-            var distributions = DistributionHelper.CalculateAllResourceDistributions(requiredResources);
-
+            var distributions = new DistributionHelper(requiredResources, tableau, leftNeighbour.tableau, rightNeighbour.tableau).ResourceDistributions;
             return distributions.Where(distribution => distribution.ResourcesFromLeftNeighbour.Any() || distribution.ResourcesFromRightNeighbour.Any()) // must include at least 1 trade
                                 .Where(distribution => distribution.SatisfiedBy(tableau, leftNeighbour.tableau, rightNeighbour.tableau))                // resources must be available from the respective tableaus  
                                 .Select(distribution => (CostForTrade(Direction.Left, distribution.ResourcesFromLeftNeighbour),
