@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace _7Wonders
@@ -23,8 +22,8 @@ namespace _7Wonders
             var rightNeighbour = playerStates[playerStates.Count - 1];
 
             // Consider all the given actions and pick the one with the highest evaluation score.
-            return playerStates[0].GetAllActions(hand, leftNeighbour, rightNeighbour)
-                                  .MaxElement(action => Evaluate(action, new PlayerState(actingPlayer), new PlayerState(leftNeighbour), new PlayerState(rightNeighbour), new List<Card>(hand)));
+            return actingPlayer.GetAllActions(hand, leftNeighbour, rightNeighbour)
+                               .MaxElement(action => Evaluate(action, new PlayerState(actingPlayer), new PlayerState(leftNeighbour), new PlayerState(rightNeighbour), new List<Card>(hand)));
         }
 
         private double Evaluate(IAction action, PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour, IList<Card> hand)
@@ -37,7 +36,8 @@ namespace _7Wonders
             return EvaluateResources(offset + 0, actingPlayer)
                  + EvaluateScience(offset + 28, actingPlayer)
                  + weights[offset + 31] * actingPlayer.Military
-                 + weights[offset + 32] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
+                 + weights[offset + 32] * actingPlayer.Coins
+                 + weights[offset + 33] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
         }
 
         private double EvaluateResources(int resourceOffset, PlayerState actingPlayer)
@@ -66,7 +66,7 @@ namespace _7Wonders
                  + weights[scienceOffset + 2] * scienceSymbolCounts[2];
         }
 
-        const int weightsPerTurn = 33;
+        const int weightsPerTurn = 34;
         int[] weights;
     }
 }
