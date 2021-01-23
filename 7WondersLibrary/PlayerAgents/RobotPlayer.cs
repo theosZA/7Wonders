@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace _7Wonders
@@ -29,27 +30,43 @@ namespace _7Wonders
         private double Evaluate(IAction action, PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour, IList<Card> hand)
         {
             int turn = ((hand[0].Age - 1) * 6) + (7 - hand.Count);
+            int offset = weightsPerTurn * turn;
 
             action.Apply(actingPlayer, leftNeighbour, rightNeighbour, hand, discards: new List<Card>());
 
-            var scienceSymbolCounts = actingPlayer.GetScienceCount();
-
-            int offset = weightsPerTurn * turn;
-            return weights[offset + 0] * actingPlayer.GetResourceCount(Resource.Clay)
-                 + weights[offset + 1] * actingPlayer.GetResourceCount(Resource.Ore)
-                 + weights[offset + 2] * actingPlayer.GetResourceCount(Resource.Stone)
-                 + weights[offset + 3] * actingPlayer.GetResourceCount(Resource.Wood)
-                 + weights[offset + 4] * actingPlayer.GetResourceCount(Resource.Glass)
-                 + weights[offset + 5] * actingPlayer.GetResourceCount(Resource.Loom)
-                 + weights[offset + 6] * actingPlayer.GetResourceCount(Resource.Papyrus)
-                 + weights[offset + 7] * scienceSymbolCounts.Min()
-                 + weights[offset + 8] * scienceSymbolCounts.Max()
-                 + weights[offset + 9] * (scienceSymbolCounts.Sum() - scienceSymbolCounts.Min() - scienceSymbolCounts.Max())
-                 + weights[offset + 10] * actingPlayer.Military
-                 + weights[offset + 11] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
+            return EvaluateResources(offset + 0, actingPlayer)
+                 + EvaluateScience(offset + 28, actingPlayer)
+                 + weights[offset + 31] * actingPlayer.Military
+                 + weights[offset + 32] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
         }
 
-        const int weightsPerTurn = 12;
+        private double EvaluateResources(int resourceOffset, PlayerState actingPlayer)
+        {
+            double score = 0.0;
+            for (int i = 0; i < 7; ++i)
+            {
+                double count = actingPlayer.GetResourceCount((Resource)i);
+                for (int compareCount = 0; compareCount < 4; ++compareCount)
+                {
+                    if (count > compareCount)
+                    {
+                        score += weights[resourceOffset + (4 * i) + compareCount];
+                    }
+                }
+            }
+            return score;
+        }
+
+        private double EvaluateScience(int scienceOffset, PlayerState actingPlayer)
+        {
+            var scienceSymbolCounts = actingPlayer.GetScienceCount().ToList();
+            scienceSymbolCounts.Sort();
+            return weights[scienceOffset + 0] * scienceSymbolCounts[0]
+                 + weights[scienceOffset + 1] * scienceSymbolCounts[1]
+                 + weights[scienceOffset + 2] * scienceSymbolCounts[2];
+        }
+
+        const int weightsPerTurn = 33;
         int[] weights;
     }
 }
