@@ -38,6 +38,14 @@ namespace _7WondersEvolution
             Generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
         }
 
+        public EvolvingPlayer Clone()
+        {
+            var newPlayer = new EvolvingPlayer(this);
+            newPlayer.victoryPointsPerGame = victoryPointsPerGame;
+            newPlayer.positionPerGame = positionPerGame;
+            return newPlayer;
+        }
+
         public void AddGame(int position, int victoryPoints)
         {
             victoryPointsPerGame.Add(victoryPoints);

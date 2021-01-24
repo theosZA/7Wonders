@@ -10,69 +10,46 @@ namespace _7WondersEvolution
         public Form1()
         {
             InitializeComponent();
-
-            availableTableaus = new StartingTableauCollection("..\\..\\..\\Cities.xml");
-            allCards = new CardCollection("..\\..\\..\\Cards.xml");
-        }
-
-        private void btnCreatePlayers_Click(object sender, EventArgs e)
-        {
-            CreatePlayers();
-        }
-
-        private void btnPlay_Click(object sender, EventArgs e)
-        {
-            PlayGames();
         }
 
         private void btnNextGeneration_Click(object sender, EventArgs e)
         {
-            if (players == null)
-            {
-                CreatePlayers();
-                Refresh();
-            }
-            if (!players.AnyGamesPlayed)
-            {
-                PlayGames();
-                Refresh();
-            }
-
-            for (int i = 0; i < (int)nudGenerations.Value; ++i)
-            {
-                players.ReplaceWithNewGeneration();
-                OnNewGeneration();
-                PlayGames();
-                Refresh();
-            }
+            var evolution = new Evolution((int)nudPlayers.Value, (int)nudGamesPlayed.Value);
+            backgroundWorker.RunWorkerAsync((evolution, (int)nudGenerations.Value));
         }
 
-        private void CreatePlayers()
+        private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            players = new PlayerPool((int)nudPlayers.Value);
-            OnNewGeneration();
+            (var evolution, int generations) = ((Evolution, int))e.Argument;
+            for (int i = 0; i < generations; ++i)
+            {
+                evolution.AdvanceGeneration();
+                backgroundWorker.ReportProgress(100 * evolution.Generation / generations, (evolution.GetCopyOfPlayers(), evolution.Generation));
+            }
+            e.Result = (evolution.GetCopyOfPlayers(), evolution.Generation);
         }
 
-        private void PlayGames()
+        private void backgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            int gamesToPlay = (int)nudGamesPlayed.Value;
-            players.PlayGamesWithRandomPlayers(gamesToPlay, playerCount: 7, availableTableaus, allCards);
-            OnGamesPlayed();
+            (var players, int generation) = ((PlayerPool, int))e.UserState;
+            RenderPlayerPool(players, generation);
         }
 
-        private void OnNewGeneration()
+        private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
+            (var players, int generation) = ((PlayerPool, int))e.Result;
+            RenderPlayerPool(players, generation);
+        }
+
+        private void RenderPlayerPool(PlayerPool players, int generation)
+        {
+            txtGeneration.Text = $"{generation}";
+
             dgvPlayers.Rows.Clear();
             foreach (var info in players.Info)
             {
                 dgvPlayers.Rows.Add(info.generation, info.name);
             }
-            ++generation;
-            txtGeneration.Text = $"{generation}";
-        }
-
-        private void OnGamesPlayed()
-        {
             var stats = players.Stats.ToList();
             for (int rowIndex = 0; rowIndex < stats.Count; ++rowIndex)
             {
@@ -83,11 +60,5 @@ namespace _7WondersEvolution
             }
             txtAverageVPs.Text = $"{stats.Sum(stat => stat.averageVictoryPoints * stat.games) / stats.Sum(stat => stat.games)}";
         }
-
-        private PlayerPool players;
-        private StartingTableauCollection availableTableaus;
-        private CardCollection allCards;
-
-        private int generation = 0;
     }
 }

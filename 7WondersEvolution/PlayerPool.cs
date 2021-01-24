@@ -12,6 +12,12 @@ namespace _7WondersEvolution
 
         public bool AnyGamesPlayed => players.Any(player => player.Games > 0);
 
+        public PlayerPool(PlayerPool source)
+        {
+            players = source.players.Select(player => player.Clone())
+                                    .ToList();
+        }
+
         public PlayerPool(int count)
         {
             players = Enumerable.Repeat(0, count)
@@ -29,15 +35,19 @@ namespace _7WondersEvolution
 
         public void ReplaceWithNewGeneration()
         {
+            var orderedPlayers = players.OrderByDescending(player => player.AverageVictoryPoints)
+                                        .ToList();
+
             // We start by keeping the best quarter of each generation.
-            var newPlayers = players.OrderByDescending(player => player.AverageVictoryPoints)
-                                     .Take(players.Count / 4)
-                                     .Select(player => new EvolvingPlayer(player))
-                                     .ToList();
-            // We fill the rest of the spots by breeding random couples.
+            var newPlayers = orderedPlayers.Take(orderedPlayers.Count / 4)
+                                           .Select(player => new EvolvingPlayer(player))
+                                           .ToList();
+            // We fill the rest of the spots by breeding random couples from the top half.
+            var breedingPlayers = orderedPlayers.Take(orderedPlayers.Count / 2)
+                                                .ToList();
             for (int i = newPlayers.Count; i < players.Count; ++i)
             {
-                var playerPair = PickTwoPlayersWeighted();
+                var playerPair = PickTwoPlayersWeighted(breedingPlayers);
                 newPlayers.Add(new EvolvingPlayer(playerPair.Item1, playerPair.Item2));
             }
 
@@ -78,12 +88,12 @@ namespace _7WondersEvolution
             }
         }
 
-        private (EvolvingPlayer, EvolvingPlayer) PickTwoPlayersWeighted()
+        private static (EvolvingPlayer, EvolvingPlayer) PickTwoPlayersWeighted(IReadOnlyCollection<EvolvingPlayer> players)
         {
-            var player1 = PickPlayerWeighted();
+            var player1 = PickPlayerWeighted(players);
             while (true)
             {
-                var player2 = PickPlayerWeighted();
+                var player2 = PickPlayerWeighted(players);
                 if (player1 != player2)
                 {
                     return (player1, player2);
@@ -91,11 +101,12 @@ namespace _7WondersEvolution
             }
         }
 
-        private EvolvingPlayer PickPlayerWeighted()
+        private static EvolvingPlayer PickPlayerWeighted(IReadOnlyCollection<EvolvingPlayer> players)
         {
-            double totalRandomWeight = players.Sum(player => player.AverageVictoryPoints);
+            double minAverageVictoryPoints = players.Min(player => player.AverageVictoryPoints);
+            double totalRandomWeight = players.Sum(player => player.AverageVictoryPoints - minAverageVictoryPoints);
             double weight = ThreadSafeRandom.ThisThreadsRandom.NextDouble() * totalRandomWeight;
-            return players.TakeWhenSumExceeds(weight, player => player.AverageVictoryPoints);
+            return players.TakeWhenSumExceeds(weight, player => player.AverageVictoryPoints - minAverageVictoryPoints);
 
         }
 

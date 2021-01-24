@@ -30,7 +30,6 @@
         {
             this.lblGeneration = new System.Windows.Forms.Label();
             this.txtGeneration = new System.Windows.Forms.TextBox();
-            this.btnCreatePlayers = new System.Windows.Forms.Button();
             this.dgvPlayers = new System.Windows.Forms.DataGridView();
             this.colGeneration = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDna = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -39,7 +38,6 @@
             this.colVPs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nudGamesPlayed = new System.Windows.Forms.NumericUpDown();
             this.lblGamesPlayed = new System.Windows.Forms.Label();
-            this.btnPlay = new System.Windows.Forms.Button();
             this.btnNextGeneration = new System.Windows.Forms.Button();
             this.nudPlayers = new System.Windows.Forms.NumericUpDown();
             this.lblPlayers = new System.Windows.Forms.Label();
@@ -47,6 +45,7 @@
             this.nudGenerations = new System.Windows.Forms.NumericUpDown();
             this.lblAverageVPs = new System.Windows.Forms.Label();
             this.txtAverageVPs = new System.Windows.Forms.TextBox();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGamesPlayed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPlayers)).BeginInit();
@@ -70,16 +69,6 @@
             this.txtGeneration.Size = new System.Drawing.Size(48, 20);
             this.txtGeneration.TabIndex = 1;
             this.txtGeneration.Text = "0";
-            // 
-            // btnCreatePlayers
-            // 
-            this.btnCreatePlayers.Location = new System.Drawing.Point(187, 15);
-            this.btnCreatePlayers.Name = "btnCreatePlayers";
-            this.btnCreatePlayers.Size = new System.Drawing.Size(75, 23);
-            this.btnCreatePlayers.TabIndex = 2;
-            this.btnCreatePlayers.Text = "Create Players";
-            this.btnCreatePlayers.UseVisualStyleBackColor = true;
-            this.btnCreatePlayers.Click += new System.EventHandler(this.btnCreatePlayers_Click);
             // 
             // dgvPlayers
             // 
@@ -152,16 +141,6 @@
             this.lblGamesPlayed.Size = new System.Drawing.Size(77, 13);
             this.lblGamesPlayed.TabIndex = 5;
             this.lblGamesPlayed.Text = "Games to play:";
-            // 
-            // btnPlay
-            // 
-            this.btnPlay.Location = new System.Drawing.Point(434, 15);
-            this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(75, 23);
-            this.btnPlay.TabIndex = 6;
-            this.btnPlay.Text = "Play";
-            this.btnPlay.UseVisualStyleBackColor = true;
-            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // btnNextGeneration
             // 
@@ -242,6 +221,13 @@
             this.txtAverageVPs.Size = new System.Drawing.Size(68, 20);
             this.txtAverageVPs.TabIndex = 13;
             // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -254,11 +240,9 @@
             this.Controls.Add(this.lblPlayers);
             this.Controls.Add(this.nudPlayers);
             this.Controls.Add(this.btnNextGeneration);
-            this.Controls.Add(this.btnPlay);
             this.Controls.Add(this.lblGamesPlayed);
             this.Controls.Add(this.nudGamesPlayed);
             this.Controls.Add(this.dgvPlayers);
-            this.Controls.Add(this.btnCreatePlayers);
             this.Controls.Add(this.txtGeneration);
             this.Controls.Add(this.lblGeneration);
             this.Name = "Form1";
@@ -276,11 +260,9 @@
 
         private System.Windows.Forms.Label lblGeneration;
         private System.Windows.Forms.TextBox txtGeneration;
-        private System.Windows.Forms.Button btnCreatePlayers;
         private System.Windows.Forms.DataGridView dgvPlayers;
         private System.Windows.Forms.NumericUpDown nudGamesPlayed;
         private System.Windows.Forms.Label lblGamesPlayed;
-        private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.Button btnNextGeneration;
         private System.Windows.Forms.NumericUpDown nudPlayers;
         private System.Windows.Forms.Label lblPlayers;
@@ -293,6 +275,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colGames;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPosition;
         private System.Windows.Forms.DataGridViewTextBoxColumn colVPs;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }
 
