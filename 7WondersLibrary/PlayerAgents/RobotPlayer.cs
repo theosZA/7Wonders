@@ -67,6 +67,6 @@ namespace _7Wonders
         }
 
         const int weightsPerTurn = 34;
-        int[] weights;
+        readonly int[] weights;
     }
 }

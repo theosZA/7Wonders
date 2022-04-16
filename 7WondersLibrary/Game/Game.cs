@@ -23,6 +23,11 @@ namespace _7Wonders
             StartAge(1);
         }
 
+        public Player GetPlayer(int playerIndex)
+        {
+            return players[playerIndex];
+        }
+
         public void WriteStateToConsole()
         {
             Console.WriteLine($"Age {age}");

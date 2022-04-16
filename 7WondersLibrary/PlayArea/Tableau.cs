@@ -11,13 +11,15 @@ namespace _7Wonders
     /// </summary>
     public class Tableau
     {
+        public string CityName { get; private set; }
+
         public int Military => builtCards.Sum(card => card.Military);
 
         public int WonderStagesBuilt => builtWonderStages.Count();
 
         public Tableau(XmlElement cityElement)
         {
-            cityName = cityElement.GetAttribute("name");
+            CityName = cityElement.GetAttribute("name");
             cityProduction = new Production(cityElement.GetChildElements("Production"));
             AddProduction(cityProduction, availableForTrade: true);
             var wonderElement = cityElement.GetChildElement("Wonder");
@@ -27,7 +29,7 @@ namespace _7Wonders
 
         public Tableau(Tableau tableau)
         {
-            cityName = tableau.cityName;
+            CityName = tableau.CityName;
             cityProduction = new Production(tableau.cityProduction);
             availableWonderStages = new List<WonderStage>(tableau.availableWonderStages);
             builtWonderStages = new List<WonderStage>(tableau.builtWonderStages);
@@ -39,7 +41,7 @@ namespace _7Wonders
         public void WriteToConsole()
         {
             ConsoleHelper.ClearConsoleColours();
-            Console.WriteLine($"{cityName} ({cityProduction.GetFirstResource()})");
+            Console.WriteLine($"{CityName} ({cityProduction.GetFirstResource()})");
             var colours = Enum.GetValues(typeof(Colour)).Cast<Colour>();
             foreach (var colour in colours)
             {
@@ -212,7 +214,6 @@ namespace _7Wonders
             }
         }
 
-        private string cityName;
         private Production cityProduction;
         private IList<WonderStage> availableWonderStages;
         private IList<WonderStage> builtWonderStages = new List<WonderStage>();

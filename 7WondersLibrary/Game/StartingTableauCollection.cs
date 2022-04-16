@@ -29,10 +29,9 @@ namespace _7Wonders
 
         private static IEnumerable<Tableau> ReadCitiesFromXml(XmlElement citiesElement)
         {
-            var cityElements = citiesElement.GetChildElements("City");
-
-            // For now we just use one common tableau, replicated across all our players. TBD implement all city boards.
-            return Enumerable.Range(0, 7).Select(i => new Tableau(cityElements.First())).ToList();
+            return citiesElement.GetChildElements("City")
+                                .Select(cityElement => new Tableau(cityElement))
+                                .ToList();
 
         }
 

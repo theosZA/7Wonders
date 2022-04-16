@@ -15,6 +15,8 @@ namespace _7Wonders
                                   .ToArray();
         }
 
+        public Player this[int i] => players[i];
+
         public int Count => players.Length;
 
         public int CardsInHand => hands[0].Count;   // All hands should have the same number of cards.

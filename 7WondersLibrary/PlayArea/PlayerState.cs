@@ -6,6 +6,8 @@ namespace _7Wonders
 {
     public class PlayerState
     {
+        public string CityName => tableau.CityName;
+
         public int Coins { get; private set; } = 3;
 
         public int Military => tableau.Military;

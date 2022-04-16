@@ -12,6 +12,8 @@ namespace _7Wonders
     {
         public string Name => agent.Name;
 
+        public string CityName => state.CityName;
+
         public int Coins => state.Coins;
 
         public int Military => state.Military;
