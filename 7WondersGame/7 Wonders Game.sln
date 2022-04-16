@@ -1,0 +1,19 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7 Wonders Game", "7 Wonders Game.csproj", "{CD70CA84-D352-4872-9C3E-9F7776B4DCFA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	Debug|Any CPU = Debug|Any CPU
+	ExportDebug|Any CPU = ExportDebug|Any CPU
+	ExportRelease|Any CPU = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD70CA84-D352-4872-9C3E-9F7776B4DCFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD70CA84-D352-4872-9C3E-9F7776B4DCFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD70CA84-D352-4872-9C3E-9F7776B4DCFA}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{CD70CA84-D352-4872-9C3E-9F7776B4DCFA}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{CD70CA84-D352-4872-9C3E-9F7776B4DCFA}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{CD70CA84-D352-4872-9C3E-9F7776B4DCFA}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+	EndGlobalSection
+EndGlobal
