@@ -6,13 +6,17 @@ using _7Wonders;
 
 public class PlayerArea
 {
-    public PlayerArea(Node parent, Player player, Rect2 viewport)
+    public PlayerArea(Node parent, Rect2 viewport, Player player, Player leftNeighbour, Player rightNeighbour)
     {
         this.player = player;
         this.viewport = viewport;
 
         rootNode = new Node2D();
 		rootNode.AddChild(CreateBoard(viewport.Size.x));
+
+        playerInfo = new PlayerInfo(player, leftNeighbour, rightNeighbour);
+        rootNode.AddChild(playerInfo);
+
         parent.AddChild(rootNode);
     }
 
@@ -27,7 +31,23 @@ public class PlayerArea
                                         viewport.Position.y + viewport.Size.y * fractionY);
     }
 
-    public void AddCard(Card card)
+    public void HandleAction(IAction action)
+    {
+        switch (action)
+        {
+            case Build build:
+                AddCard(build.Card);
+                break;
+
+            case BuildWonderStage buildWonderStage:
+                AddWonderStage(buildWonderStage.CardToSpend.Age);
+                break;
+        }
+
+        playerInfo.OnGameUpdate();
+    }
+
+    private void AddCard(Card card)
     {
         var cardSprite = CreateCardSprite(card);
         rootNode.AddChild(cardSprite);
@@ -38,7 +58,7 @@ public class PlayerArea
         cards.Add(card);
     }
 
-    public void AddWonderStage(int age)
+    private void AddWonderStage(int age)
     {
         var cardBackSprite = CreateCardBackSprite(age);
         rootNode.AddChild(cardBackSprite);
@@ -163,6 +183,7 @@ public class PlayerArea
     private Player player;
     private Rect2 viewport;
     private Node2D rootNode;
+    private PlayerInfo playerInfo;
     private List<Card> cards = new List<Card>();
     float boardWidth;
     float boardHeight;

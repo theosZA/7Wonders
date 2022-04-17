@@ -18,6 +18,14 @@ namespace _7Wonders
 
         public int Military => state.Military;
 
+        public int MilitaryVictoryPoints => state.MilitaryVictoryPoints;
+
+        public int TreasuryVictoryPoints => state.TreasuryVictoryPoints;
+
+        public int WonderVictoryPoints => state.WonderVictoryPoints;
+
+        public int ScienceVictoryPoints => state.ScienceVictoryPoints;
+
         public Player(PlayerAgent playerAgent, Tableau tableau)
         {
             agent = playerAgent;
@@ -35,6 +43,21 @@ namespace _7Wonders
         public int CalculateVictoryPoints(Player leftNeighbour, Player rightNeighbour)
         {
             return state.CalculateVictoryPoints(leftNeighbour.state, rightNeighbour.state);
+        }
+
+        public int CalculateCivilianVictoryPoints(Player leftNeighbour, Player rightNeighbour)
+        {
+            return state.CalculateCivilianVictoryPoints(leftNeighbour.state, rightNeighbour.state);
+        }
+
+        public int CalculateCommercialVictoryPoints(Player leftNeighbour, Player rightNeighbour)
+        {
+            return state.CalculateCommercialVictoryPoints(leftNeighbour.state, rightNeighbour.state);
+        }
+
+        public int CalculateGuildVictoryPoints(Player leftNeighbour, Player rightNeighbour)
+        {
+            return state.CalculateGuildVictoryPoints(leftNeighbour.state, rightNeighbour.state);
         }
 
         public void AwardMilitaryVictoryPoints(int militaryVictoryPoints)

@@ -16,6 +16,14 @@ namespace _7Wonders
 
         public int WonderStagesBuilt => tableau.WonderStagesBuilt;
 
+        public int MilitaryVictoryPoints { get; private set; } = 0;
+
+        public int TreasuryVictoryPoints => Coins / 3;
+
+        public int WonderVictoryPoints => tableau.CalculateWonderVictoryPoints();
+
+        public int ScienceVictoryPoints => tableau.CalculateScienceVictoryPoints();
+
         public PlayerState(Tableau tableau)
         {
             this.tableau = tableau;
@@ -25,20 +33,29 @@ namespace _7Wonders
         {
             Coins = source.Coins;
             MilitaryDefeats = source.MilitaryDefeats;
-            militaryVictoryPoints = source.militaryVictoryPoints;
+            MilitaryVictoryPoints = source.MilitaryVictoryPoints;
             tableau = new Tableau(source.tableau);
         }
 
         public int CalculateVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
-            int treasuryVictoryPoints = Coins / 3;
-            int wonderVictoryPoints = tableau.CalculateWonderVictoryPoints();
-            int civilianVictoryPoints = tableau.CalculateCivilianVictoryPoints(this, leftNeighbour, rightNeighbour);
-            int scienceVictoryPoints = tableau.CalculateScienceVictoryPoints();
-            int commercialVictoryPoints = tableau.CalculateCommercialVictoryPoints(this, leftNeighbour, rightNeighbour);
-            int guildVictoryPoints = tableau.CalculateGuildVictoryPoints(this, leftNeighbour, rightNeighbour);
+            return MilitaryVictoryPoints + TreasuryVictoryPoints + WonderVictoryPoints + CalculateCivilianVictoryPoints(leftNeighbour, rightNeighbour) + ScienceVictoryPoints 
+                 + CalculateCommercialVictoryPoints(leftNeighbour, rightNeighbour) + CalculateGuildVictoryPoints(leftNeighbour, rightNeighbour);
+        }
 
-            return militaryVictoryPoints + treasuryVictoryPoints + wonderVictoryPoints + civilianVictoryPoints + scienceVictoryPoints + commercialVictoryPoints + guildVictoryPoints;
+        public int CalculateCivilianVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
+        {
+            return tableau.CalculateCivilianVictoryPoints(this, leftNeighbour, rightNeighbour);
+        }
+
+        public int CalculateCommercialVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
+        {
+            return tableau.CalculateCommercialVictoryPoints(this, leftNeighbour, rightNeighbour);
+        }
+
+        public int CalculateGuildVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
+        {
+            return tableau.CalculateGuildVictoryPoints(this, leftNeighbour, rightNeighbour);
         }
 
         public void AddCardToTableau(Card card)
@@ -72,7 +89,7 @@ namespace _7Wonders
 
         public void AwardMilitaryVictoryPoints(int militaryVictoryPoints)
         {
-            this.militaryVictoryPoints += militaryVictoryPoints;
+            this.MilitaryVictoryPoints += militaryVictoryPoints;
             if (militaryVictoryPoints < 0)
             {
                 ++MilitaryDefeats;
@@ -92,7 +109,7 @@ namespace _7Wonders
             ConsoleHelper.ClearConsoleColours();
             Console.Write($"Score: {CalculateVictoryPoints(leftNeighbour, rightNeighbour)} (");
             ConsoleHelper.SetConsoleColours(Colour.Red);
-            Console.Write(militaryVictoryPoints);
+            Console.Write(MilitaryVictoryPoints);
             ConsoleHelper.ClearConsoleColours();
             Console.Write($" + {treasuryVictoryPoints} + {wonderVictoryPoints} + ");
             ConsoleHelper.SetConsoleColours(Colour.Blue);
@@ -231,8 +248,6 @@ namespace _7Wonders
             // Must have the resources for the building. (Not counting for trades yet.)
             return tableau.HasResources(cost.Resources);
         }
-
-        private int militaryVictoryPoints = 0;
 
         private Tableau tableau;
     }

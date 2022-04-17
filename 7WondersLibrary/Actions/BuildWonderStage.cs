@@ -8,17 +8,19 @@ namespace _7Wonders
     /// </summary>
     public class BuildWonderStage : IAction
     {
+        public Card CardToSpend { get; }
+
         public BuildWonderStage(WonderStage wonderStage, Card cardToSpend, int coinsToLeftNeighbour = 0, int coinsToRightNeighbour = 0)
         {
             this.wonderStage = wonderStage;
-            this.cardToSpend = cardToSpend;
+            this.CardToSpend = cardToSpend;
             this.coinsToLeftNeighbour = coinsToLeftNeighbour;
             this.coinsToRightNeighbour = coinsToRightNeighbour;
         }
 
         public void Apply(PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour, IList<Card> hand, IList<Card> discards)
         {
-            hand.Remove(cardToSpend);
+            hand.Remove(CardToSpend);
             actingPlayer.PayCoins(wonderStage.Cost.Coins);
             actingPlayer.PayCoins(coinsToLeftNeighbour);
             leftNeighbour.AddCoins(coinsToLeftNeighbour);
@@ -31,7 +33,7 @@ namespace _7Wonders
         public void WriteToConsole()
         {
             Console.Write("Build next wonder stage discarding ");
-            ConsoleHelper.WriteCardToConsole(cardToSpend);
+            ConsoleHelper.WriteCardToConsole(CardToSpend);
             Console.Write($" ({wonderStage.Cost})");
             if (coinsToLeftNeighbour > 0 || coinsToRightNeighbour > 0)
             {
@@ -58,7 +60,6 @@ namespace _7Wonders
         }
 
         private WonderStage wonderStage;
-        private Card cardToSpend;
         private int coinsToLeftNeighbour;
         private int coinsToRightNeighbour;
     }

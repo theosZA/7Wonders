@@ -34,7 +34,11 @@ public class Gameplay : Node2D
 	private void InitializePlayerAreas(int playerCount)
 	{
 		playerAreas = Enumerable.Range(0, playerCount)
-								.Select(i => new PlayerArea(this, game.GetPlayer(i), GetViewportRect()))
+								.Select(i => new PlayerArea(this,
+															GetViewportRect(),
+															game.GetPlayer(i),
+															game.GetPlayer((i + 1) % playerCount),
+															game.GetPlayer((i - 1 + playerCount) % playerCount)))
 								.ToArray();
 
 		// Position the player areas.
@@ -77,21 +81,7 @@ public class Gameplay : Node2D
 		var playerActions = gameTurn.playerActions.ToArray();
 		for (int i = 0; i < playerActions.Length; ++i)
 		{
-			// TODO: Handle this player's action, typically adding to their board.
-
-			var playerAction = playerActions[i];
-			switch (playerAction)
-			{
-				case Build build:
-					playerAreas[i].AddCard(build.Card);
-					break;
-
-				case BuildWonderStage buildWonderStage:
-					playerAreas[i].AddWonderStage(game.Age);
-					break;
-
-			}
-
+			playerAreas[i].HandleAction(playerActions[i]);
 		}
 
 		// TODO: Handle military results in the militaryResults property.
