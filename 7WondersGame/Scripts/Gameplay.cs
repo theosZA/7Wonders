@@ -45,7 +45,7 @@ public class Gameplay : Node2D
 		
 		// The primary player area (currently area 0) should be front and center.
 		playerAreas[0].ApplyScale(primaryAreaScale);
-		playerAreas[0].SetPosition(0.456f, 0.8f);
+		playerAreas[0].SetPosition(0.456f, 0.78f);
 
 		// Left-hand neighbour.
 		if (playerCount >= 2)
@@ -85,11 +85,24 @@ public class Gameplay : Node2D
 				case Build build:
 					playerAreas[i].AddCard(build.Card);
 					break;
+
+				case BuildWonderStage buildWonderStage:
+					playerAreas[i].AddWonderStage(game.Age);
+					break;
+
 			}
 
 		}
 
 		// TODO: Handle military results in the militaryResults property.
+
+		// TODO: Display the leaderboard in a nice way. For now it goes to debug output.
+		var leaderboard = game.Leaderboard.ToArray();
+		for (int i = 0; i < leaderboard.Length; ++i)
+		{
+			GD.Print($"{i + 1}. {leaderboard[i].player.CityName} ({leaderboard[i].player.Name}): {leaderboard[i].victoryPoints}");
+		}
+		GD.Print();
 	}
 
 	private PlayerArea[] playerAreas;

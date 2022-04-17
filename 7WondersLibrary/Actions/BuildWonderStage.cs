@@ -6,7 +6,7 @@ namespace _7Wonders
     /// <summary>
     /// An action in which a player builds the next wonder stage.
     /// </summary>
-    internal class BuildWonderStage : IAction
+    public class BuildWonderStage : IAction
     {
         public BuildWonderStage(WonderStage wonderStage, Card cardToSpend, int coinsToLeftNeighbour = 0, int coinsToRightNeighbour = 0)
         {

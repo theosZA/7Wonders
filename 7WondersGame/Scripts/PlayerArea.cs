@@ -38,6 +38,18 @@ public class PlayerArea
         cards.Add(card);
     }
 
+    public void AddWonderStage(int age)
+    {
+        var cardBackSprite = CreateCardBackSprite(age);
+        rootNode.AddChild(cardBackSprite);
+        
+        // TODO: Handle wonders that have 2 or 4 stages. For now we assume 3 stages.
+        cardBackSprite.Position = CalculatePosition(0.2f + 0.3f * wonderStagesBuilt, 0.9f);
+        cardBackSprite.ZIndex = -1;
+
+        ++wonderStagesBuilt;        
+    }
+
 	private Sprite CreateBoard(float viewportWidth)
 	{
 		var board = new Sprite()
@@ -58,9 +70,8 @@ public class PlayerArea
 		return board;
 	}    
 
-	private Sprite CreateCardSprite(Card card)
+	private static Sprite CreateCardSprite(Card card)
 	{
-		const float cardScale = 0.8f;	// TODO: Need to experiment to find a reasonable scaling factor. We don't have a global scaling factor beceause each board has been scaled slightly differently.
 		return new Sprite()
 		{
 			Texture = GD.Load<Texture>($"res://Art/Age{card.Age}_{ToTitleCase(card.Colour.ToString())}_{ToTitleCase(card.Name)}.png"),
@@ -68,12 +79,21 @@ public class PlayerArea
 		};
 	}
 
+    private static Sprite CreateCardBackSprite(int age)
+    {
+		return new Sprite()
+		{
+			Texture = GD.Load<Texture>($"res://Art/Age{age}_Back.png"),
+			Scale = new Vector2(cardScale, cardScale)
+		};
+    }
+
     private (Vector2 position, int zIndex) CalculateCardPosition(Colour colour)
     {
         int cardsOfTheSameType = CountCardsOfTheSameType(colour);
         int column = GetColumnForCard(colour);
         
-        float fractionX = 0.1f + 0.2f * column;
+        float fractionX = 0.105f + 0.2f * column;
         float fractionY = 0.16f - 0.175f * cardsOfTheSameType;
         if (column > 0) // The above calculation is to line up the resource cards neatly. We want to offset the other card types a bit.
         {
@@ -138,11 +158,14 @@ public class PlayerArea
 		return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(text).Replace(" ", string.Empty);
 	}
 
+    private const float cardScale = 0.8f;
+		
     private Player player;
     private Rect2 viewport;
     private Node2D rootNode;
     private List<Card> cards = new List<Card>();
     float boardWidth;
     float boardHeight;
+    int wonderStagesBuilt = 0;
 }
  

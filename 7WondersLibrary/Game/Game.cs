@@ -10,11 +10,15 @@ namespace _7Wonders
     /// </summary>
     public class Game
     {
-        public bool IsGameOver => age == 3 && players.CardsInHand == 0;
+        public bool IsGameOver => Age == 3 && players.CardsInHand == 0;
+
+        public int Age { get; private set; }
 
         public int[] VictoryPoints => players.VictoryPoints.ToArray();
 
         public int[] Positions => players.Positions.ToArray();
+
+        public IReadOnlyCollection<(Player player, int victoryPoints)> Leaderboard => players.Leaderboard;
 
         public Game(IReadOnlyCollection<PlayerAgent> playerAgents, StartingTableauCollection availableTableaus, CardCollection allCards)
         {
@@ -30,7 +34,7 @@ namespace _7Wonders
 
         public void WriteStateToConsole()
         {
-            Console.WriteLine($"Age {age}");
+            Console.WriteLine($"Age {Age}");
             Console.WriteLine();
             players.WriteStateToConsole();
             if (IsGameOver)
@@ -53,14 +57,14 @@ namespace _7Wonders
             if (players.CardsInHand == 1)
             {
                 militaryResults = EndAge().ToList();
-                if (age < 3)
+                if (Age < 3)
                 {
-                    StartAge(age + 1);
+                    StartAge(Age + 1);
                 }
             }
             else
             {
-                players.PassHands(age == 2 ? Direction.Right : Direction.Left);
+                players.PassHands(Age == 2 ? Direction.Right : Direction.Left);
             }
 
             return new GameTurn
@@ -72,7 +76,7 @@ namespace _7Wonders
 
         private void StartAge(int newAge)
         {
-            age = newAge;
+            Age = newAge;
 
             var deck = CreateAgeDeck(newAge);
             players.DealDeck(deck);
@@ -81,7 +85,7 @@ namespace _7Wonders
         private IEnumerable<MilitaryResult> EndAge()
         {
             discards.AddRange(players.DiscardHands());
-            return players.EvaluateMilitaryBattles(scoreForVictory: (2 * age) - 1, scoreForDefeat: -1);
+            return players.EvaluateMilitaryBattles(scoreForVictory: (2 * Age) - 1, scoreForDefeat: -1);
         }
 
         private Deck CreateAgeDeck(int age)
@@ -100,7 +104,6 @@ namespace _7Wonders
 
         private PlayerCollection players;
         private List<Card> discards = new List<Card>();
-        private int age;
         private CardCollection allCards;
     }
 }
