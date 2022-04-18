@@ -7,9 +7,10 @@ namespace _7Wonders
     /// <summary>
     /// The collection of all possible starting tableaus.
     /// </summary>
-    /// <remarks>For now we only allow a single tableau and simply replicate it 7 times.</remarks>
     public class StartingTableauCollection
     {
+        public IEnumerable<string> CityNames => tableaus.Select(tableau => tableau.CityName);
+
         public StartingTableauCollection(string citiesXmlFileName)
         {
             var xmlDocument = new XmlDocument();

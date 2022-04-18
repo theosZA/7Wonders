@@ -10,7 +10,7 @@ namespace _7WondersEvolution
         {
             availableTableaus = new StartingTableauCollection("..\\..\\..\\Cities.xml");
             allCards = new CardCollection("..\\..\\..\\Cards.xml");
-            players = new PlayerPool(playerCount);
+            players = new PlayerPool(playerCount, availableTableaus.CityNames);
             this.gamesPerGeneration = gamesPerGeneration;
         }
 

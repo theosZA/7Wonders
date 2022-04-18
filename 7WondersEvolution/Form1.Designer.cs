@@ -31,11 +31,6 @@
             this.lblGeneration = new System.Windows.Forms.Label();
             this.txtGeneration = new System.Windows.Forms.TextBox();
             this.dgvPlayers = new System.Windows.Forms.DataGridView();
-            this.colGeneration = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColDna = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colGames = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPosition = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colVPs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nudGamesPlayed = new System.Windows.Forms.NumericUpDown();
             this.lblGamesPlayed = new System.Windows.Forms.Label();
             this.btnNextGeneration = new System.Windows.Forms.Button();
@@ -46,6 +41,12 @@
             this.lblAverageVPs = new System.Windows.Forms.Label();
             this.txtAverageVPs = new System.Windows.Forms.TextBox();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.colGeneration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.City = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColDna = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGames = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPosition = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colVPs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGamesPlayed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPlayers)).BeginInit();
@@ -78,6 +79,7 @@
             this.dgvPlayers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPlayers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colGeneration,
+            this.City,
             this.ColDna,
             this.colGames,
             this.colPosition,
@@ -86,35 +88,6 @@
             this.dgvPlayers.Name = "dgvPlayers";
             this.dgvPlayers.Size = new System.Drawing.Size(768, 786);
             this.dgvPlayers.TabIndex = 3;
-            // 
-            // colGeneration
-            // 
-            this.colGeneration.HeaderText = "Generation";
-            this.colGeneration.Name = "colGeneration";
-            // 
-            // ColDna
-            // 
-            this.ColDna.HeaderText = "DNA";
-            this.ColDna.Name = "ColDna";
-            this.ColDna.ReadOnly = true;
-            // 
-            // colGames
-            // 
-            this.colGames.HeaderText = "Games";
-            this.colGames.Name = "colGames";
-            this.colGames.ReadOnly = true;
-            // 
-            // colPosition
-            // 
-            this.colPosition.HeaderText = "Avg Position";
-            this.colPosition.Name = "colPosition";
-            this.colPosition.ReadOnly = true;
-            // 
-            // colVPs
-            // 
-            this.colVPs.HeaderText = "Avg VPs";
-            this.colVPs.Name = "colVPs";
-            this.colVPs.ReadOnly = true;
             // 
             // nudGamesPlayed
             // 
@@ -154,7 +127,7 @@
             // 
             // nudPlayers
             // 
-            this.nudPlayers.Location = new System.Drawing.Point(133, 18);
+            this.nudPlayers.Location = new System.Drawing.Point(156, 18);
             this.nudPlayers.Maximum = new decimal(new int[] {
             999,
             0,
@@ -164,7 +137,7 @@
             this.nudPlayers.Size = new System.Drawing.Size(48, 20);
             this.nudPlayers.TabIndex = 8;
             this.nudPlayers.Value = new decimal(new int[] {
-            100,
+            25,
             0,
             0,
             0});
@@ -174,9 +147,9 @@
             this.lblPlayers.AutoSize = true;
             this.lblPlayers.Location = new System.Drawing.Point(31, 20);
             this.lblPlayers.Name = "lblPlayers";
-            this.lblPlayers.Size = new System.Drawing.Size(99, 13);
+            this.lblPlayers.Size = new System.Drawing.Size(120, 13);
             this.lblPlayers.TabIndex = 9;
-            this.lblPlayers.Text = "Players/generation:";
+            this.lblPlayers.Text = "Players/city/generation:";
             // 
             // lblGenerations
             // 
@@ -228,6 +201,40 @@
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
+            // colGeneration
+            // 
+            this.colGeneration.HeaderText = "Generation";
+            this.colGeneration.Name = "colGeneration";
+            // 
+            // City
+            // 
+            this.City.HeaderText = "City";
+            this.City.Name = "City";
+            // 
+            // ColDna
+            // 
+            this.ColDna.HeaderText = "DNA";
+            this.ColDna.Name = "ColDna";
+            this.ColDna.ReadOnly = true;
+            // 
+            // colGames
+            // 
+            this.colGames.HeaderText = "Games";
+            this.colGames.Name = "colGames";
+            this.colGames.ReadOnly = true;
+            // 
+            // colPosition
+            // 
+            this.colPosition.HeaderText = "Avg Position";
+            this.colPosition.Name = "colPosition";
+            this.colPosition.ReadOnly = true;
+            // 
+            // colVPs
+            // 
+            this.colVPs.HeaderText = "Avg VPs";
+            this.colVPs.Name = "colVPs";
+            this.colVPs.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -270,12 +277,13 @@
         private System.Windows.Forms.NumericUpDown nudGenerations;
         private System.Windows.Forms.Label lblAverageVPs;
         private System.Windows.Forms.TextBox txtAverageVPs;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGeneration;
+        private System.Windows.Forms.DataGridViewTextBoxColumn City;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColDna;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGames;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPosition;
         private System.Windows.Forms.DataGridViewTextBoxColumn colVPs;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }
 

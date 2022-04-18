@@ -26,6 +26,36 @@ namespace _7Wonders
         }
 
         /// <summary>
+        /// Returns the element in the collection that results in the lowest evaluation using the evaluation function.
+        /// </summary>
+        public static T MinElement<T>(this IEnumerable<T> collection, Func<T, double> evaluationFunction) where T : class
+        {
+            return collection.MaxElement(x => -evaluationFunction(x));
+        }
+
+        /// <summary>
+        /// Randomly chooses an element in the collection from all elements with the highest evaluation using the evaluation function.
+        /// </summary>
+        public static T MaxElementRandom<T>(this IEnumerable<T> collection, Func<T, double> evaluationFunction) where T : class
+        {
+            double max = collection.Max(x => evaluationFunction(x));
+            return collection.Where(x => evaluationFunction(x) == max)
+                             .TakeRandom(1)
+                             .First();
+        }
+
+        /// <summary>
+        /// Randomly chooses an element in the collection from all elements with the lowest evaluation using the evaluation function.
+        /// </summary>
+        public static T MinElementRandom<T>(this IEnumerable<T> collection, Func<T, double> evaluationFunction) where T : class
+        {
+            double min = collection.Min(x => evaluationFunction(x));
+            return collection.Where(x => evaluationFunction(x) == min)
+                             .TakeRandom(1)
+                             .First();
+        }
+
+        /// <summary>
         /// Returns a randomly ordered sequence of the original collection using the Knuth shuffle algorithm.
         /// </summary>
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> collection)

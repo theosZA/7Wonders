@@ -9,6 +9,8 @@ namespace _7WondersEvolution
     {
         public string Name => string.Join(".", Weights.Select(i => i.ToString("x2")));
 
+        public string CityName { get; }
+
         public int Generation { get; }
 
         public int Games => victoryPointsPerGame.Count;
@@ -19,20 +21,23 @@ namespace _7WondersEvolution
 
         public int[] Weights { get; }
 
-        public EvolvingPlayer()
+        public EvolvingPlayer(string cityName)
         {
+            CityName = cityName;
             Weights = CreateRandomWeights(RobotPlayer.WeightsRequired).ToArray();
             Generation = 1;
         }
 
         public EvolvingPlayer(EvolvingPlayer player)
         {
+            CityName = player.CityName;
             Weights = (int[])player.Weights.Clone();
             Generation = player.Generation;
         }
 
         public EvolvingPlayer(EvolvingPlayer parentA, EvolvingPlayer parentB)
         {
+            CityName = parentA.CityName;    // both parents should be for the same city
             Weights = parentA.Weights.Zip(parentB.Weights, CreateWeightFromParents)
                                      .ToArray();
             Generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
@@ -40,10 +45,11 @@ namespace _7WondersEvolution
 
         public EvolvingPlayer Clone()
         {
-            var newPlayer = new EvolvingPlayer(this);
-            newPlayer.victoryPointsPerGame = victoryPointsPerGame;
-            newPlayer.positionPerGame = positionPerGame;
-            return newPlayer;
+            return new EvolvingPlayer(this)
+            {
+                victoryPointsPerGame = victoryPointsPerGame,
+                positionPerGame = positionPerGame
+            };
         }
 
         public void AddGame(int position, int victoryPoints)

@@ -24,10 +24,13 @@ public class Gameplay : Node2D
 	{
 		var availableTableaus = new StartingTableauCollection("..\\Cities.xml");
 		var allCards = new CardCollection("..\\Cards.xml");
+		var playerFactory = new RobotPlayerFactory("..\\Robots.xml");
+
 		var playerAgents = Enumerable.Range(0, playerCount)
-									 .Select(i => new DefaultPlayer($"Robot {i + 1}"))
+									 .Select(i => playerFactory.CreatePlayer($"Robot {i + 1}", 'A'))
 									 .Cast<PlayerAgent>()
 									 .ToList();
+
 		game = new Game(playerAgents, availableTableaus, allCards);
 	}
 

@@ -6,7 +6,7 @@ namespace _7WondersEvolution
 {
     internal class PlayerPool
     {
-        public IEnumerable<(string name, int generation)> Info => players.Select(player => (player.Name, player.Generation));
+        public IEnumerable<(string name, string cityName, int generation)> Info => players.Select(player => (player.Name, player.CityName, player.Generation));
 
         public IEnumerable<(int games, double averagePosition, double averageVictoryPoints)> Stats => players.Select(player => (player.Games, player.AveragePosition, player.AverageVictoryPoints));
 
@@ -18,10 +18,10 @@ namespace _7WondersEvolution
                                     .ToList();
         }
 
-        public PlayerPool(int count)
+        public PlayerPool(int countPerCity, IEnumerable<string> cityNames)
         {
-            players = Enumerable.Repeat(0, count)
-                                .Select(i => new EvolvingPlayer())
+            players = Enumerable.Repeat(0, countPerCity)
+                                .SelectMany(_ => cityNames, (_, cityName) => new EvolvingPlayer(cityName))
                                 .ToList();
         }
 
@@ -34,6 +34,52 @@ namespace _7WondersEvolution
         }
 
         public void ReplaceWithNewGeneration()
+        {
+            players = players.GroupBy(player => player.CityName)
+                             .Select(cityPlayers => CreateNewGeneration(cityPlayers.ToList()))
+                             .SelectMany(x => x)
+                             .ToList();
+        }
+
+        private void PlayGameWithRandomPlayers(int playerCount, StartingTableauCollection availableTableaus, CardCollection allCards)
+        {
+            // For each city pick the player who has played the fewest games so far (to balance it out).
+            var fewestGamePlayers = players.GroupBy(player => player.CityName)
+                                           .Select(cityPlayers => cityPlayers.MinElementRandom(player => player.Games))
+                                           .ToList();
+
+            PlayGame(playerCount, fewestGamePlayers, availableTableaus, allCards);
+        }
+
+        private static void PlayGame(int playerCount, IReadOnlyCollection<EvolvingPlayer> cityPlayers, StartingTableauCollection availableTableaus, CardCollection allCards)
+        {
+            // Set up player agents. We need to wrap the individual city-specific agents in a smart agent that will select
+            // the city-specific agent based on which city it is playing.
+            var playerAgentsByCity = cityPlayers.ToDictionary(evolvingPlayer => evolvingPlayer.CityName,
+                                                              evolvingPlayer => (PlayerAgent)new RobotPlayer(evolvingPlayer.Name, evolvingPlayer.Weights));
+            var gamePlayers = Enumerable.Range(1, playerCount)
+                                        .Select(i => (PlayerAgent)new CityPlayer($"Player {i}", playerAgentsByCity))
+                                        .ToList();
+
+            // Play the game.
+            var game = new Game(gamePlayers, availableTableaus, allCards);
+            while (!game.IsGameOver)
+            {
+                game.PlayTurn();
+            }
+
+            // Update the (evolving) players with the results of the game.
+            for (int i = 0; i < playerCount; ++i)
+            {
+                string cityName = game.GetPlayer(i).CityName;
+                int position = game.Positions[i];
+                int victoryPoints = game.VictoryPoints[i];
+
+                cityPlayers.First(player => player.CityName == cityName).AddGame(position, victoryPoints);
+            }
+        }
+
+        private IReadOnlyCollection<EvolvingPlayer> CreateNewGeneration(IReadOnlyCollection<EvolvingPlayer> players)
         {
             var orderedPlayers = players.OrderByDescending(player => player.AverageVictoryPoints)
                                         .ToList();
@@ -51,41 +97,7 @@ namespace _7WondersEvolution
                 newPlayers.Add(new EvolvingPlayer(playerPair.Item1, playerPair.Item2));
             }
 
-            players = newPlayers;
-        }
-
-        private void PlayGameWithRandomPlayers(int playerCount, StartingTableauCollection availableTableaus, CardCollection allCards)
-        {
-            // Pick only from the players who've played the fewest games so far (to balance it out).
-            int fewestGames = players.Min(player => player.Games);
-            var currentPlayers = players.Where(player => player.Games == fewestGames)
-                                        .TakeRandom(playerCount)
-                                        .ToList();
-            // If we need additional, take at random from the rest. They should all be no more than a game ahead.
-            if (currentPlayers.Count < playerCount)
-            {
-                currentPlayers.AddRange(players.Except(currentPlayers)
-                                               .TakeRandom(playerCount - currentPlayers.Count));
-            }
-            // Play with the picked players.
-            PlayGame(currentPlayers, availableTableaus, allCards);
-        }
-
-        private static void PlayGame(IList<EvolvingPlayer> gamePlayers, StartingTableauCollection availableTableaus, CardCollection allCards)
-        {
-            var playerAgents = gamePlayers.Select(evolvingPlayer => new RobotPlayer(evolvingPlayer.Name, evolvingPlayer.Weights))
-                                          .ToList();
-            var game = new Game(playerAgents, availableTableaus, allCards);
-            while (!game.IsGameOver)
-            {
-                game.PlayTurn();
-            }
-            var victoryPoints = game.VictoryPoints;
-            var positions = game.Positions;
-            for (int i = 0; i < gamePlayers.Count; ++i)
-            {
-                gamePlayers[i].AddGame(positions[i], victoryPoints[i]);
-            }
+            return newPlayers;
         }
 
         private static (EvolvingPlayer, EvolvingPlayer) PickTwoPlayersWeighted(IReadOnlyCollection<EvolvingPlayer> players)
