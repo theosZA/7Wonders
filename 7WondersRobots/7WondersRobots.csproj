@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F6C4B9B2-6F31-4AA0-91C6-8F334FE8BC53}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{805CE6C6-D186-40FD-9488-342AC8F37A49}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>_7Wonders</RootNamespace>
-    <AssemblyName>PerformanceTester</AssemblyName>
+    <AssemblyName>7WondersRobots</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,20 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="CityPlayer.cs" />
+    <Compile Include="DefaultPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
+    <Compile Include="RobotPlayer.cs" />
+    <Compile Include="RobotPlayerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\7WondersGameLogic\7WondersGameLogic.csproj">
       <Project>{4f1620ee-9a50-4f71-825d-7eeb076c819b}</Project>
       <Name>7WondersGameLogic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\7WondersRobots\7WondersRobots.csproj">
-      <Project>{805ce6c6-d186-40fd-9488-342ac8f37a49}</Project>
-      <Name>7WondersRobots</Name>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{9204f0aa-40ea-4e68-aaaf-b5d48515e329}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

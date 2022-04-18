@@ -1,6 +1,5 @@
 using _7Wonders;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -8,11 +7,14 @@ namespace PerformanceTester
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             const int playerCount = 7;
+            const char citySide = 'A';
+
             var availableTableaus = new StartingTableauCollection("..\\..\\..\\Cities.xml");
             var allCards = new CardCollection("..\\..\\..\\Cards.xml");
+            var playerFactory = new RobotPlayerFactory("..\\..\\..\\Robots.xml");
 
             // Time games for 10 seconds.
             Console.WriteLine("Playing games for 10 seconds...");
@@ -23,9 +25,8 @@ namespace PerformanceTester
             {
                 for (int g = 0; g < 10; ++g)
                 {
-                    var playerAgents = Enumerable.Range(0, playerCount)
-                                                 .Select(i => new RobotPlayer($"Robot {i + 1}", CreateRandomWeights(RobotPlayer.WeightsRequired)))
-                                                 .Cast<PlayerAgent>()
+                    var playerAgents = Enumerable.Range(1, playerCount)
+                                                 .Select(i => (PlayerAgent)playerFactory.CreatePlayer($"Robot {i}", citySide))
                                                  .ToList();
                     var game = new Game(playerAgents, availableTableaus, allCards);
                     while (!game.IsGameOver)
@@ -38,14 +39,6 @@ namespace PerformanceTester
             stopwatch.Stop();
 
             Console.WriteLine($"{gameCount} games played in {stopwatch.ElapsedMilliseconds / 1000.0:0.000} seconds: {gameCount / (stopwatch.Elapsed.TotalMilliseconds / 1000.0):0.000} games/second");
-        }
-
-        private static IEnumerable<int> CreateRandomWeights(int count)
-        {
-            for (int i = 0; i < count; ++i)
-            {
-                yield return ThreadSafeRandom.ThisThreadsRandom.Next(0, 255);
-            }
         }
     }
 }
