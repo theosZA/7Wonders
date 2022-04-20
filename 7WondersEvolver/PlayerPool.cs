@@ -34,12 +34,18 @@ namespace _7Wonders
             }
         }
 
-        public void ReplaceWithNewGeneration()
+        public void ReplaceWithNewGeneration(int playersPerCity)
         {
-            players = players.GroupBy(player => player.CityName)
-                             .Select(cityPlayers => CreateNewGeneration(cityPlayers.ToList()))
-                             .SelectMany(x => x)
-                             .ToList();
+            var playersByCity = players.GroupBy(player => player.CityName);
+            var bestPlayerForEachCity = playersByCity.Select(playerGroup => (playerGroup.Key, playerGroup.MinElementRandom(player => player.AveragePosition)));
+
+            players = playersByCity.Select(cityPlayers => CreateNewGeneration(cityPlayers.Key,
+                                                                              playersPerCity,
+                                                                              cityPlayers,
+                                                                              bestPlayerForEachCity.Where(bestPlayerForCity => bestPlayerForCity.Key != cityPlayers.Key)
+                                                                                                   .Select(bestPlayerForCity => bestPlayerForCity.Item2)))
+                                   .SelectMany(x => x)
+                                   .ToList();
         }
 
         private void PlayGameWithRandomPlayers(int playerCount, StartingTableauCollection availableTableaus, CardCollection allCards)
@@ -80,19 +86,23 @@ namespace _7Wonders
             }
         }
 
-        private IReadOnlyCollection<EvolvingPlayer> CreateNewGeneration(IReadOnlyCollection<EvolvingPlayer> players)
+        private IReadOnlyCollection<EvolvingPlayer> CreateNewGeneration(string cityName, int newPlayersCount, IEnumerable<EvolvingPlayer> players, IEnumerable<EvolvingPlayer> bestPlayersOfOtherCities)
         {
-            var orderedPlayers = players.OrderByDescending(player => player.AverageVictoryPoints)
+            var orderedPlayers = players.OrderBy(player => player.AveragePosition)
                                         .ToList();
 
             // We start by keeping the best quarter of each generation.
             var newPlayers = orderedPlayers.Take(orderedPlayers.Count / 4)
                                            .Select(player => new EvolvingPlayer(player))
                                            .ToList();
+
+            // We also add in the best players from other cities.
+            newPlayers.AddRange(bestPlayersOfOtherCities.Select(player => new EvolvingPlayer(cityName, player)));
+
             // We fill the rest of the spots by breeding random couples from the top half.
             var breedingPlayers = orderedPlayers.Take(orderedPlayers.Count / 2)
                                                 .ToList();
-            for (int i = newPlayers.Count; i < players.Count; ++i)
+            while (newPlayers.Count < newPlayersCount)
             {
                 var playerPair = PickTwoPlayersWeighted(breedingPlayers);
                 newPlayers.Add(new EvolvingPlayer(playerPair.Item1, playerPair.Item2));

@@ -4,12 +4,14 @@
     {
         public int Generation { get; private set; } = 0;
 
-        public Evolution(int playerCount, int gamesPerGeneration)
+        public Evolution(int playersPerCity, int gamesPerGeneration)
         {
+            this.playersPerCity = playersPerCity;
+            this.gamesPerGeneration = gamesPerGeneration;
+
             availableTableaus = new StartingTableauCollection("..\\..\\..\\Cities.xml");
             allCards = new CardCollection("..\\..\\..\\Cards.xml");
-            players = new PlayerPool(playerCount, availableTableaus.CityNames);
-            this.gamesPerGeneration = gamesPerGeneration;
+            players = new PlayerPool(playersPerCity, availableTableaus.CityNames);
         }
 
         public PlayerPool GetCopyOfPlayers()
@@ -21,7 +23,7 @@
         {
             if (Generation > 0)
             {
-                players.ReplaceWithNewGeneration();
+                players.ReplaceWithNewGeneration(playersPerCity);
             }
             players.PlayGamesWithRandomPlayers(gameCount: gamesPerGeneration, playerCount: 7, availableTableaus, allCards);
             ++Generation;
@@ -30,6 +32,7 @@
         private readonly PlayerPool players;
         private readonly StartingTableauCollection availableTableaus;
         private readonly CardCollection allCards;
+        private int playersPerCity;
         private int gamesPerGeneration;
     }
 }

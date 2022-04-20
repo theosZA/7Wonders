@@ -35,6 +35,13 @@ namespace _7Wonders
             Generation = player.Generation;
         }
 
+        public EvolvingPlayer(string cityName, EvolvingPlayer player)
+        {
+            CityName = cityName;
+            Weights = (int[])player.Weights.Clone();
+            Generation = player.Generation;
+        }
+
         public EvolvingPlayer(EvolvingPlayer parentA, EvolvingPlayer parentB)
         {
             CityName = parentA.CityName;    // both parents should be for the same city
