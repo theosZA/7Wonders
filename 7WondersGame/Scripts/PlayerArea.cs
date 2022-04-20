@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Godot;
 using _7Wonders;
@@ -49,7 +48,7 @@ public class PlayerArea
 
     private void AddCard(Card card)
     {
-        var cardSprite = CreateCardSprite(card);
+        var cardSprite = Assets.CreateCardSprite(card);
         rootNode.AddChild(cardSprite);
         var cardPosition = CalculateCardPosition(card.Colour);
         cardSprite.Position = cardPosition.position;
@@ -60,7 +59,7 @@ public class PlayerArea
 
     private void AddWonderStage(int age)
     {
-        var cardBackSprite = CreateCardBackSprite(age);
+        var cardBackSprite = Assets.CreateCardBackSprite(age);
         rootNode.AddChild(cardBackSprite);
         
         // TODO: Handle wonders that have 2 or 4 stages. For now we assume 3 stages.
@@ -89,24 +88,6 @@ public class PlayerArea
 
 		return board;
 	}    
-
-	private static Sprite CreateCardSprite(Card card)
-	{
-		return new Sprite()
-		{
-			Texture = GD.Load<Texture>($"res://Art/Age{card.Age}_{ToTitleCase(card.Colour.ToString())}_{ToTitleCase(card.Name)}.png"),
-			Scale = new Vector2(cardScale, cardScale)
-		};
-	}
-
-    private static Sprite CreateCardBackSprite(int age)
-    {
-		return new Sprite()
-		{
-			Texture = GD.Load<Texture>($"res://Art/Age{age}_Back.png"),
-			Scale = new Vector2(cardScale, cardScale)
-		};
-    }
 
     private (Vector2 position, int zIndex) CalculateCardPosition(Colour colour)
     {
@@ -173,13 +154,6 @@ public class PlayerArea
         }
     }
 
-	private static string ToTitleCase(string text)
-	{
-		return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(text).Replace(" ", string.Empty);
-	}
-
-    private const float cardScale = 0.8f;
-		
     private Player player;
     private Rect2 viewport;
     private Node2D rootNode;

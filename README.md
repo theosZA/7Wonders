@@ -6,7 +6,9 @@ This is an implementation of the [7 Wonders](https://boardgamegeek.com/boardgame
 
 A _7 Wonders_ game implemented in the Godot game engine. It has been tested with Godot version 3.4.4. The Godot scripts are implemented in C#. While these scripts can be edited in the Godot editor, I suggest using VS Code (with the C# and Godot extensions) instead.
 
-⚠️ Currently the game does not support a human player. All seats are played by AI players. Press `SPACE` to advance the game turn by turn.
+Currently the game supports a single human player (and all other seats are played by AI players).
+
+⚠️ The human player can only make regular build actions through the GUI so this may result in a soft-lock if none of the cards in the human player's hand can be built.
 
 ## 7WondersConsoleGame
 

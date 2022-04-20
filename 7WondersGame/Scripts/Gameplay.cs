@@ -1,6 +1,7 @@
 using System.Linq;
 using Godot;
 using _7Wonders;
+using System.Collections.Generic;
 
 public class Gameplay : Node2D
 {
@@ -10,14 +11,8 @@ public class Gameplay : Node2D
 		const int playerCount = 7;
 		InitializeGame(playerCount);
 		InitializePlayerAreas(playerCount);
-	}
 
-	public override void _Input(InputEvent inputEvent)
-	{
-		if (inputEvent is InputEventKey inputEventKey && inputEventKey.Pressed && inputEventKey.Scancode == (uint)KeyList.Space && !inputEvent.IsEcho() && !game.IsGameOver)
-		{
-			AdvanceGame();
-		}
+		AdvanceGame();
 	}
 
 	private void InitializeGame(int playerCount)
@@ -26,10 +21,10 @@ public class Gameplay : Node2D
 		var allCards = new CardCollection("..\\Cards.xml");
 		var playerFactory = new RobotPlayerFactory("..\\Robots.xml");
 
-		var playerAgents = Enumerable.Range(0, playerCount)
-									 .Select(i => playerFactory.CreatePlayer($"Robot {i + 1}", 'A'))
-									 .Cast<PlayerAgent>()
-									 .ToList();
+		var playerAgents = new List<PlayerAgent>();
+		playerAgents.Add(new GodotHumanPlayer("Human", this));
+		playerAgents.AddRange(Enumerable.Range(0, playerCount - 1)
+									 	.Select(i => playerFactory.CreatePlayer($"Robot {i + 1}", 'A')));
 
 		game = new Game(playerAgents, availableTableaus, allCards);
 	}
@@ -79,23 +74,31 @@ public class Gameplay : Node2D
 
 	private void AdvanceGame()
 	{
-		var gameTurn = game.PlayTurn();
-		
-		var playerActions = gameTurn.playerActions.ToArray();
-		for (int i = 0; i < playerActions.Length; ++i)
+		new System.Threading.Thread(() =>
 		{
-			playerAreas[i].HandleAction(playerActions[i]);
-		}
+			var gameTurn = game.PlayTurn();
+			
+			var playerActions = gameTurn.playerActions.ToArray();
+			for (int i = 0; i < playerActions.Length; ++i)
+			{
+				playerAreas[i].HandleAction(playerActions[i]);
+			}
 
-		// TODO: Handle military results in the militaryResults property.
+			// TODO: Handle military results in the militaryResults property.
 
-		// TODO: Display the leaderboard in a nice way. For now it goes to debug output.
-		var leaderboard = game.Leaderboard.ToArray();
-		for (int i = 0; i < leaderboard.Length; ++i)
-		{
-			GD.Print($"{i + 1}. {leaderboard[i].player.CityName} ({leaderboard[i].player.Name}): {leaderboard[i].victoryPoints}");
-		}
-		GD.Print();
+			// TODO: Display the leaderboard in a nice way. For now it goes to debug output.
+			var leaderboard = game.Leaderboard.ToArray();
+			for (int i = 0; i < leaderboard.Length; ++i)
+			{
+				GD.Print($"{i + 1}. {leaderboard[i].player.CityName} ({leaderboard[i].player.Name}): {leaderboard[i].victoryPoints}");
+			}
+			GD.Print();
+
+			if (!game.IsGameOver)
+			{
+				AdvanceGame();
+			}
+		}).Start();
 	}
 
 	private PlayerArea[] playerAreas;
