@@ -11,11 +11,14 @@ namespace _7Wonders
     {
         public Card Card { get; }
 
+        public int CoinsToLeftNeighbour { get; }
+        public int CoinsToRightNeighbour { get; }
+
         public Build(Card card, int coinsToLeftNeighbour = 0, int coinsToRightNeighbour = 0)
         {
             Card = card;
-            this.coinsToLeftNeighbour = coinsToLeftNeighbour;
-            this.coinsToRightNeighbour = coinsToRightNeighbour;
+            CoinsToLeftNeighbour = coinsToLeftNeighbour;
+            CoinsToRightNeighbour = coinsToRightNeighbour;
         }
 
         public void Apply(PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour, IList<Card> hand, IList<Card> discards)
@@ -23,10 +26,10 @@ namespace _7Wonders
             hand.Remove(Card);
             actingPlayer.AddCardToTableau(Card);
             actingPlayer.PayCoins(Card.Cost.Coins);
-            actingPlayer.PayCoins(coinsToLeftNeighbour);
-            leftNeighbour.AddCoins(coinsToLeftNeighbour);
-            actingPlayer.PayCoins(coinsToRightNeighbour);
-            rightNeighbour.AddCoins(coinsToRightNeighbour);
+            actingPlayer.PayCoins(CoinsToLeftNeighbour);
+            leftNeighbour.AddCoins(CoinsToLeftNeighbour);
+            actingPlayer.PayCoins(CoinsToRightNeighbour);
+            rightNeighbour.AddCoins(CoinsToRightNeighbour);
 
             // Gain coins immediately from the card (if applicable).
             actingPlayer.AddCoins(Card.CoinGain);
@@ -45,20 +48,20 @@ namespace _7Wonders
             {
                 Console.Write($" ({costText})");
             }
-            if (coinsToLeftNeighbour > 0 || coinsToRightNeighbour > 0)
+            if (CoinsToLeftNeighbour > 0 || CoinsToRightNeighbour > 0)
             {
                 Console.Write(" - paying ");
-                if (coinsToLeftNeighbour > 0)
+                if (CoinsToLeftNeighbour > 0)
                 {
-                    Console.Write($"{coinsToLeftNeighbour} {TextHelper.Pluralize("coin", coinsToLeftNeighbour)} to trade left");
+                    Console.Write($"{CoinsToLeftNeighbour} {TextHelper.Pluralize("coin", CoinsToLeftNeighbour)} to trade left");
                 }
-                if (coinsToLeftNeighbour > 0 && coinsToRightNeighbour > 0)
+                if (CoinsToLeftNeighbour > 0 && CoinsToRightNeighbour > 0)
                 {
                     Console.Write(" and ");
                 }
-                if (coinsToRightNeighbour > 0)
+                if (CoinsToRightNeighbour > 0)
                 {
-                    Console.Write($"{coinsToRightNeighbour} {TextHelper.Pluralize("coin", coinsToRightNeighbour)} to trade right");
+                    Console.Write($"{CoinsToRightNeighbour} {TextHelper.Pluralize("coin", CoinsToRightNeighbour)} to trade right");
                 }
             }
             Console.WriteLine();
@@ -66,10 +69,7 @@ namespace _7Wonders
 
         public bool IsWorseOrEqualThan(Build compareBuild)
         {
-            return coinsToLeftNeighbour >= compareBuild.coinsToLeftNeighbour && coinsToRightNeighbour >= compareBuild.coinsToRightNeighbour;
+            return CoinsToLeftNeighbour >= compareBuild.CoinsToLeftNeighbour && CoinsToRightNeighbour >= compareBuild.CoinsToRightNeighbour;
         }
-
-        private int coinsToLeftNeighbour;
-        private int coinsToRightNeighbour;
     }
 }

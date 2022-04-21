@@ -11,22 +11,25 @@ namespace _7Wonders
     {
         public Card CardToSpend { get; }
 
+        public int CoinsToLeftNeighbour { get; }
+        public int CoinsToRightNeighbour { get; }
+
         public BuildWonderStage(WonderStage wonderStage, Card cardToSpend, int coinsToLeftNeighbour = 0, int coinsToRightNeighbour = 0)
         {
             this.wonderStage = wonderStage;
-            this.CardToSpend = cardToSpend;
-            this.coinsToLeftNeighbour = coinsToLeftNeighbour;
-            this.coinsToRightNeighbour = coinsToRightNeighbour;
+            CardToSpend = cardToSpend;
+            CoinsToLeftNeighbour = coinsToLeftNeighbour;
+            CoinsToRightNeighbour = coinsToRightNeighbour;
         }
 
         public void Apply(PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour, IList<Card> hand, IList<Card> discards)
         {
             hand.Remove(CardToSpend);
             actingPlayer.PayCoins(wonderStage.Cost.Coins);
-            actingPlayer.PayCoins(coinsToLeftNeighbour);
-            leftNeighbour.AddCoins(coinsToLeftNeighbour);
-            actingPlayer.PayCoins(coinsToRightNeighbour);
-            rightNeighbour.AddCoins(coinsToRightNeighbour);
+            actingPlayer.PayCoins(CoinsToLeftNeighbour);
+            leftNeighbour.AddCoins(CoinsToLeftNeighbour);
+            actingPlayer.PayCoins(CoinsToRightNeighbour);
+            rightNeighbour.AddCoins(CoinsToRightNeighbour);
 
             actingPlayer.BuildNextWonderStage();
         }
@@ -36,20 +39,20 @@ namespace _7Wonders
             Console.Write("Build next wonder stage discarding ");
             ConsoleHelper.WriteCardToConsole(CardToSpend);
             Console.Write($" ({wonderStage.Cost})");
-            if (coinsToLeftNeighbour > 0 || coinsToRightNeighbour > 0)
+            if (CoinsToLeftNeighbour > 0 || CoinsToRightNeighbour > 0)
             {
                 Console.Write(" - paying ");
-                if (coinsToLeftNeighbour > 0)
+                if (CoinsToLeftNeighbour > 0)
                 {
-                    Console.Write($"{coinsToLeftNeighbour} {TextHelper.Pluralize("coin", coinsToLeftNeighbour)} to trade left");
+                    Console.Write($"{CoinsToLeftNeighbour} {TextHelper.Pluralize("coin", CoinsToLeftNeighbour)} to trade left");
                 }
-                if (coinsToLeftNeighbour > 0 && coinsToRightNeighbour > 0)
+                if (CoinsToLeftNeighbour > 0 && CoinsToRightNeighbour > 0)
                 {
                     Console.Write(" and ");
                 }
-                if (coinsToRightNeighbour > 0)
+                if (CoinsToRightNeighbour > 0)
                 {
-                    Console.Write($"{coinsToRightNeighbour} {TextHelper.Pluralize("coin", coinsToRightNeighbour)} to trade right");
+                    Console.Write($"{CoinsToRightNeighbour} {TextHelper.Pluralize("coin", CoinsToRightNeighbour)} to trade right");
                 }
             }
             Console.WriteLine();
@@ -57,11 +60,9 @@ namespace _7Wonders
 
         public bool IsWorseOrEqualThan(BuildWonderStage compareBuild)
         {
-            return coinsToLeftNeighbour >= compareBuild.coinsToLeftNeighbour && coinsToRightNeighbour >= compareBuild.coinsToRightNeighbour;
+            return CoinsToLeftNeighbour >= compareBuild.CoinsToLeftNeighbour && CoinsToRightNeighbour >= compareBuild.CoinsToRightNeighbour;
         }
 
         private WonderStage wonderStage;
-        private int coinsToLeftNeighbour;
-        private int coinsToRightNeighbour;
     }
 }
