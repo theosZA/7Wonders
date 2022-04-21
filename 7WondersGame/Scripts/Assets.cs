@@ -13,7 +13,8 @@ public static class Assets
             TextureDisabled = LoadCardTexture(card, enabled: false),
             Expand = true,
             StretchMode = TextureButton.StretchModeEnum.KeepAspect,
-            SizeFlagsHorizontal = (int)SizeFlags.ExpandFill
+            SizeFlagsHorizontal = (int)SizeFlags.ExpandFill,
+            SizeFlagsVertical = (int)SizeFlags.ExpandFill
 		};
 	}
 

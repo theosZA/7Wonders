@@ -32,25 +32,61 @@ public class HandArea : PanelContainer
 		};
 		AddStyleboxOverride("panel", panelStyle);
 
-        var container = new HBoxContainer();
-        container.AddConstantOverride("separation", 5);
-        AddChild(container);
+        var perCardContainer = new HBoxContainer();
+        perCardContainer.AddConstantOverride("separation", 5);
+        AddChild(perCardContainer);
 
         for (int i = 0; i < hand.Count; ++i)
         {
+            var controlsContainer = new VBoxContainer()
+            {
+                SizeFlagsHorizontal = (int)SizeFlags.ExpandFill
+            };
+            perCardContainer.AddChild(controlsContainer);
+
             var card = hand[i];
-            var button = Assets.CreateCardButton(card);
-            button.Connect("pressed", this, "OnCardChosen", new Godot.Collections.Array(i));
-            container.AddChild(button);
-            button.Disabled = !actions.Any(action => action is Build build && build.Card.Name == card.Name);
+            var buildButton = Assets.CreateCardButton(card);
+            buildButton.Connect("pressed", this, "OnBuild", new Godot.Collections.Array(i));
+            buildButton.Disabled = !actions.Any(action => action is Build build && build.Card.Name == card.Name);
+            controlsContainer.AddChild(buildButton);
+
+            var sellButton = new Button()
+            {
+                Text = "+3"
+            };
+            sellButton.Connect("pressed", this, "OnSell", new Godot.Collections.Array(i));
+            controlsContainer.AddChild(sellButton);
+
+            var wonderButton = new Button()
+            {
+                Text = "Wonder"
+            };
+            wonderButton.Connect("pressed", this, "OnWonder", new Godot.Collections.Array(i));
+            wonderButton.Disabled = !actions.Any(action => action is BuildWonderStage buildWonderStage && buildWonderStage.CardToSpend.Name == card.Name);
+            controlsContainer.AddChild(wonderButton);
         }
     }
 
-    public void OnCardChosen(int index)
+    public void OnBuild(int index)
     {
         var card = hand[index];
         // TODO: Choose between multiple build options for same card but different trades.
         var chosenAction = actions.First(action => action is Build build && build.Card.Name == card.Name);
+        onActionChosen(chosenAction);
+    }
+
+    public void OnSell(int index)
+    {
+        var card = hand[index];
+        var chosenAction = actions.First(action => action is Sell sell && sell.Card.Name == card.Name);
+        onActionChosen(chosenAction);
+    }
+
+    public void OnWonder(int index)
+    {
+        var card = hand[index];
+        // TODO: Choose between multiple trade options for building the wonder stage.
+        var chosenAction = actions.First(action => action is BuildWonderStage buildWonderStage && buildWonderStage.CardToSpend.Name == card.Name);
         onActionChosen(chosenAction);
     }
 
