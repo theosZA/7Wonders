@@ -32,6 +32,8 @@ namespace _7Wonders
             rightNeighbour.AddCoins(CoinsToRightNeighbour);
 
             actingPlayer.BuildNextWonderStage();
+
+            wonderStage.OnPlayerGain(actingPlayer, leftNeighbour, rightNeighbour);
         }
 
         public void WriteToConsole()

@@ -22,8 +22,6 @@ namespace _7Wonders
 
         public int TreasuryVictoryPoints => Coins / 3;
 
-        public int WonderVictoryPoints => tableau.CalculateWonderVictoryPoints();
-
         public int ScienceVictoryPoints => tableau.CalculateScienceVictoryPoints();
 
         public PlayerState(Tableau tableau)
@@ -41,8 +39,18 @@ namespace _7Wonders
 
         public int CalculateVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
-            return MilitaryVictoryPoints + TreasuryVictoryPoints + WonderVictoryPoints + CalculateCivilianVictoryPoints(leftNeighbour, rightNeighbour) + ScienceVictoryPoints 
-                 + CalculateCommercialVictoryPoints(leftNeighbour, rightNeighbour) + CalculateGuildVictoryPoints(leftNeighbour, rightNeighbour);
+            return MilitaryVictoryPoints
+                 + TreasuryVictoryPoints
+                 + CalculateWonderVictoryPoints(leftNeighbour, rightNeighbour)
+                 + CalculateCivilianVictoryPoints(leftNeighbour, rightNeighbour)
+                 + ScienceVictoryPoints
+                 + CalculateCommercialVictoryPoints(leftNeighbour, rightNeighbour)
+                 + CalculateGuildVictoryPoints(leftNeighbour, rightNeighbour);
+        }
+
+        public int CalculateWonderVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
+        {
+            return tableau.CalculateWonderVictoryPoints(this, leftNeighbour, rightNeighbour);
         }
 
         public int CalculateCivilianVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
@@ -102,7 +110,7 @@ namespace _7Wonders
         {
             // Score
             int treasuryVictoryPoints = Coins / 3;
-            int wonderVictoryPoints = tableau.CalculateWonderVictoryPoints();
+            int wonderVictoryPoints = tableau.CalculateWonderVictoryPoints(this, leftNeighbour, rightNeighbour);
             int civilianVictoryPoints = tableau.CalculateCivilianVictoryPoints(this, leftNeighbour, rightNeighbour);
             int scienceVictoryPoints = tableau.CalculateScienceVictoryPoints();
             int commercialVictoryPoints = tableau.CalculateCommercialVictoryPoints(this, leftNeighbour, rightNeighbour);

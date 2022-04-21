@@ -14,9 +14,9 @@ namespace _7Wonders
     {
         public string CityName { get; private set; }
 
-        public int Military => builtCards.Sum(card => card.Military);
+        public int Military => builtElements.Sum(element => element.Military);
 
-        public int WonderStagesBuilt => builtWonderStages.Count();
+        public int WonderStagesBuilt => builtElements.Count(element => element is WonderStage);
 
         public Tableau(XmlElement cityElement)
         {
@@ -26,6 +26,7 @@ namespace _7Wonders
             var wonderElement = cityElement.GetChildElement("Wonder");
             var wonderName = wonderElement.GetAttribute_String("name");
             availableWonderStages = wonderElement.GetChildElements("Stage").Select((stageElement, i) => new WonderStage($"{wonderName} {i + 1}", stageElement)).ToList();
+            builtElements = new List<TableauElement>();
         }
 
         public Tableau(Tableau tableau)
@@ -33,8 +34,7 @@ namespace _7Wonders
             CityName = tableau.CityName;
             cityProduction = new Production(tableau.cityProduction);
             availableWonderStages = new List<WonderStage>(tableau.availableWonderStages);
-            builtWonderStages = new List<WonderStage>(tableau.builtWonderStages);
-            builtCards = new List<Card>(tableau.builtCards);
+            builtElements = new List<TableauElement>(tableau.builtElements);
             resourceProductionOptions = new ResourceOptions(tableau.resourceProductionOptions);
             resourceTradeOptions = new ResourceOptions(tableau.resourceTradeOptions);
         }
@@ -46,11 +46,14 @@ namespace _7Wonders
             var colours = Enum.GetValues(typeof(Colour)).Cast<Colour>();
             foreach (var colour in colours)
             {
-                ConsoleHelper.WriteCardsToConsole(builtCards.Where(card => card.Colour == colour));
+                ConsoleHelper.WriteCardsToConsole(builtElements.Where(element => element is Card card && card.Colour == colour)
+                                                               .Cast<Card>());
             }
-            if (builtWonderStages.Count > 0)
+            if (WonderStagesBuilt > 0)
             {
-                Console.Write(string.Join(", ", builtWonderStages.Select(wonderStage => wonderStage.Name)));
+                Console.Write(string.Join(", ", builtElements.Where(element => element is WonderStage wonderStage)
+                                                             .Cast<WonderStage>()
+                                                             .Select(wonderStage => wonderStage.Name)));
                 Console.Write(" ");
             }
             if (availableWonderStages.Count > 0)
@@ -71,7 +74,7 @@ namespace _7Wonders
             bool firstResource = true;
             foreach (var resource in resources)
             {
-                var count = builtCards.Sum(card => card.Production.GetSingleProduction(resource)) + cityProduction.GetSingleProduction(resource);
+                var count = builtElements.Sum(card => card.Production.GetSingleProduction(resource)) + cityProduction.GetSingleProduction(resource);
                 if (count > 0)
                 {
                     if (!firstResource)
@@ -84,9 +87,9 @@ namespace _7Wonders
             }
 
             // List each resource combination where only 1 of each set of resources can be chosen.
-            foreach (var card in builtCards)
+            foreach (var element in builtElements)
             {
-                var multipleProduction = card.Production.GetMultipleProduction()?.ToList();
+                var multipleProduction = element.Production.GetMultipleProduction()?.ToList();
                 if (multipleProduction != null && multipleProduction.Any())
                 {
                     if (!firstResource)
@@ -101,15 +104,16 @@ namespace _7Wonders
             return text.ToString();
         }
 
-        public void Add(Card card)
+        public void Add(TableauElement element)
         {
-            builtCards.Add(card);
-            AddProduction(card.Production, availableForTrade: (card.Colour == Colour.Brown || card.Colour == Colour.Gray));
+            bool availableForTrade = element is Card card && (card.Colour == Colour.Brown || card.Colour == Colour.Gray);
+            builtElements.Add(element);
+            AddProduction(element.Production, availableForTrade);
         }
 
-        public bool Has(string cardName)
+        public bool Has(string elementName)
         {
-            return builtCards.Any(card => card.Name == cardName);
+            return builtElements.Any(element => element.Name == elementName);
         }
 
         public WonderStage NextWonderStage()
@@ -119,13 +123,13 @@ namespace _7Wonders
 
         public void BuildNextWonderStage()
         {
-            builtWonderStages.Add(availableWonderStages.First());
+            Add(availableWonderStages.First());
             availableWonderStages.RemoveAt(0);
         }
 
         public int CountColour(Colour colour)
         {
-            return builtCards.Count(card => card.Colour == colour);
+            return builtElements.Count(element => element is Card card && card.Colour == colour);
         }
 
         public bool HasResources(ResourceCollection resources)
@@ -140,14 +144,14 @@ namespace _7Wonders
 
         public int TradeCost(Resource resource, Direction direction)
         {
-            return builtCards.Select(card => card.TradeBonus == null ? 2 : card.TradeBonus.TradeCost(resource, direction))
-                             .DefaultIfEmpty(2)
-                             .Min();
+            return builtElements.Select(element => element.TradeBonus == null ? 2 : element.TradeBonus.TradeCost(resource, direction))
+                                .DefaultIfEmpty(2)
+                                .Min();
         }
 
-        public int CalculateWonderVictoryPoints()
+        public int CalculateWonderVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
-            return builtWonderStages.Sum(wonderStage => wonderStage.VictoryPoints);
+            return builtElements.Sum(element => element is WonderStage ? element.EvaluateVictoryPoints(self, leftNeighbour, rightNeighbour) : 0);
         }
 
         public int CalculateCivilianVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
@@ -177,12 +181,12 @@ namespace _7Wonders
         public IReadOnlyCollection<int> CalculateScience()
         {
             // Count how many of each symbol we have.
-            var symbolCount = ScienceSymbolHelper.GetAllBasicScienceSymbols().Select(scienceSymbol => builtCards.Count(card => card.Science == scienceSymbol))
+            var symbolCount = ScienceSymbolHelper.GetAllBasicScienceSymbols().Select(scienceSymbol => builtElements.Count(card => card.Science == scienceSymbol))
                                                                              .ToArray();
 
             // What should we be counting the wilds as?
-            int wildCount = builtCards.Count(card => card.Science == ScienceSymbol.Wild);
-            // TBD - For now, force all to whatever we have the least of.
+            int wildCount = builtElements.Count(card => card.Science == ScienceSymbol.Wild);
+            // TODO: This should be based on what maximizes our score, but for now we force all to whatever we have the least of.
             var leastIndex = symbolCount.ToList().IndexOf(symbolCount.Min());
             symbolCount[leastIndex] += wildCount;
 
@@ -191,7 +195,7 @@ namespace _7Wonders
 
         private int CalculateVictoryPointsForColour(Colour colour, PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
         {
-            return builtCards.Sum(card => card.Colour == colour ? card.EvaluateVictoryPoints(self, leftNeighbour, rightNeighbour) : 0);
+            return builtElements.Sum(element => (element is Card card && card.Colour == colour) ? card.EvaluateVictoryPoints(self, leftNeighbour, rightNeighbour) : 0);
         }
 
         private static int CalculateScienceVictoryPoints(IReadOnlyCollection<int> scienceSymbolCounts)
@@ -217,8 +221,7 @@ namespace _7Wonders
 
         private Production cityProduction;
         private IList<WonderStage> availableWonderStages;
-        private IList<WonderStage> builtWonderStages = new List<WonderStage>();
-        private IList<Card> builtCards = new List<Card>();
+        private IList<TableauElement> builtElements;
         private ResourceOptions resourceProductionOptions = new ResourceOptions();
         private ResourceOptions resourceTradeOptions = new ResourceOptions();
     }

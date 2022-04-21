@@ -22,8 +22,6 @@ namespace _7Wonders
 
         public int TreasuryVictoryPoints => state.TreasuryVictoryPoints;
 
-        public int WonderVictoryPoints => state.WonderVictoryPoints;
-
         public int ScienceVictoryPoints => state.ScienceVictoryPoints;
 
         public Player(PlayerAgent playerAgent, Tableau tableau)
@@ -43,6 +41,11 @@ namespace _7Wonders
         public int CalculateVictoryPoints(Player leftNeighbour, Player rightNeighbour)
         {
             return state.CalculateVictoryPoints(leftNeighbour.state, rightNeighbour.state);
+        }
+
+        public int CalculateWonderVictoryPoints(Player leftNeighbour, Player rightNeighbour)
+        {
+            return state.CalculateWonderVictoryPoints(leftNeighbour.state, rightNeighbour.state);
         }
 
         public int CalculateCivilianVictoryPoints(Player leftNeighbour, Player rightNeighbour)

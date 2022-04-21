@@ -31,12 +31,7 @@ namespace _7Wonders
             actingPlayer.PayCoins(CoinsToRightNeighbour);
             rightNeighbour.AddCoins(CoinsToRightNeighbour);
 
-            // Gain coins immediately from the card (if applicable).
-            actingPlayer.AddCoins(Card.CoinGain);
-            foreach (var gain in Card.EvaluatedGains)
-            {
-                actingPlayer.AddCoins(gain.GetCoinsGained(actingPlayer, leftNeighbour, rightNeighbour));
-            }
+            Card.OnPlayerGain(actingPlayer, leftNeighbour, rightNeighbour);
         }
 
         public void WriteToConsole()
