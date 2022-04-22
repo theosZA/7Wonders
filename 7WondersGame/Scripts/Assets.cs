@@ -18,21 +18,19 @@ public static class Assets
 		};
 	}
 
-	public static Sprite CreateCardSprite(Card card)
+	public static TextureRect CreateCardFront(Card card)
 	{
-		return new Sprite()
+		return new TextureRect()
 		{
-			Texture = LoadCardTexture(card),
-			Scale = new Vector2(cardScale, cardScale)
+			Texture = LoadCardTexture(card)
 		};
 	}
 
-    public static Sprite CreateCardBackSprite(int age)
+    public static TextureRect CreateCardBack(int age)
     {
-		return new Sprite()
+		return new TextureRect()
 		{
-			Texture = LoadCardBackTexture(age),
-			Scale = new Vector2(cardScale, cardScale)
+			Texture = LoadCardBackTexture(age)
 		};
     }
 
@@ -55,6 +53,4 @@ public static class Assets
 	{
 		return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(text).Replace(" ", string.Empty);
 	}
-
-    private const float cardScale = 0.8f;
 }

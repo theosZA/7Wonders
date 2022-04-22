@@ -31,12 +31,17 @@ public class Gameplay : Node2D
 
 	private void InitializePlayerAreas(int playerCount)
 	{
+		var playerAreaScene = ResourceLoader.Load<PackedScene>("res://Scenes/PlayerArea.tscn");
+
 		playerAreas = Enumerable.Range(0, playerCount)
-								.Select(i => new PlayerArea(this,
-															GetViewportRect(),
-															game.GetPlayer(i),
-															game.GetPlayer((i + 1) % playerCount),
-															game.GetPlayer((i - 1 + playerCount) % playerCount)))
+								.Select(i => 
+										{
+											var instance = playerAreaScene.Instance<PlayerArea>();
+											instance.Player = game.GetPlayer(i);
+											instance.LeftNeighbour = game.GetPlayer((i + 1) % playerCount);
+											instance.RightNeighbour = game.GetPlayer((i - 1 + playerCount) % playerCount);
+											return instance;
+										})
 								.ToArray();
 
 		// Position the player areas.
@@ -44,31 +49,52 @@ public class Gameplay : Node2D
 		const float primaryAreaScale = 0.45f;
 		const float neighbourScale = 0.25f;
 		const float otherScale = 0.2f;
+
+		var viewport = GetViewportRect().Size;
 		
 		// The primary player area (currently area 0) should be front and center.
-		playerAreas[0].ApplyScale(primaryAreaScale);
-		playerAreas[0].SetPosition(0.456f, 0.78f);
+		GetNode("ActivePlayer").AddChild(playerAreas[0]);
 
 		// Left-hand neighbour.
 		if (playerCount >= 2)
 		{
-			playerAreas[1].ApplyScale(neighbourScale);
-			playerAreas[1].SetPosition(0.106f, 0.6f);
+			GetNode("LeftNeighbour").AddChild(playerAreas[1]);
 		}
 
 		// Right-hand neighbour.
 		if (playerCount >= 3)
 		{
-			playerAreas[playerCount - 1].ApplyScale(neighbourScale);
-			playerAreas[playerCount - 1].SetPosition(0.846f, 0.6f);
+			GetNode("RightNeighbour").AddChild(playerAreas[playerCount - 1]);
 		}
 
 		// Other players (not neighbours).
-		float widthFractionPerPlayer = 1.0f / (playerCount - 2.5f);
-		for (int i = 2; i < playerCount - 1; ++i)
+		switch (playerCount)
 		{
-			playerAreas[i].ApplyScale(otherScale);
-			playerAreas[i].SetPosition((i - 1.3f) * widthFractionPerPlayer, 0.23f);
+			case 4:
+				GetNode("OppositePlayers/Opposite3").AddChild(playerAreas[2]);
+				break;
+
+			case 5:
+				GetNode("OppositePlayers/Opposite2").AddChild(playerAreas[2]);
+				GetNode("OppositePlayers/Opposite4").AddChild(playerAreas[3]);
+				break;
+
+			case 6:
+				GetNode("OppositePlayers/Opposite1").AddChild(playerAreas[2]);
+				GetNode("OppositePlayers/Opposite3").AddChild(playerAreas[3]);
+				GetNode("OppositePlayers/Opposite5").AddChild(playerAreas[4]);
+				break;
+
+			case 7:
+				GetNode("OppositePlayers/Opposite0").AddChild(playerAreas[2]);
+				GetNode("OppositePlayers/Opposite2").AddChild(playerAreas[3]);
+				GetNode("OppositePlayers/Opposite4").AddChild(playerAreas[4]);
+				GetNode("OppositePlayers/Opposite6").AddChild(playerAreas[5]);
+				break;
+
+			default:
+				// No more players to add.
+				break;	
 		}
 	}
 

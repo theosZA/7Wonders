@@ -11,3 +11,126 @@ position = Vector2( 961.5, 539 )
 scale = Vector2( 0.995313, 1.05419 )
 z_index = -255
 texture = ExtResource( 1 )
+
+[node name="ActivePlayer" type="Node2D" parent="."]
+position = Vector2( 960, 863 )
+scale = Vector2( 0.46, 0.46 )
+
+[node name="TestBounds" type="ColorRect" parent="ActivePlayer"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 1, 0, 0, 0.392157 )
+
+[node name="LeftNeighbour" type="Node2D" parent="."]
+position = Vector2( 257, 750 )
+scale = Vector2( 0.25, 0.25 )
+
+[node name="TestBounds" type="ColorRect" parent="LeftNeighbour"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 0, 1, 0, 0.392157 )
+
+[node name="RightNeighbour" type="Node2D" parent="."]
+position = Vector2( 1663, 750 )
+scale = Vector2( 0.25, 0.25 )
+
+[node name="TestBounds" type="ColorRect" parent="RightNeighbour"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 0, 0, 1, 0.392157 )
+
+[node name="OppositePlayers" type="Node2D" parent="."]
+position = Vector2( 960, 248 )
+scale = Vector2( 0.2, 0.2 )
+
+[node name="Opposite0" type="Node2D" parent="OppositePlayers"]
+position = Vector2( -3150, 0 )
+scale = Vector2( 1, 1 )
+
+[node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite0"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 1, 1, 0, 0.392157 )
+
+[node name="Opposite1" type="Node2D" parent="OppositePlayers"]
+position = Vector2( -2100, 0 )
+scale = Vector2( 1, 1 )
+
+[node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite1"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 0, 1, 1, 0.392157 )
+
+[node name="Opposite2" type="Node2D" parent="OppositePlayers"]
+position = Vector2( -1050, 0 )
+scale = Vector2( 1, 1 )
+
+[node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite2"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 1, 1, 0, 0.392157 )
+
+[node name="Opposite3" type="Node2D" parent="OppositePlayers"]
+scale = Vector2( 1, 1 )
+
+[node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite3"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 0, 1, 1, 0.392157 )
+
+[node name="Opposite4" type="Node2D" parent="OppositePlayers"]
+position = Vector2( 1050, 0 )
+scale = Vector2( 1, 1 )
+
+[node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite4"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 1, 1, 0, 0.392157 )
+
+[node name="Opposite5" type="Node2D" parent="OppositePlayers"]
+position = Vector2( 2100, 0 )
+scale = Vector2( 1, 1 )
+
+[node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite5"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 0, 1, 1, 0.392157 )
+
+[node name="Opposite6" type="Node2D" parent="OppositePlayers"]
+position = Vector2( 3150, 0 )
+scale = Vector2( 1, 1 )
+
+[node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite6"]
+visible = false
+margin_left = -989.0
+margin_top = -1240.0
+margin_right = 989.0
+margin_bottom = 454.0
+color = Color( 1, 1, 0, 0.392157 )

@@ -1,166 +1,123 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using _7Wonders;
 
-public class PlayerArea
+public class PlayerArea : Node2D
 {
-    public PlayerArea(Node parent, Rect2 viewport, Player player, Player leftNeighbour, Player rightNeighbour)
-    {
-        this.player = player;
-        this.viewport = viewport;
+	public Player Player;
+	public Player LeftNeighbour;
+	public Player RightNeighbour;
 
-        rootNode = new Node2D();
-		rootNode.AddChild(CreateBoard(viewport.Size.x));
-
-        playerInfo = new PlayerInfo(player, leftNeighbour, rightNeighbour);
-        rootNode.AddChild(playerInfo);
-
-        parent.AddChild(rootNode);
-    }
-
-    public void ApplyScale(float relativeScale)
-    {
-        rootNode.ApplyScale(new Vector2(relativeScale, relativeScale));
-    }
-
-    public void SetPosition(float fractionX, float fractionY)
-    {
-        rootNode.Position = new Vector2(viewport.Position.x + viewport.Size.x * fractionX,
-                                        viewport.Position.y + viewport.Size.y * fractionY);
-    }
-
-    public void HandleAction(IAction action)
-    {
-        switch (action)
-        {
-            case Build build:
-                AddCard(build.Card);
-                break;
-
-            case BuildWonderStage buildWonderStage:
-                AddWonderStage(buildWonderStage.CardToSpend.Age);
-                break;
-        }
-
-        playerInfo.OnGameUpdate();
-    }
-
-    private void AddCard(Card card)
-    {
-        var cardSprite = Assets.CreateCardSprite(card);
-        rootNode.AddChild(cardSprite);
-        var cardPosition = CalculateCardPosition(card.Colour);
-        cardSprite.Position = cardPosition.position;
-        cardSprite.ZIndex = cardPosition.zIndex;
-
-        cards.Add(card);
-    }
-
-    private void AddWonderStage(int age)
-    {
-        var cardBackSprite = Assets.CreateCardBackSprite(age);
-        rootNode.AddChild(cardBackSprite);
-        
-        // TODO: Handle wonders that have 2 or 4 stages. For now we assume 3 stages.
-        cardBackSprite.Position = CalculatePosition(0.2f + 0.3f * wonderStagesBuilt, 0.9f);
-        cardBackSprite.ZIndex = -1;
-
-        ++wonderStagesBuilt;        
-    }
-
-	private Sprite CreateBoard(float viewportWidth)
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
 	{
-		var board = new Sprite()
+		if (Player != null)
 		{
-			Texture = GD.Load<Texture>($"res://Art/PlayerBoard_{player.CityName}_A.jpg")
+			var playerBoard = GetNode<TextureRect>("PlayerBoard");
+			playerBoard.Texture = GD.Load<Texture>($"res://Art/PlayerBoard_{Player.CityName}_A.jpg");
+		}
+		OnGameUpdate();
+	}
+
+	public void HandleAction(IAction action)
+	{
+		switch (action)
+		{
+			case Build build:
+				AddCard(build.Card);
+				break;
+
+			case BuildWonderStage buildWonderStage:
+				AddWonderStage(buildWonderStage.CardToSpend.Age);
+				break;
+		}
+
+		OnGameUpdate();
+	}
+
+	private void AddCard(Card card)
+	{
+		cards.Add(card);
+
+		var terminalNode = (Node2D)GetTerminalNode(GetColumnRoot(card));
+		terminalNode.AddChild(Assets.CreateCardFront(card));
+		
+		var newTerminalNode = new Node2D()
+		{
+			Name = "next",
+			ZIndex = terminalNode.ZIndex - 1,	// next card goes behind this one...
+			Position = new Vector2(0, -125)		// ...and a bit up
 		};
+		terminalNode.AddChild(newTerminalNode);
+	}
 
-        boardWidth = board.Texture.GetWidth();
-        boardHeight = board.Texture.GetHeight();
+	private void AddWonderStage(int age)
+	{
+		++wonderStagesBuilt;
 
-		float playAreaScale = viewportWidth / boardWidth;
-		float boardScale = 0.80645f * playAreaScale;	// The board should take up about 80% of the horizontal width of the player area.
-		board.ApplyScale(new Vector2(boardScale, boardScale));
+		var positioningNode = FindNode($"WonderStage{wonderStagesBuilt}");
+		if (positioningNode != null)	// TODO: Handle wonders that have 2 or 4 stages. For now we assume 3 stages.
+		{
+			positioningNode.AddChild(Assets.CreateCardBack(age));
+		}
+	}
 
-        boardWidth *= boardScale;
-        boardHeight *= boardScale;
+	private Node GetColumnRoot(Card card)
+	{
+		switch (card.Colour)
+		{
+			case Colour.Brown:
+			case Colour.Gray:
+				return FindNode("ProductionRoot");
 
-		return board;
-	}    
+			case Colour.Yellow:
+				return FindNode("YellowRoot");
 
-    private (Vector2 position, int zIndex) CalculateCardPosition(Colour colour)
-    {
-        int cardsOfTheSameType = CountCardsOfTheSameType(colour);
-        int column = GetColumnForCard(colour);
-        
-        float fractionX = 0.105f + 0.2f * column;
-        float fractionY = 0.16f - 0.175f * cardsOfTheSameType;
-        if (column > 0) // The above calculation is to line up the resource cards neatly. We want to offset the other card types a bit.
-        {
-            fractionX += 0.04f;
-            fractionY -= 0.15f;
-        }
+			case Colour.Red:
+				return FindNode("RedRoot");
 
-        Vector2 position = CalculatePosition(fractionX, fractionY);
-        int zIndex = -1 - cardsOfTheSameType;
-        return (position, zIndex);
-        
-    }
+			case Colour.Green:
+				return FindNode("GreenRoot");
 
-    private Vector2 CalculatePosition(float fractionX, float fractionY)
-    {
-        float leftEdge = -boardWidth / 2;
-        float topEdge = -boardHeight / 2;
+			case Colour.Blue:
+				return FindNode("BlueRoot");
 
-        // A fraction of 0 is the left edge (/top edge) and a fraction of 1 is the right edge (/bottom edge).
-        return new Vector2(leftEdge + boardWidth * fractionX, topEdge + boardHeight * fractionY);
-    }
+			case Colour.Purple:
+				return FindNode("PurpleRoot");
 
-    private int CountCardsOfTheSameType(Colour colour)
-    {
-        if (colour == Colour.Brown || colour == Colour.Gray)
-        {
-            return cards.Count(card => card.Colour == Colour.Brown || card.Colour == Colour.Gray);
-        }
-        return cards.Count(card => card.Colour == colour);
-    }
+			default:
+				throw new System.Exception($"Unexpected card colour: {card.Colour}");
+		}		
+	}
 
-    private static int GetColumnForCard(Colour colour)
-    {
-        switch (colour)
-        {
-            case Colour.Brown:
-            case Colour.Gray:
-                return 0;
+	private static Node GetTerminalNode(Node root)
+	{
+		var currentNode = root;
+		while (true)
+		{
+			var nextNode = currentNode.GetNodeOrNull("next");
+			if (nextNode == null)
+			{
+				return currentNode;
+			}
+			currentNode = nextNode;
+		}
+	}
 
-            case Colour.Yellow:
-                return 1;
+	public void OnGameUpdate()
+	{
+		if (Player != null && LeftNeighbour != null && RightNeighbour != null)
+		{
+			var vpsValue = (Label)FindNode("VPsValue");
+			vpsValue.Text = Player.CalculateVictoryPoints(LeftNeighbour, RightNeighbour).ToString();
+		}
+		if (Player != null)
+		{
+			var coinsValue = (Label)FindNode("CoinsValue");
+			coinsValue.Text = Player.Coins.ToString();
+		}
+	}
 
-            case Colour.Red:
-                return 2;
-
-            case Colour.Green:
-                return 3;
-
-            case Colour.Blue:
-                return 4;
-
-            case Colour.Purple:
-                return 5;
-
-            default:
-                throw new System.Exception($"Unexpected card colour: {colour}");
-        }
-    }
-
-    private Player player;
-    private Rect2 viewport;
-    private Node2D rootNode;
-    private PlayerInfo playerInfo;
-    private List<Card> cards = new List<Card>();
-    float boardWidth;
-    float boardHeight;
-    int wonderStagesBuilt = 0;
+	private List<Card> cards = new List<Card>();
+	int wonderStagesBuilt = 0;
 }
- 
