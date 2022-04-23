@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scripts/HandCardArea.cs" type="Script" id=1]
 [ext_resource path="res://Art/Age1_Brown_StonePit.png" type="Texture" id=2]
@@ -7,18 +7,19 @@
 [ext_resource path="res://Art/Icon_Wonder.png" type="Texture" id=5]
 [ext_resource path="res://Art/Icon_ArrowRight.png" type="Texture" id=6]
 [ext_resource path="res://Art/Icon_ArrowLeft.png" type="Texture" id=7]
+[ext_resource path="res://Art/Icon_Popup.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 48
 font_data = ExtResource( 4 )
 
 [sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.203125, 0.0682683, 0.0214233, 1 )
+bg_color = Color( 0.203922, 0.0666667, 0.0196078, 1 )
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color( 0.29, 0.096425, 0.0319, 1 )
+border_color = Color( 0.290196, 0.0980392, 0.0313726, 1 )
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -138,6 +139,14 @@ rect_scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 6 )
 expand = true
 stretch_mode = 3
+
+[node name="ChangeTrade" type="TextureRect" parent="CostNode/TradeNode"]
+margin_left = -14.0
+margin_top = -5.0
+margin_right = 114.0
+margin_bottom = 123.0
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 8 )
 
 [node name="SellNode" type="Node2D" parent="."]
 position = Vector2( 47, 475 )
@@ -270,3 +279,11 @@ rect_scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 6 )
 expand = true
 stretch_mode = 3
+
+[node name="ChangeTrade" type="TextureRect" parent="WonderNode/TradeNode"]
+margin_left = -14.0
+margin_top = -5.0
+margin_right = 114.0
+margin_bottom = 123.0
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 8 )

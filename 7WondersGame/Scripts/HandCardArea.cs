@@ -1,9 +1,7 @@
 using Godot;
 using _7Wonders;
 using System.Collections.Generic;
-using System;
 using System.Linq;
-using System.Text;
 
 public class HandCardArea : ColorRect
 {
@@ -26,11 +24,15 @@ public class HandCardArea : ColorRect
 		InitializeSell(GetNode<Node2D>("SellNode"));
 		InitializeWonder(GetNode<Node2D>("WonderNode"));
 
-		InitializeBuildTradeSelection();
-		UpdateTrade(buildTradeSelection, GetNode<Node2D>("CostNode/TradeNode"));
+		var buildTradeNode = GetNode<Node2D>("CostNode/TradeNode");
+		buildTradeSelection = CreateTradeSelection(BuildActions, buildTradeNode);
+		UpdateTrade(buildTradeSelection, buildTradeNode);
+		InitializeChangeTradeButton(buildTradeSelection, buildTradeNode);
 
-		InitializeWonderTradeSelection();
-		UpdateTrade(wonderTradeSelection, GetNode<Node2D>("WonderNode/TradeNode"));
+		var wonderTradeNode = GetNode<Node2D>("WonderNode/TradeNode");
+		wonderTradeSelection = CreateTradeSelection(WonderActions, wonderTradeNode);
+		UpdateTrade(wonderTradeSelection, wonderTradeNode);
+		InitializeChangeTradeButton(wonderTradeSelection, wonderTradeNode);
 	}
 
 	private void InitializeCard(Node cardNode)
@@ -74,25 +76,26 @@ public class HandCardArea : ColorRect
 		wonderNode.GetNode("WonderPanel").Connect("gui_input", this, "OnWonderGuiInput");
 	}
 
-	private void InitializeBuildTradeSelection()
+	private TradeSelection<ActionType> CreateTradeSelection<ActionType>(IEnumerable<ActionType> actions, Node2D tradeNode) where ActionType : IAction
 	{
-		var buildAction = BuildActions.FirstOrDefault();
-		if (buildAction?.CoinsToLeftNeighbour > 0 || buildAction?.CoinsToRightNeighbour > 0)
+		var action = actions.FirstOrDefault();
+		if (action == null)
 		{
-			buildTradeSelection = new TradeSelection<Build>(BuildActions);
+			return null;
 		}
+
+		var tradeSelection = new TradeSelection<ActionType>(actions);
+		if (tradeSelection.OptionCount == 0)
+		{
+			return null;
+		}
+
+		tradeSelection.NewTradeSelected = () => UpdateTrade(tradeSelection, tradeNode);
+
+		return tradeSelection;
 	}
 
-	private void InitializeWonderTradeSelection()
-	{
-		var wonderAction = WonderActions.FirstOrDefault();
-		if (wonderAction?.CoinsToLeftNeighbour > 0 || wonderAction?.CoinsToRightNeighbour > 0)
-		{
-			wonderTradeSelection = new TradeSelection<BuildWonderStage>(WonderActions);
-		}
-	}
-
-	private static void UpdateTrade<ActionType>(TradeSelection<ActionType> tradeSelection, Node2D tradeNode) where ActionType : IAction
+	private void UpdateTrade<ActionType>(TradeSelection<ActionType> tradeSelection, Node2D tradeNode) where ActionType : IAction
 	{
 		if (tradeSelection == null)
 		{
@@ -104,6 +107,23 @@ public class HandCardArea : ColorRect
 
 		UpdateDirectionalTrade(tradeNode.GetNode<Node2D>("TradeLeft"), tradeSelection.SelectedCoinsToLeftNeighbour);
 		UpdateDirectionalTrade(tradeNode.GetNode<Node2D>("TradeRight"), tradeSelection.SelectedCoinsToRightNeighbour);
+	}
+
+	private void InitializeChangeTradeButton<ActionType>(TradeSelection<ActionType> tradeSelection, Node2D tradeNode) where ActionType : IAction
+	{
+		var changeTradeButton = tradeNode.GetNode<TextureRect>("ChangeTrade");
+		if (tradeSelection?.OptionCount >= 2)
+		{
+			var tradePopupDialog = tradeSelection.CreatePopupDialog();
+			changeTradeButton.AddChild(tradePopupDialog);
+			changeTradeButton.Connect("gui_input", this, "OnChangeTradeGuiInput", new Godot.Collections.Array(changeTradeButton, tradePopupDialog));
+			changeTradeButton.Connect("mouse_entered", this, "OnChangeTradeMouseIn", new Godot.Collections.Array(changeTradeButton));
+			changeTradeButton.Connect("mouse_exited", this, "OnChangeTradeMouseOut", new Godot.Collections.Array(changeTradeButton));
+		}
+		else
+		{
+			changeTradeButton.Visible = false;
+		}
 	}
 
 	private static void UpdateDirectionalTrade(Node2D directionalTradeNode, int value)
@@ -136,26 +156,23 @@ public class HandCardArea : ColorRect
 		}
 	}
 
-	private static string GetCostText(int coinsToLeftNeighbour, int coinsToRightNeighbour, bool moreOptionsAvailable)
+	private void OnChangeTradeGuiInput(InputEvent inputEvent, TextureRect changeTradeButton, PopupDialog changeTradeDialog)
 	{
-		StringBuilder text = new StringBuilder();
-		if (coinsToLeftNeighbour > 0)
+		if (inputEvent is InputEventMouseButton mouseButtonEvent && mouseButtonEvent.Pressed && mouseButtonEvent.ButtonIndex == (int)ButtonList.Left)
 		{
-			text.Append("< ");
-			text.Append(coinsToLeftNeighbour);
-			text.Append(" ");
+			var position = changeTradeButton.RectGlobalPosition + new Vector2(0, 20);
+			changeTradeDialog.Popup_(new Rect2(position, changeTradeDialog.RectSize));
 		}
-		if (moreOptionsAvailable)
-		{
-			text.Append("v");
-		}
-		if (coinsToRightNeighbour > 0)
-		{
-			text.Append(" ");
-			text.Append(coinsToRightNeighbour);
-			text.Append(" >");
-		}
-		return text.ToString();
+	}
+
+	private void OnChangeTradeMouseIn(TextureRect changeTradeButton)
+	{
+		changeTradeButton.Texture = ResourceLoader.Load<Texture>("res://Art/Icon_Popup_Hover.png");
+	}
+
+	private void OnChangeTradeMouseOut(TextureRect changeTradeButton)
+	{
+		changeTradeButton.Texture = ResourceLoader.Load<Texture>("res://Art/Icon_Popup.png");
 	}
 
 	private TradeSelection<Build> buildTradeSelection;

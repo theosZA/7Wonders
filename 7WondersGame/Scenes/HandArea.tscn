@@ -8,7 +8,8 @@ script = ExtResource( 1 )
 [node name="HandDialog" type="WindowDialog" parent="."]
 visible = true
 margin_left = -663.0
-margin_top = -344.0
+margin_top = -346.0
 margin_right = 664.0
-margin_bottom = 348.0
+margin_bottom = 346.0
+popup_exclusive = true
 window_title = "Age X Turn Y"

@@ -2,15 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _7Wonders;
+using Godot;
 
 public class TradeSelection<ActionType> where ActionType : IAction
 {
+    public delegate void NewTradeSelectedEventHandler();
+    public NewTradeSelectedEventHandler NewTradeSelected { get; set; }
+
     public ActionType SelectedTrade => actions[selectedActionIndex];
 
-    public int SelectedCoinsToLeftNeighbour => SelectedTrade is Build build ? build.CoinsToLeftNeighbour :
-                                               SelectedTrade is BuildWonderStage buildWonder ? buildWonder.CoinsToLeftNeighbour : 0; 
-    public int SelectedCoinsToRightNeighbour => SelectedTrade is Build build ? build.CoinsToRightNeighbour :
-                                                SelectedTrade is BuildWonderStage buildWonder ? buildWonder.CoinsToRightNeighbour : 0; 
+    public int OptionCount => actions.Count;
+
+    public int SelectedCoinsToLeftNeighbour => CoinsToLeftNeighbour(SelectedTrade);
+    public int SelectedCoinsToRightNeighbour => CoinsToRightNeighbour(SelectedTrade);
 
     public TradeSelection(IEnumerable<ActionType> actions)
     {
@@ -18,6 +22,28 @@ public class TradeSelection<ActionType> where ActionType : IAction
 
         // By default select the cheapest trading option.
         selectedActionIndex = GetIndexOfCheapestTrade();        
+    }
+
+    public PopupDialog CreatePopupDialog()
+    {
+		var changeTradePopupScene = ResourceLoader.Load<PackedScene>("res://Scenes/ChangeTradePopup.tscn");
+
+        var changeTradePopup = changeTradePopupScene.Instance<ChangeTradePopup>();
+        changeTradePopup.PopupExclusive = false;
+        changeTradePopup.RectSize = new Vector2(160, OptionCount * 35 + 5);
+        changeTradePopup.TradeValues = actions.Select(action => (CoinsToLeftNeighbour(action), CoinsToRightNeighbour(action)))
+                                              .ToList();
+        changeTradePopup.TradeChosen = OnTradeChosen;
+
+        return changeTradePopup;
+    }
+
+    private void OnTradeChosen(int leftAmount, int rightAmount)
+    {
+        selectedActionIndex = actions.Select((action, i) => (CoinsToLeftNeighbour(action), CoinsToRightNeighbour(action), i))
+                                     .First(t => t.Item1 == leftAmount && t.Item2 == rightAmount).Item3;
+
+        NewTradeSelected?.Invoke();
     }
 
     private int GetIndexOfCheapestTrade()
