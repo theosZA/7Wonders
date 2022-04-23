@@ -8,7 +8,7 @@ A _7 Wonders_ game implemented in the Godot game engine. It has been tested with
 
 Currently the game supports a single human player (and all other seats are played by AI players).
 
-⚠️ The human player can only make regular build actions through the GUI so this may result in a soft-lock if none of the cards in the human player's hand can be built.
+⚠️ The Build dialog can be closed, but there is currently no way to reopen it, so closing the dialog will soft-lock the game.
 
 ## 7WondersConsoleGame
 

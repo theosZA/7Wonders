@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _7Wonders;
-using Godot;
 
-public class TradeSelection<ActionType> : PanelContainer where ActionType : IAction
+public class TradeSelection<ActionType> where ActionType : IAction
 {
     public ActionType SelectedTrade => actions[selectedActionIndex];
 
-	// Editor-specific constructor. Don't use.
-	private TradeSelection()
-	{}
+    public int SelectedCoinsToLeftNeighbour => SelectedTrade is Build build ? build.CoinsToLeftNeighbour :
+                                               SelectedTrade is BuildWonderStage buildWonder ? buildWonder.CoinsToLeftNeighbour : 0; 
+    public int SelectedCoinsToRightNeighbour => SelectedTrade is Build build ? build.CoinsToRightNeighbour :
+                                                SelectedTrade is BuildWonderStage buildWonder ? buildWonder.CoinsToRightNeighbour : 0; 
 
     public TradeSelection(IEnumerable<ActionType> actions)
     {

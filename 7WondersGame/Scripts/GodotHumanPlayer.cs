@@ -2,47 +2,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using _7Wonders;
-using Godot;
 
 /// <summary>
 /// Player agent that displays the player choices in a Godot UI and allows for a human player to make the choice.
 /// </summary>
 public class GodotHumanPlayer : PlayerAgent
 {
-    public string Name { get; }
+	public delegate void NewHandEventHandler(IList<Card> hand, IReadOnlyCollection<IAction> actions);
+	public NewHandEventHandler NewHand { get; set; }
 
-    public GodotHumanPlayer(string name, Node2D godotParent)
-    {
-        Name = name;
-        this.godotParent = godotParent;
-    }
+	public string Name { get; }
 
-    public IAction GetAction(IList<PlayerState> playerStates, IList<Card> hand)
-    {
-        var actingPlayer = playerStates[0];
-        var leftNeighbour = playerStates[1];
-        var rightNeighbour = playerStates[playerStates.Count - 1];
+	public GodotHumanPlayer(string name)
+	{
+		Name = name;
+	}
 
-        var actions = playerStates[0].GetAllActions(hand, leftNeighbour, rightNeighbour).ToList();
+	public IAction GetAction(IList<PlayerState> playerStates, IList<Card> hand)
+	{
+		var actingPlayer = playerStates[0];
+		var leftNeighbour = playerStates[1];
+		var rightNeighbour = playerStates[playerStates.Count - 1];
 
-        var handArea = new HandArea(hand, actions, OnActionChosen);
-        godotParent.AddChild(handArea);
-        handArea.RectPosition = new Vector2((godotParent.GetViewportRect().Size.x - handArea.RectSize.x) / 2, 40);
+		var actions = actingPlayer.GetAllActions(hand, leftNeighbour, rightNeighbour).ToList();
 
-        waitHandle.WaitOne();   // Blocks until OnActionChosen is called.
+		NewHand?.Invoke(hand, actions);
 
-        handArea.QueueFree();
+		waitHandle.WaitOne();   // Blocks until OnActionChosen is called.
 
-        return chosenAction;
-    }
+		return chosenAction;
+	}
 
-    public void OnActionChosen(IAction action)
-    {
-        this.chosenAction = action;
-        waitHandle.Set();
-    }
+	public void OnActionChosen(IAction action)
+	{
+		this.chosenAction = action;
+		waitHandle.Set();
+	}
 
-    private Node2D godotParent;
-    private AutoResetEvent waitHandle = new AutoResetEvent(false);
-    private IAction chosenAction;
+	private AutoResetEvent waitHandle = new AutoResetEvent(false);
+	private IAction chosenAction;
 }

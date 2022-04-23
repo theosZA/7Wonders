@@ -9,6 +9,12 @@ public class Gameplay : Node2D
 	public override void _Ready()
 	{
 		const int playerCount = 7;
+
+		godotHumanPlayer = new GodotHumanPlayer("Human");
+		var handArea = GetNode<HandArea>("HandArea");
+		handArea.ActionChosen = godotHumanPlayer.OnActionChosen;
+		godotHumanPlayer.NewHand = handArea.OnNewHand;
+
 		InitializeGame(playerCount);
 		InitializePlayerAreas(playerCount);
 
@@ -22,7 +28,7 @@ public class Gameplay : Node2D
 		var playerFactory = new RobotPlayerFactory("..\\Robots.xml");
 
 		var playerAgents = new List<PlayerAgent>();
-		playerAgents.Add(new GodotHumanPlayer("Human", this));
+		playerAgents.Add(godotHumanPlayer);
 		playerAgents.AddRange(Enumerable.Range(0, playerCount - 1)
 									 	.Select(i => playerFactory.CreatePlayer($"Robot {i + 1}", 'A')));
 
@@ -128,6 +134,6 @@ public class Gameplay : Node2D
 	}
 
 	private PlayerArea[] playerAreas;
-
 	private Game game;
+	private GodotHumanPlayer godotHumanPlayer;
 }

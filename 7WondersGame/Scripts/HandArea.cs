@@ -1,40 +1,65 @@
 using Godot;
 using _7Wonders;
 using System.Collections.Generic;
-using System;
+using System.Linq;
 
-public class HandArea : PanelContainer
+public class HandArea : Node2D
 {
-	// Editor-specific constructor. Don't use.
-	private HandArea()
-	{}
+	public delegate void ActionChosenEventHandler(IAction action);
+	public ActionChosenEventHandler ActionChosen { get; set; }
 
-	public HandArea(IList<Card> hand, IReadOnlyCollection<IAction> actions, Action<IAction> onActionChosen)
-    {
-        RectSize = new Vector2(1200, 400);
-		var panelStyle = new StyleBoxFlat()
+	public void OnNewHand(IList<Card> hand, IReadOnlyCollection<IAction> actions)
+	{
+		var dialog = GetNode<WindowDialog>("HandDialog");
+
+		// Remove all existing cards.
+		var oldHandCardAreas = dialog.GetChildren().Cast<Node>()
+												   .Where(node => node is HandCardArea);
+		foreach (var handCardArea in oldHandCardAreas)
 		{
-			BgColor = new Color(0.1f, 0.1f, 0.5f, 0.75f),
-			BorderColor = new Color(0.1f, 0.1f, 0.5f, 0.75f),
-			BorderWidthLeft = 15,
-			BorderWidthTop = 15,
-			BorderWidthRight = 15,
-			BorderWidthBottom = 15,
-			CornerRadiusTopLeft = 7,
-			CornerRadiusTopRight = 7,
-			CornerRadiusBottomRight = 7,
-			CornerRadiusBottomLeft = 7
-		};
-		AddStyleboxOverride("panel", panelStyle);
+			dialog.RemoveChild(handCardArea);
+		}
 
-        var perCardContainer = new HBoxContainer();
-        perCardContainer.AddConstantOverride("separation", 5);
-        AddChild(perCardContainer);
+		// Add new cards.
+		var handCardAreas = CreateHandCardAreas(hand, actions).ToList();
+		foreach (var handCardArea in handCardAreas)
+		{
+			dialog.AddChild(handCardArea);
+		}
+		dialog.SetSize(new Vector2(handCardAreas.Sum(handCardArea => handCardArea.RectSize.x),
+								   handCardAreas.Max(handCardArea => handCardArea.RectSize.y)));
 
-        foreach (var card in hand)
-        {
-            var cardArea = new HandCardArea(card, actions, onActionChosen);
-			perCardContainer.AddChild(cardArea);
-        }
-    }
+		dialog.Popup_();
+	}
+
+	private IEnumerable<HandCardArea> CreateHandCardAreas(IList<Card> hand, IReadOnlyCollection<IAction> actions)
+	{
+		float xOffset = 0;
+		foreach (var card in hand)
+		{
+			var handCardArea = CreateHandCardArea(card, actions);
+			handCardArea.RectPosition = new Vector2(xOffset, 0);
+			xOffset += handCardArea.RectSize.x;
+			yield return handCardArea;
+		}
+	}
+
+	private HandCardArea CreateHandCardArea(Card card, IReadOnlyCollection<IAction> handActions)
+	{
+		var handCardArea = handCardAreaScene.Instance<HandCardArea>();
+		handCardArea.ActionChosen = OnActionChosen;
+		handCardArea.Card = card;
+		handCardArea.HandActions = handActions;
+
+		return handCardArea;
+	}
+
+	private void OnActionChosen(IAction action)
+	{
+		GetNode<WindowDialog>("HandDialog").Hide();
+		ActionChosen?.Invoke(action);
+	}
+
+	private PackedScene handCardAreaScene = ResourceLoader.Load<PackedScene>("res://Scenes/HandCardArea.tscn");
+
 }

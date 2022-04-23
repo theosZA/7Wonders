@@ -4,11 +4,10 @@ using _7Wonders;
 
 public class PlayerArea : Node2D
 {
-	public Player Player;
-	public Player LeftNeighbour;
-	public Player RightNeighbour;
+	public Player Player { get; set; }
+	public Player LeftNeighbour { get; set; }
+	public Player RightNeighbour { get; set; }
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		if (Player != null)
