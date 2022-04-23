@@ -12,6 +12,11 @@ public class HandArea : Node2D
 	{
 		var dialog = GetNode<WindowDialog>("HandDialog");
 
+		// Update title.
+		int age = hand[0].Age;
+		int turn = 8 - hand.Count;
+		dialog.WindowTitle = $"Age {age} Turn {turn}";
+
 		// Remove all existing cards.
 		var oldHandCardAreas = dialog.GetChildren().Cast<Node>()
 												   .Where(node => node is HandCardArea);
@@ -26,10 +31,11 @@ public class HandArea : Node2D
 		{
 			dialog.AddChild(handCardArea);
 		}
-		dialog.SetSize(new Vector2(handCardAreas.Sum(handCardArea => handCardArea.RectSize.x),
-								   handCardAreas.Max(handCardArea => handCardArea.RectSize.y)));
 
-		dialog.Popup_();
+		float width = handCardAreas.Sum(handCardArea => handCardArea.RectSize.x);
+		float height = handCardAreas.Max(handCardArea => handCardArea.RectSize.y);
+		float left = (GetViewportRect().Size.x - width) / 2;
+		dialog.Popup_(new Rect2(new Vector2(left, 10), new Vector2(width, height)));
 	}
 
 	private IEnumerable<HandCardArea> CreateHandCardAreas(IList<Card> hand, IReadOnlyCollection<IAction> actions)

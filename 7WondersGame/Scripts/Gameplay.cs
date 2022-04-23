@@ -51,29 +51,15 @@ public class Gameplay : Node2D
 								.ToArray();
 
 		// Position the player areas.
-
-		const float primaryAreaScale = 0.45f;
-		const float neighbourScale = 0.25f;
-		const float otherScale = 0.2f;
-
-		var viewport = GetViewportRect().Size;
-		
-		// The primary player area (currently area 0) should be front and center.
 		GetNode("ActivePlayer").AddChild(playerAreas[0]);
-
-		// Left-hand neighbour.
 		if (playerCount >= 2)
 		{
 			GetNode("LeftNeighbour").AddChild(playerAreas[1]);
 		}
-
-		// Right-hand neighbour.
 		if (playerCount >= 3)
 		{
 			GetNode("RightNeighbour").AddChild(playerAreas[playerCount - 1]);
 		}
-
-		// Other players (not neighbours).
 		switch (playerCount)
 		{
 			case 4:
