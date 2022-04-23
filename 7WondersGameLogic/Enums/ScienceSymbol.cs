@@ -15,7 +15,7 @@ namespace _7Wonders
         Wild
     }
 
-    internal static class ScienceSymbolHelper
+    public static class ScienceSymbolHelper
     {
         public static IEnumerable<ScienceSymbol> GetAllBasicScienceSymbols()
         {

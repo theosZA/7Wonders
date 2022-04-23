@@ -60,11 +60,10 @@ namespace _7Wonders
 
         private double EvaluateScience(int scienceOffset, PlayerState actingPlayer)
         {
-            var scienceSymbolCounts = actingPlayer.GetScienceCount().ToList();
-            scienceSymbolCounts.Sort();
-            return weights[scienceOffset + 0] * scienceSymbolCounts[0]
+            var scienceSymbolCounts = actingPlayer.GetScienceCountsWithWildsAllocated().ToList();
+            return weights[scienceOffset + 2] * scienceSymbolCounts[0]
                  + weights[scienceOffset + 1] * scienceSymbolCounts[1]
-                 + weights[scienceOffset + 2] * scienceSymbolCounts[2];
+                 + weights[scienceOffset + 0] * scienceSymbolCounts[2];
         }
 
         const int weightsPerTurn = 34;

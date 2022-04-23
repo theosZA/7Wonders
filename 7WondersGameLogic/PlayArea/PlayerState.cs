@@ -170,9 +170,9 @@ namespace _7Wonders
             return count - 1;
         }
 
-        public IReadOnlyCollection<int> GetScienceCount()
+        public IReadOnlyCollection<int> GetScienceCountsWithWildsAllocated()
         {
-            return tableau.CalculateScience();
+            return tableau.GetScienceCountsWithWildsAllocated();
         }
 
         public IEnumerable<IAction> GetAllActions(IEnumerable<Card> hand, PlayerState leftNeighbour, PlayerState rightNeighbour)
