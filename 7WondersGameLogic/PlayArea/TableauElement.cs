@@ -18,6 +18,7 @@ namespace _7Wonders
         public Cost Cost { get; }
         public Production Production { get; }
         public TradeBonus TradeBonus { get; }
+        public int FreeBuildsPerAge { get; }
 
         public IReadOnlyCollection<Gain> EvaluatedGains { get; }
 
@@ -35,6 +36,7 @@ namespace _7Wonders
             {
                 TradeBonus = new TradeBonus(tradeElement);
             }
+            FreeBuildsPerAge = xmlElement.GetAttribute_Int("freeBuildsPerAge");
 
             EvaluatedGains = xmlElement.GetChildElements("Gain").Select(gainElement => new Gain(gainElement)).ToList();
         }

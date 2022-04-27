@@ -21,12 +21,12 @@
 
         public void AdvanceGeneration()
         {
-            if (Generation > 0)
+            ++Generation;
+            if (Generation > 1)
             {
-                players.ReplaceWithNewGeneration(playersPerCity);
+                players.ReplaceWithNewGeneration(Generation, playersPerCity);
             }
             players.PlayGamesWithRandomPlayers(gameCount: gamesPerGeneration, playerCount: 7, availableTableaus, allCards);
-            ++Generation;
         }
 
         private readonly PlayerPool players;

@@ -20,7 +20,7 @@ public static class Assets
 		};
     }
 
-    private static Texture LoadCardTexture(Card card, bool enabled = true)
+    public static Texture LoadCardTexture(Card card, bool enabled = true)
     {
         string filename = $"Age{card.Age}_{ToTitleCase(card.Colour.ToString())}_{ToTitleCase(card.Name)}";
         if (!enabled)

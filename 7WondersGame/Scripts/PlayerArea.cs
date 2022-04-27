@@ -114,6 +114,9 @@ public class PlayerArea : Node2D
 		{
 			var coinsValue = (Label)FindNode("CoinsValue");
 			coinsValue.Text = Player.Coins.ToString();
+
+			var freeBuildAvailable = (CanvasItem)FindNode("FreeBuildAvailable");
+			freeBuildAvailable.Visible = (Player.FreeBuildsLeft > 0);
 		}
 	}
 

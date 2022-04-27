@@ -80,7 +80,7 @@
       <Stage victoryPoints="3">
         <Cost wood="2"/>
       </Stage>
-      <Stage victoryPoints="5"><!-- Should be to allow one free build per Age -->
+      <Stage freeBuildsPerAge="1">
         <Cost stone="2"/>
       </Stage>
       <Stage victoryPoints="7">

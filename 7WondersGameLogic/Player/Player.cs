@@ -24,10 +24,19 @@ namespace _7Wonders
 
         public int ScienceVictoryPoints => state.ScienceVictoryPoints;
 
+        public int FreeBuildsPerAge => state.FreeBuildsPerAge;
+
+        public int FreeBuildsLeft => state.FreeBuildsLeft;
+
         public Player(PlayerAgent playerAgent, Tableau tableau)
         {
             agent = playerAgent;
             state = new PlayerState(tableau);
+        }
+
+        public void StartAge(int newAge)
+        {
+            state.StartAge(newAge);
         }
 
         public void WriteStateToConsole(IEnumerable<Card> hand, Player leftNeighbour, Player rightNeighbour)

@@ -10,18 +10,22 @@ public class Gameplay : Node2D
 	{
 		const int playerCount = 7;
 
+		// Either set the city board for the human to play is or choose null for random.
+		//const string humanCity = "Olympia";
+		const string humanCity = null;
+
 		godotHumanPlayer = new GodotHumanPlayer("Human");
 		var handArea = GetNode<HandArea>("HandArea");
 		handArea.ActionChosen = godotHumanPlayer.OnActionChosen;
 		godotHumanPlayer.NewHand = handArea.OnNewHand;
 
-		InitializeGame(playerCount);
+		InitializeGame(playerCount, humanCity);
 		InitializePlayerAreas(playerCount);
 
 		AdvanceGame();
 	}
 
-	private void InitializeGame(int playerCount)
+	private void InitializeGame(int playerCount, string humanCity)
 	{
 		var availableTableaus = new StartingTableauCollection("..\\Cities.xml");
 		var allCards = new CardCollection("..\\Cards.xml");
@@ -32,7 +36,7 @@ public class Gameplay : Node2D
 		playerAgents.AddRange(Enumerable.Range(0, playerCount - 1)
 									 	.Select(i => playerFactory.CreatePlayer($"Robot {i + 1}", 'A')));
 
-		game = new Game(playerAgents, availableTableaus, allCards);
+		game = new Game(playerAgents, availableTableaus, allCards, humanCity);
 	}
 
 	private void InitializePlayerAreas(int playerCount)

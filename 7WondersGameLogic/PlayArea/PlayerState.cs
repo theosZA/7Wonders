@@ -24,6 +24,10 @@ namespace _7Wonders
 
         public int ScienceVictoryPoints => tableau.CalculateScienceVictoryPoints();
 
+        public int FreeBuildsPerAge => tableau.FreeBuildsPerAge;
+
+        public int FreeBuildsLeft => FreeBuildsPerAge - freeBuildsMadeThisAge;
+
         public PlayerState(Tableau tableau)
         {
             this.tableau = tableau;
@@ -34,7 +38,14 @@ namespace _7Wonders
             Coins = source.Coins;
             MilitaryDefeats = source.MilitaryDefeats;
             MilitaryVictoryPoints = source.MilitaryVictoryPoints;
+            freeBuildsMadeThisAge = source.freeBuildsMadeThisAge;
+
             tableau = new Tableau(source.tableau);
+        }
+
+        public void StartAge(int newAge)
+        {
+            freeBuildsMadeThisAge = 0;
         }
 
         public int CalculateVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
@@ -95,6 +106,11 @@ namespace _7Wonders
                 throw new InvalidOperationException($"Can't pay {coins} {TextHelper.Pluralize("coin", coins)} because coins available is only {Coins}");
             }
             Coins -= coins;
+        }
+
+        public void UseFreeBuild()
+        {
+            ++freeBuildsMadeThisAge;
         }
 
         public void AwardMilitaryVictoryPoints(int militaryVictoryPoints)
@@ -186,14 +202,42 @@ namespace _7Wonders
                 {
                     if (CanAfford(card.Cost))
                     {
-                        actions.Add(new Build(card));
+                        actions.Add(new Build
+                                    {
+                                        Card = card
+                                    });
+                        
+                        // If the card has a coin cost, may be able to ignore this cost with an earned ability.
+                        if (card.Cost.Coins > 0 && FreeBuildsLeft > 0)
+                        {
+                            actions.Add(new Build
+                            {
+                                Card = card,
+                                UsesFreeBuild = true
+                            });
+                        }
                     }
                     else
                     {   // May be able to build the card using trades. Create all possible trade options.
                         var requiredResources = new ResourceCollection(card.Cost.Resources);
                         var possibleTradeCosts = CalculatePossibleTradeCosts(requiredResources, leftNeighbour, rightNeighbour);
-                        var tradeActions = possibleTradeCosts.Select(trade => new Build(card, trade.costToLeftNeighbour, trade.costToRightNeighbour));
+                        var tradeActions = possibleTradeCosts.Select(trade => new Build
+                                                                                  {
+                                                                                      Card = card,
+                                                                                      CoinsToLeftNeighbour = trade.costToLeftNeighbour,
+                                                                                      CoinsToRightNeighbour = trade.costToRightNeighbour
+                                                                                  });
                         actions.AddRange(tradeActions);
+
+                        // May be able to bypass trades by building the card for free with an earned ability.
+                        if (FreeBuildsLeft > 0)
+                        {
+                            actions.Add(new Build
+                                            {
+                                                Card = card,
+                                                UsesFreeBuild = true
+                                            });
+                        }
                     }
                 }
             }
@@ -260,5 +304,7 @@ namespace _7Wonders
         }
 
         private Tableau tableau;
+
+        private int freeBuildsMadeThisAge = 0;
     }
 }

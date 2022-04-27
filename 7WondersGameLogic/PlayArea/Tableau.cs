@@ -16,6 +16,8 @@ namespace _7Wonders
 
         public int Military => builtElements.Sum(element => element.Military);
 
+        public int FreeBuildsPerAge => builtElements.Sum(element => element.FreeBuildsPerAge);
+
         public int WonderStagesBuilt => builtElements.Count(element => element is WonderStage);
 
         public Tableau(XmlElement cityElement)

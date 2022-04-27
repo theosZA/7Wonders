@@ -38,7 +38,9 @@ namespace _7Wonders
                  + EvaluateScience(offset + 28, actingPlayer)
                  + weights[offset + 31] * actingPlayer.Military
                  + weights[offset + 32] * actingPlayer.Coins
-                 + weights[offset + 33] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
+                 + weights[offset + 33] * actingPlayer.FreeBuildsLeft
+                 + weights[offset + 34] * actingPlayer.FreeBuildsPerAge
+                 + weights[offset + 35] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
         }
 
         private double EvaluateResources(int resourceOffset, PlayerState actingPlayer)
@@ -66,7 +68,7 @@ namespace _7Wonders
                  + weights[scienceOffset + 0] * scienceSymbolCounts[2];
         }
 
-        const int weightsPerTurn = 34;
+        const int weightsPerTurn = 36;
         readonly int[] weights;
     }
 }

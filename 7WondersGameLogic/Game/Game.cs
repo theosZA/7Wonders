@@ -21,10 +21,10 @@ namespace _7Wonders
 
         public IReadOnlyCollection<(Player player, int victoryPoints)> Leaderboard => players.Leaderboard;
 
-        public Game(IReadOnlyCollection<PlayerAgent> playerAgents, StartingTableauCollection availableTableaus, CardCollection allCards)
+        public Game(IReadOnlyCollection<PlayerAgent> playerAgents, StartingTableauCollection availableTableaus, CardCollection allCards, string firstCityOverride = null)
         {
             this.allCards = allCards;
-            players = new PlayerCollection(playerAgents, availableTableaus.GetCopyOfTableaus().ToList());
+            players = new PlayerCollection(playerAgents, availableTableaus.GetCopyOfTableaus().ToList(), firstCityOverride);
             StartAge(1);
         }
 
@@ -78,6 +78,8 @@ namespace _7Wonders
         private void StartAge(int newAge)
         {
             Age = newAge;
+
+            players.StartAge(newAge);
 
             var deck = CreateAgeDeck(newAge);
             players.DealDeck(deck);

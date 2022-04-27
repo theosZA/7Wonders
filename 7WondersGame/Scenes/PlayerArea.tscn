@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Scripts/PlayerArea.cs" type="Script" id=1]
 [ext_resource path="res://Art/PlayerBoard_Gizah_A.jpg" type="Texture" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://Art/Age1_Brown_StonePit.png" type="Texture" id=12]
 [ext_resource path="res://Art/Age1_Yellow_Tavern.png" type="Texture" id=13]
 [ext_resource path="res://Art/Age1_Green_Workshop.png" type="Texture" id=14]
+[ext_resource path="res://Art/Icon_Free.png" type="Texture" id=15]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 0.498039 )
@@ -92,6 +93,15 @@ margin_right = 500.0
 margin_bottom = 203.0
 custom_fonts/font = SubResource( 2 )
 text = "GP"
+
+[node name="FreeBuildAvailable" type="TextureRect" parent="PlayerBoard/PlayerInfoWrapper/PlayerInfoBox/PlayerInfoNode"]
+visible = false
+margin_left = 6.0
+margin_top = 130.0
+margin_right = 518.0
+margin_bottom = 642.0
+rect_scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 15 )
 
 [node name="Cards" type="Node2D" parent="PlayerBoard"]
 scale = Vector2( 0.835, 0.835 )

@@ -34,12 +34,13 @@ namespace _7Wonders
             }
         }
 
-        public void ReplaceWithNewGeneration(int playersPerCity)
+        public void ReplaceWithNewGeneration(int newGenerationNumber, int playersPerCity)
         {
             var playersByCity = players.GroupBy(player => player.CityName);
             var bestPlayerForEachCity = playersByCity.Select(playerGroup => (playerGroup.Key, playerGroup.MinElementRandom(player => player.AveragePosition)));
 
-            players = playersByCity.Select(cityPlayers => CreateNewGeneration(cityPlayers.Key,
+            players = playersByCity.Select(cityPlayers => CreateNewGeneration(newGenerationNumber,
+                                                                              cityPlayers.Key,
                                                                               playersPerCity,
                                                                               cityPlayers,
                                                                               bestPlayerForEachCity.Where(bestPlayerForCity => bestPlayerForCity.Key != cityPlayers.Key)
@@ -86,7 +87,7 @@ namespace _7Wonders
             }
         }
 
-        private IReadOnlyCollection<EvolvingPlayer> CreateNewGeneration(string cityName, int newPlayersCount, IEnumerable<EvolvingPlayer> players, IEnumerable<EvolvingPlayer> bestPlayersOfOtherCities)
+        private IReadOnlyCollection<EvolvingPlayer> CreateNewGeneration(int newGenerationNumber, string cityName, int newPlayersCount, IEnumerable<EvolvingPlayer> players, IEnumerable<EvolvingPlayer> bestPlayersOfOtherCities)
         {
             var orderedPlayers = players.OrderBy(player => player.AveragePosition)
                                         .ToList();
@@ -96,8 +97,11 @@ namespace _7Wonders
                                            .Select(player => new EvolvingPlayer(player))
                                            .ToList();
 
-            // We also add in the best players from other cities.
-            newPlayers.AddRange(bestPlayersOfOtherCities.Select(player => new EvolvingPlayer(cityName, player)));
+            // Every 10th generation, also add in the best players from other cities.
+            if (newGenerationNumber % 10 == 0)
+            {
+                newPlayers.AddRange(bestPlayersOfOtherCities.Select(player => new EvolvingPlayer(cityName, player)));
+            }
 
             // We fill the rest of the spots by breeding random couples from the top half.
             var breedingPlayers = orderedPlayers.Take(orderedPlayers.Count / 2)

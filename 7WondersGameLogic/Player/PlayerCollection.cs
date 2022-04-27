@@ -11,12 +11,6 @@ namespace _7Wonders
     /// </summary>
     internal class PlayerCollection
     {
-        public PlayerCollection(IReadOnlyCollection<PlayerAgent> playerAgents, IList<Tableau> availableTableaus)
-        {
-            players = playerAgents.Zip(availableTableaus.TakeRandom(playerAgents.Count()), (playerAgent, tableau) => new Player(playerAgent, tableau))
-                                  .ToArray();
-        }
-
         public Player this[int i] => players[i];
 
         public int Count => players.Length;
@@ -42,6 +36,34 @@ namespace _7Wonders
                                                                                       .OrderByDescending(playerScore => playerScore.Item2)
                                                                                       .ThenByDescending(playerScore => playerScore.player.Coins)
                                                                                       .ToList();
+
+        public PlayerCollection(IReadOnlyCollection<PlayerAgent> playerAgents, IReadOnlyCollection<Tableau> availableTableaus, string firstCityOverride = null)
+        {
+            IEnumerable<Tableau> tableaus;
+            if (!string.IsNullOrEmpty(firstCityOverride))
+            {
+                // Force the first tableau to have the given city name (e.g. so that the human player has it).
+                var chosenTableau = availableTableaus.First(tableau => tableau.CityName == firstCityOverride);
+                tableaus = availableTableaus.Where(tableau => tableau.CityName != firstCityOverride)
+                                            .Shuffle()
+                                            .Prepend(chosenTableau);
+            }
+            else
+            {
+                // Fully random.
+                tableaus = availableTableaus.Shuffle(); 
+            }
+
+            players = CreatePlayers(playerAgents, tableaus).ToArray();
+        }
+
+        public void StartAge(int newAge)
+        {
+            foreach (var player in players)
+            {
+                player.StartAge(newAge);
+            }
+        }
 
         public void WriteStateToConsole()
         {
@@ -151,6 +173,11 @@ namespace _7Wonders
         private Player GetRightNeighbour(int playerIndex)
         {
             return players[(playerIndex + players.Length - 1) % players.Length];
+        }
+
+        private static IEnumerable<Player> CreatePlayers(IEnumerable<PlayerAgent> playerAgents, IEnumerable<Tableau> tableaus)
+        {
+            return playerAgents.Zip(tableaus, (playerAgent, tableau) => new Player(playerAgent, tableau));
         }
 
         private Player[] players;
