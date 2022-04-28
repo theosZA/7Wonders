@@ -1,5 +1,4 @@
 ﻿using Extensions;
-using Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,7 +102,7 @@ namespace _7Wonders
         {
             if (Coins < coins)
             {
-                throw new InvalidOperationException($"Can't pay {coins} {TextHelper.Pluralize("coin", coins)} because coins available is only {Coins}");
+                throw new InvalidOperationException($"Can't pay {coins} {(coins == 1 ? "coin" : "coins")} because player only has {Coins} {(Coins == 1 ? "coin" : "coins")}");
             }
             Coins -= coins;
         }
@@ -120,60 +119,6 @@ namespace _7Wonders
             {
                 ++MilitaryDefeats;
             }
-        }
-
-        public void WriteStateToConsole(IEnumerable<Card> hand, PlayerState leftNeighbour, PlayerState rightNeighbour)
-        {
-            // Score
-            int treasuryVictoryPoints = Coins / 3;
-            int wonderVictoryPoints = tableau.CalculateWonderVictoryPoints(this, leftNeighbour, rightNeighbour);
-            int civilianVictoryPoints = tableau.CalculateCivilianVictoryPoints(this, leftNeighbour, rightNeighbour);
-            int scienceVictoryPoints = tableau.CalculateScienceVictoryPoints();
-            int commercialVictoryPoints = tableau.CalculateCommercialVictoryPoints(this, leftNeighbour, rightNeighbour);
-            int guildVictoryPoints = tableau.CalculateGuildVictoryPoints(this, leftNeighbour, rightNeighbour);
-
-            ConsoleHelper.ClearConsoleColours();
-            Console.Write($"Score: {CalculateVictoryPoints(leftNeighbour, rightNeighbour)} (");
-            ConsoleHelper.SetConsoleColours(Colour.Red);
-            Console.Write(MilitaryVictoryPoints);
-            ConsoleHelper.ClearConsoleColours();
-            Console.Write($" + {treasuryVictoryPoints} + {wonderVictoryPoints} + ");
-            ConsoleHelper.SetConsoleColours(Colour.Blue);
-            Console.Write(civilianVictoryPoints);
-            ConsoleHelper.ClearConsoleColours();
-            Console.Write(" + ");
-            ConsoleHelper.SetConsoleColours(Colour.Green);
-            Console.Write(scienceVictoryPoints);
-            ConsoleHelper.ClearConsoleColours();
-            Console.Write(" + ");
-            ConsoleHelper.SetConsoleColours(Colour.Yellow);
-            Console.Write(commercialVictoryPoints);
-            ConsoleHelper.ClearConsoleColours();
-            Console.Write(" + ");
-            ConsoleHelper.SetConsoleColours(Colour.Purple);
-            Console.Write(guildVictoryPoints);
-            ConsoleHelper.ClearConsoleColours();
-            Console.WriteLine(")");
-
-            // Military
-            Console.WriteLine($"Military: {Military}");
-            Console.WriteLine();
-
-            // Coins
-            Console.WriteLine($"{Coins} {TextHelper.Pluralize("coin", Coins)}");
-
-            // Resources available
-            Console.WriteLine(tableau.ResourceProductionToString());
-
-            // Cards in tableau
-            tableau.WriteToConsole();
-
-            // Hand
-            Console.WriteLine();
-            Console.Write("Hand: ");
-            ConsoleHelper.WriteCardsToConsole(hand);
-
-            Console.WriteLine();
         }
 
         public int GetResourceCount(Resource resource)

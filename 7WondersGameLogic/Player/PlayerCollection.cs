@@ -1,8 +1,7 @@
 ﻿using Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Text;
 
 namespace _7Wonders
 {
@@ -65,37 +64,32 @@ namespace _7Wonders
             }
         }
 
-        public void WriteStateToConsole()
+        public string GetLeaderboardText()
         {
-            for (int i = 0; i < Count; ++i)
-            {
-                players[i].WriteStateToConsole(hands[i], GetLeftNeighbour(i), GetRightNeighbour(i));
-                Console.WriteLine("======================================================================");
-                Console.WriteLine();
-            }
-        }
+            var text = new StringBuilder();
 
-        public void WriteLeaderboardToConsole()
-        {
             var leaderboard = Leaderboard.ToList();
             for (int i = 0; i < leaderboard.Count; ++i)
             {
                 if (i > 0 && leaderboard[i].victoryPoints == leaderboard[i - 1].victoryPoints && leaderboard[i].player.Coins == leaderboard[i - 1].player.Coins)
                 {   // Tie - leave out position number.
-                    Console.Write("   ");
+                    text.Append("   ");
                 }
                 else
                 {
-                    Console.Write($"{i + 1}. ");
+                    text.Append($"{i + 1}. ");
                 }
-                Console.Write($"{leaderboard[i].player.Name}: {leaderboard[i].victoryPoints} VPs");
+                text.Append($"{leaderboard[i].player.Name} ({leaderboard[i].player.CityName}): {leaderboard[i].victoryPoints} VPs");
                 if ((i > 0 && leaderboard[i].victoryPoints == leaderboard[i - 1].victoryPoints) ||
                     (i < leaderboard.Count - 1 && leaderboard[i].victoryPoints == leaderboard[i + 1].victoryPoints))
                 {   // VPs tied with another player - list coins as well.
-                    Console.Write($" ({leaderboard[i].player.Coins} coins)");
+                    int coins = leaderboard[i].player.Coins;
+                    text.Append($" ({coins} {(coins == 1 ? "coin" : "coins")})");
                 }
-                Console.WriteLine();
+                text.AppendLine();
             }
+
+            return text.ToString();
         }
 
         public void DealDeck(Deck deck)

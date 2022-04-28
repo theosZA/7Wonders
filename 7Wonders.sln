@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7WondersEvolver", "7Wonders
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7WondersGameLogic", "7WondersGameLogic\7WondersGameLogic.csproj", "{4F1620EE-9A50-4F71-825D-7EEB076C819B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7WondersConsoleGame", "7WondersConsoleGame\7WondersConsoleGame.csproj", "{DC55A79B-52CF-4DDA-B474-B83593428B16}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{9204F0AA-40EA-4E68-AAAF-B5D48515E329}"
 EndProject
 Global
@@ -37,10 +35,6 @@ Global
 		{4F1620EE-9A50-4F71-825D-7EEB076C819B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F1620EE-9A50-4F71-825D-7EEB076C819B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F1620EE-9A50-4F71-825D-7EEB076C819B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC55A79B-52CF-4DDA-B474-B83593428B16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC55A79B-52CF-4DDA-B474-B83593428B16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC55A79B-52CF-4DDA-B474-B83593428B16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC55A79B-52CF-4DDA-B474-B83593428B16}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9204F0AA-40EA-4E68-AAAF-B5D48515E329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9204F0AA-40EA-4E68-AAAF-B5D48515E329}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9204F0AA-40EA-4E68-AAAF-B5D48515E329}.Release|Any CPU.ActiveCfg = Release|Any CPU

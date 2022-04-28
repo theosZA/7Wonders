@@ -2,7 +2,6 @@ using Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml;
 
 namespace _7Wonders
@@ -39,71 +38,6 @@ namespace _7Wonders
             builtElements = new List<TableauElement>(tableau.builtElements);
             resourceProductionOptions = new ResourceOptions(tableau.resourceProductionOptions);
             resourceTradeOptions = new ResourceOptions(tableau.resourceTradeOptions);
-        }
-
-        public void WriteToConsole()
-        {
-            ConsoleHelper.ClearConsoleColours();
-            Console.WriteLine($"{CityName} ({cityProduction.GetFirstResource()})");
-            var colours = Enum.GetValues(typeof(Colour)).Cast<Colour>();
-            foreach (var colour in colours)
-            {
-                ConsoleHelper.WriteCardsToConsole(builtElements.Where(element => element is Card card && card.Colour == colour)
-                                                               .Cast<Card>());
-            }
-            if (WonderStagesBuilt > 0)
-            {
-                Console.Write(string.Join(", ", builtElements.Where(element => element is WonderStage wonderStage)
-                                                             .Cast<WonderStage>()
-                                                             .Select(wonderStage => wonderStage.Name)));
-                Console.Write(" ");
-            }
-            if (availableWonderStages.Count > 0)
-            {
-                Console.Write("(unbuilt ");
-                Console.Write(string.Join(", ", availableWonderStages.Select(wonderStage => wonderStage.Name)));
-                Console.Write(")");
-            }
-            Console.WriteLine();
-        }
-
-        public string ResourceProductionToString()
-        {
-            var text = new StringBuilder();
-
-            // Combine linear resource production of each resource.
-            var resources = ResourceHelper.GetAllResources();
-            bool firstResource = true;
-            foreach (var resource in resources)
-            {
-                var count = builtElements.Sum(card => card.Production.GetSingleProduction(resource)) + cityProduction.GetSingleProduction(resource);
-                if (count > 0)
-                {
-                    if (!firstResource)
-                    {
-                        text.Append(", ");
-                    }
-                    text.Append($"{count} {resource}");
-                    firstResource = false;
-                }
-            }
-
-            // List each resource combination where only 1 of each set of resources can be chosen.
-            foreach (var element in builtElements)
-            {
-                var multipleProduction = element.Production.GetMultipleProduction()?.ToList();
-                if (multipleProduction != null && multipleProduction.Any())
-                {
-                    if (!firstResource)
-                    {
-                        text.Append(", ");
-                    }
-                    text.Append($"1 {string.Join("/", multipleProduction)}");
-                    firstResource = false;
-                }
-            }
-
-            return text.ToString();
         }
 
         public void Add(TableauElement element)

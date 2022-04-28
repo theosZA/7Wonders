@@ -8,6 +8,5 @@ namespace _7Wonders
     public interface IAction
     {
         void Apply(PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour, IList<Card> hand, IList<Card> discards);
-        void WriteToConsole();
     }
 }

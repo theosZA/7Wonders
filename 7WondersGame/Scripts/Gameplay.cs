@@ -10,7 +10,7 @@ public class Gameplay : Node2D
 	{
 		const int playerCount = 7;
 
-		// Either set the city board for the human to play is or choose null for random.
+		// Either set the city board for the human to play, or set it to null for random.
 		//const string humanCity = "Olympia";
 		const string humanCity = null;
 
@@ -109,11 +109,7 @@ public class Gameplay : Node2D
 			// TODO: Handle military results in the militaryResults property.
 
 			// TODO: Display the leaderboard in a nice way. For now it goes to debug output.
-			var leaderboard = game.Leaderboard.ToArray();
-			for (int i = 0; i < leaderboard.Length; ++i)
-			{
-				GD.Print($"{i + 1}. {leaderboard[i].player.CityName} ({leaderboard[i].player.Name}): {leaderboard[i].victoryPoints}");
-			}
+			GD.Print(game.GetLeaderboardText());
 			GD.Print();
 
 			if (!game.IsGameOver)

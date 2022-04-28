@@ -1,5 +1,4 @@
 ﻿using Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,16 +32,9 @@ namespace _7Wonders
             return players[playerIndex];
         }
 
-        public void WriteStateToConsole()
+        public string GetLeaderboardText()
         {
-            Console.WriteLine($"Age {Age}");
-            Console.WriteLine();
-            players.WriteStateToConsole();
-            if (IsGameOver)
-            {
-                players.WriteLeaderboardToConsole();
-            }
-            Console.WriteLine();
+            return players.GetLeaderboardText();
         }
 
         public GameTurn PlayTurn()

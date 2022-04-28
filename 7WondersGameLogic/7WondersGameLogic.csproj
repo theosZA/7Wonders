@@ -45,7 +45,6 @@
     <Compile Include="Actions\BuildWonderStage.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\Sell.cs" />
-    <Compile Include="Console\ConsoleHelper.cs" />
     <Compile Include="Enums\Colour.cs" />
     <Compile Include="Enums\Direction.cs" />
     <Compile Include="Enums\Resource.cs" />
@@ -69,9 +68,8 @@
     <Compile Include="PlayArea\TableauElement.cs" />
     <Compile Include="PlayArea\TradeBonus.cs" />
     <Compile Include="PlayArea\WonderStage.cs" />
-    <Compile Include="PlayerAgents\PlayerAgent.cs" />
+    <Compile Include="Player\PlayerAgent.cs" />
     <Compile Include="Player\PlayerCollection.cs" />
-    <Compile Include="Enums\PlayerType.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

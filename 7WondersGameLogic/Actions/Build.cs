@@ -1,6 +1,4 @@
-﻿using Helper;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace _7Wonders
 {
@@ -39,39 +37,6 @@ namespace _7Wonders
             }
 
             Card.OnPlayerGain(actingPlayer, leftNeighbour, rightNeighbour);
-        }
-
-        public void WriteToConsole()
-        {
-            Console.Write("Build ");
-            ConsoleHelper.WriteCardToConsole(Card);
-            var costText = Card.Cost.ToString();
-            if (!string.IsNullOrEmpty(costText))
-            {
-                Console.Write($" ({costText})");
-            }
-            if (CoinsToLeftNeighbour > 0 || CoinsToRightNeighbour > 0)
-            {
-                Console.Write(" - paying ");
-                if (CoinsToLeftNeighbour > 0)
-                {
-                    Console.Write($"{CoinsToLeftNeighbour} {TextHelper.Pluralize("coin", CoinsToLeftNeighbour)} to trade left");
-                }
-                if (CoinsToLeftNeighbour > 0 && CoinsToRightNeighbour > 0)
-                {
-                    Console.Write(" and ");
-                }
-                if (CoinsToRightNeighbour > 0)
-                {
-                    Console.Write($"{CoinsToRightNeighbour} {TextHelper.Pluralize("coin", CoinsToRightNeighbour)} to trade right");
-                }
-            }
-            Console.WriteLine();
-        }
-
-        public bool IsWorseOrEqualThan(Build compareBuild)
-        {
-            return CoinsToLeftNeighbour >= compareBuild.CoinsToLeftNeighbour && CoinsToRightNeighbour >= compareBuild.CoinsToRightNeighbour;
         }
     }
 }

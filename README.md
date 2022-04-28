@@ -6,13 +6,9 @@ This is an implementation of the [7 Wonders](https://boardgamegeek.com/boardgame
 
 A _7 Wonders_ game implemented in the Godot game engine. It has been tested with Godot version 3.4.4. The Godot scripts are implemented in C#. While these scripts can be edited in the Godot editor, I suggest using VS Code (with the C# and Godot extensions) instead.
 
-Currently the game supports a single human player (and all other seats are played by AI players).
+Currently the game supports a single human player (and all other seats are played by AI players). There is no game setup screen yet, so to tweak the setup you will need to adjust it in the `Gameplay._Ready` method (in `Gameplay.cs`). You can adjust the number of players (3-7) and if the human player has a specific city board or is assigned one at random.
 
 ⚠️ The Build dialog can be closed, but there is currently no way to reopen it, so closing the dialog will soft-lock the game.
-
-## 7WondersConsoleGame
-
-A console (text-based) implementation of a _7 Wonders_ game. It allows a human player to play against a number of AI players. The text-based nature limits the ease of use of the game and it really only exists to aid in testing the other components.
 
 ## PerformanceTester
 
@@ -20,7 +16,7 @@ A small console application that determines how fast a _7 Wonders_ game can be p
 
 ## 7WondersGameLogic
 
-A library for the underlying game logic of a _7 Wonders_ game independent of the actual implementation. (Note that there are still console-specific output methods in the library.)
+A library for the underlying game logic of a _7 Wonders_ game independent of the actual implementation.
 
 The `Game` class is the entry point into the library for wanting to run a game. The `PlayerAgent` interface has to be implemented for any players (human or AI) to have them play the game.
 

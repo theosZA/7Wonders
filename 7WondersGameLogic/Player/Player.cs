@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace _7Wonders
@@ -37,14 +36,6 @@ namespace _7Wonders
         public void StartAge(int newAge)
         {
             state.StartAge(newAge);
-        }
-
-        public void WriteStateToConsole(IEnumerable<Card> hand, Player leftNeighbour, Player rightNeighbour)
-        {
-            ConsoleHelper.ClearConsoleColours();
-            Console.WriteLine(agent.Name);
-            Console.WriteLine();
-            state.WriteStateToConsole(hand, leftNeighbour.state, rightNeighbour.state);
         }
 
         public int CalculateVictoryPoints(Player leftNeighbour, Player rightNeighbour)

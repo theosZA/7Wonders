@@ -1,6 +1,4 @@
 ﻿using Extensions;
-using Helper;
-using System.Text;
 using System.Xml;
 
 namespace _7Wonders
@@ -26,28 +24,6 @@ namespace _7Wonders
                 Coins = costElement.GetAttribute_Int("coins");
                 FreeWithOtherCard = costElement.GetAttribute_String("free");
             }
-        }
-
-        public override string ToString()
-        {
-            var text = new StringBuilder();
-            if (Coins >= 1)
-            {
-                text.Append($"{Coins} {TextHelper.Pluralize("coin", Coins)}");
-            }
-            if (Resources.Any())
-            {
-                if (Coins >= 1)
-                {
-                    text.Append(", ");
-                }
-                text.Append($"{Resources}");
-            }
-            if (FreeWithOtherCard != null)
-            {
-                text.Append($" or free with {FreeWithOtherCard}");
-            }
-            return text.ToString();
         }
     }
 }

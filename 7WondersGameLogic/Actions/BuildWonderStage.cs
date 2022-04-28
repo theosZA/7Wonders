@@ -1,6 +1,4 @@
-﻿using Helper;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace _7Wonders
 {
@@ -34,35 +32,6 @@ namespace _7Wonders
             actingPlayer.BuildNextWonderStage();
 
             wonderStage.OnPlayerGain(actingPlayer, leftNeighbour, rightNeighbour);
-        }
-
-        public void WriteToConsole()
-        {
-            Console.Write("Build next wonder stage discarding ");
-            ConsoleHelper.WriteCardToConsole(CardToSpend);
-            Console.Write($" ({wonderStage.Cost})");
-            if (CoinsToLeftNeighbour > 0 || CoinsToRightNeighbour > 0)
-            {
-                Console.Write(" - paying ");
-                if (CoinsToLeftNeighbour > 0)
-                {
-                    Console.Write($"{CoinsToLeftNeighbour} {TextHelper.Pluralize("coin", CoinsToLeftNeighbour)} to trade left");
-                }
-                if (CoinsToLeftNeighbour > 0 && CoinsToRightNeighbour > 0)
-                {
-                    Console.Write(" and ");
-                }
-                if (CoinsToRightNeighbour > 0)
-                {
-                    Console.Write($"{CoinsToRightNeighbour} {TextHelper.Pluralize("coin", CoinsToRightNeighbour)} to trade right");
-                }
-            }
-            Console.WriteLine();
-        }
-
-        public bool IsWorseOrEqualThan(BuildWonderStage compareBuild)
-        {
-            return CoinsToLeftNeighbour >= compareBuild.CoinsToLeftNeighbour && CoinsToRightNeighbour >= compareBuild.CoinsToRightNeighbour;
         }
 
         private WonderStage wonderStage;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace _7Wonders
 {
@@ -20,13 +19,6 @@ namespace _7Wonders
             hand.Remove(Card);
             discards.Add(Card);
             actingPlayer.AddCoins(3);
-        }
-
-        public void WriteToConsole()
-        {
-            Console.Write("Sell ");
-            ConsoleHelper.WriteCardToConsole(Card);
-            Console.WriteLine(" for 3 coins");
         }
     }
 }
