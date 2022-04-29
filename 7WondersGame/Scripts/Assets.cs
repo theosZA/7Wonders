@@ -39,9 +39,14 @@ public static class Assets
         return GD.Load<Texture>($"res://Art/{filename}.png");
     }
 
-    private static Texture LoadCardBackTexture(int age)
+    public static Texture LoadCardBackTexture(int age)
     {
         return GD.Load<Texture>($"res://Art/Age{age}_Back.png");
+    }
+
+    public static Texture LoadCityIcon(string cityName)
+    {
+        return GD.Load<Texture>($"res://Art/Icon_City_{cityName}.png");
     }
 
 	private static string ToTitleCase(string text)

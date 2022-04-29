@@ -1,0 +1,399 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Scripts/Leaderboard.cs" type="Script" id=1]
+[ext_resource path="res://Art/Icon_City_Babylon.png" type="Texture" id=2]
+[ext_resource path="res://Art/Icon_VPs.png" type="Texture" id=3]
+[ext_resource path="res://Fonts/Mont-HeavyDEMO.otf" type="DynamicFontData" id=4]
+[ext_resource path="res://Art/Icon_Coins.png" type="Texture" id=5]
+[ext_resource path="res://Art/Icon_Leaderboard.png" type="Texture" id=6]
+[ext_resource path="res://Art/Icon_Leaderboard_Hover.png" type="Texture" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+size = 100
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 64
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 48
+font_data = ExtResource( 4 )
+
+[node name="Leaderboard" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="LeaderboardDialog" type="WindowDialog" parent="."]
+margin_left = 147.0
+margin_top = 48.0
+margin_right = 1936.0
+margin_bottom = 1248.0
+
+[node name="VPsIcon" type="TextureRect" parent="LeaderboardDialog"]
+margin_left = 805.0
+margin_top = 8.0
+margin_right = 1317.0
+margin_bottom = 520.0
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 3 )
+
+[node name="Position1" type="Node2D" parent="LeaderboardDialog"]
+position = Vector2( 40, 108 )
+
+[node name="Number" type="Label" parent="LeaderboardDialog/Position1"]
+margin_left = 18.0
+margin_top = 26.0
+margin_right = 58.0
+margin_bottom = 117.0
+custom_fonts/font = SubResource( 1 )
+text = "1"
+
+[node name="CityIcon" type="TextureRect" parent="LeaderboardDialog/Position1"]
+margin_left = 90.0
+margin_right = 218.0
+margin_bottom = 128.0
+texture = ExtResource( 2 )
+
+[node name="PlayerName" type="Label" parent="LeaderboardDialog/Position1"]
+margin_left = 260.0
+margin_top = 42.0
+margin_right = 712.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "Robot 99"
+
+[node name="VPs" type="Label" parent="LeaderboardDialog/Position1"]
+margin_left = 781.0
+margin_top = 42.0
+margin_right = 855.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "99"
+
+[node name="CoinsNode" type="Node2D" parent="LeaderboardDialog/Position1"]
+position = Vector2( 897, 37 )
+
+[node name="CoinsIcon" type="TextureRect" parent="LeaderboardDialog/Position1/CoinsNode"]
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 5 )
+
+[node name="CoinsValue" type="Label" parent="LeaderboardDialog/Position1/CoinsNode"]
+margin_left = 68.0
+margin_top = 13.0
+margin_right = 152.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 3 )
+text = "999"
+
+[node name="Position2" type="Node2D" parent="LeaderboardDialog"]
+position = Vector2( 40, 242 )
+
+[node name="Number" type="Label" parent="LeaderboardDialog/Position2"]
+margin_left = 18.0
+margin_top = 26.0
+margin_right = 58.0
+margin_bottom = 117.0
+custom_fonts/font = SubResource( 1 )
+text = "2"
+
+[node name="CityIcon" type="TextureRect" parent="LeaderboardDialog/Position2"]
+margin_left = 90.0
+margin_right = 218.0
+margin_bottom = 128.0
+texture = ExtResource( 2 )
+
+[node name="PlayerName" type="Label" parent="LeaderboardDialog/Position2"]
+margin_left = 260.0
+margin_top = 42.0
+margin_right = 712.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "Robot 99"
+
+[node name="VPs" type="Label" parent="LeaderboardDialog/Position2"]
+margin_left = 781.0
+margin_top = 42.0
+margin_right = 855.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "99"
+
+[node name="CoinsNode" type="Node2D" parent="LeaderboardDialog/Position2"]
+position = Vector2( 897, 37 )
+
+[node name="CoinsIcon" type="TextureRect" parent="LeaderboardDialog/Position2/CoinsNode"]
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 5 )
+
+[node name="CoinsValue" type="Label" parent="LeaderboardDialog/Position2/CoinsNode"]
+margin_left = 68.0
+margin_top = 13.0
+margin_right = 152.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 3 )
+text = "999"
+
+[node name="Position3" type="Node2D" parent="LeaderboardDialog"]
+position = Vector2( 40, 376 )
+
+[node name="Number" type="Label" parent="LeaderboardDialog/Position3"]
+margin_left = 18.0
+margin_top = 26.0
+margin_right = 58.0
+margin_bottom = 117.0
+custom_fonts/font = SubResource( 1 )
+text = "3"
+
+[node name="CityIcon" type="TextureRect" parent="LeaderboardDialog/Position3"]
+margin_left = 90.0
+margin_right = 218.0
+margin_bottom = 128.0
+texture = ExtResource( 2 )
+
+[node name="PlayerName" type="Label" parent="LeaderboardDialog/Position3"]
+margin_left = 260.0
+margin_top = 42.0
+margin_right = 712.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "Robot 99"
+
+[node name="VPs" type="Label" parent="LeaderboardDialog/Position3"]
+margin_left = 781.0
+margin_top = 42.0
+margin_right = 855.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "99"
+
+[node name="CoinsNode" type="Node2D" parent="LeaderboardDialog/Position3"]
+position = Vector2( 897, 37 )
+
+[node name="CoinsIcon" type="TextureRect" parent="LeaderboardDialog/Position3/CoinsNode"]
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 5 )
+
+[node name="CoinsValue" type="Label" parent="LeaderboardDialog/Position3/CoinsNode"]
+margin_left = 68.0
+margin_top = 13.0
+margin_right = 152.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 3 )
+text = "999"
+
+[node name="Position4" type="Node2D" parent="LeaderboardDialog"]
+position = Vector2( 40, 510 )
+
+[node name="Number" type="Label" parent="LeaderboardDialog/Position4"]
+margin_left = 18.0
+margin_top = 26.0
+margin_right = 58.0
+margin_bottom = 117.0
+custom_fonts/font = SubResource( 1 )
+text = "4"
+
+[node name="CityIcon" type="TextureRect" parent="LeaderboardDialog/Position4"]
+margin_left = 90.0
+margin_right = 218.0
+margin_bottom = 128.0
+texture = ExtResource( 2 )
+
+[node name="PlayerName" type="Label" parent="LeaderboardDialog/Position4"]
+margin_left = 260.0
+margin_top = 42.0
+margin_right = 712.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "Robot 99"
+
+[node name="VPs" type="Label" parent="LeaderboardDialog/Position4"]
+margin_left = 781.0
+margin_top = 42.0
+margin_right = 855.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "99"
+
+[node name="CoinsNode" type="Node2D" parent="LeaderboardDialog/Position4"]
+position = Vector2( 897, 37 )
+
+[node name="CoinsIcon" type="TextureRect" parent="LeaderboardDialog/Position4/CoinsNode"]
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 5 )
+
+[node name="CoinsValue" type="Label" parent="LeaderboardDialog/Position4/CoinsNode"]
+margin_left = 68.0
+margin_top = 13.0
+margin_right = 152.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 3 )
+text = "999"
+
+[node name="Position5" type="Node2D" parent="LeaderboardDialog"]
+position = Vector2( 40, 644 )
+
+[node name="Number" type="Label" parent="LeaderboardDialog/Position5"]
+margin_left = 18.0
+margin_top = 26.0
+margin_right = 58.0
+margin_bottom = 117.0
+custom_fonts/font = SubResource( 1 )
+text = "5"
+
+[node name="CityIcon" type="TextureRect" parent="LeaderboardDialog/Position5"]
+margin_left = 90.0
+margin_right = 218.0
+margin_bottom = 128.0
+texture = ExtResource( 2 )
+
+[node name="PlayerName" type="Label" parent="LeaderboardDialog/Position5"]
+margin_left = 260.0
+margin_top = 42.0
+margin_right = 712.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "Robot 99"
+
+[node name="VPs" type="Label" parent="LeaderboardDialog/Position5"]
+margin_left = 781.0
+margin_top = 42.0
+margin_right = 855.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "99"
+
+[node name="CoinsNode" type="Node2D" parent="LeaderboardDialog/Position5"]
+position = Vector2( 897, 37 )
+
+[node name="CoinsIcon" type="TextureRect" parent="LeaderboardDialog/Position5/CoinsNode"]
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 5 )
+
+[node name="CoinsValue" type="Label" parent="LeaderboardDialog/Position5/CoinsNode"]
+margin_left = 68.0
+margin_top = 13.0
+margin_right = 152.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 3 )
+text = "999"
+
+[node name="Position6" type="Node2D" parent="LeaderboardDialog"]
+position = Vector2( 40, 778 )
+
+[node name="Number" type="Label" parent="LeaderboardDialog/Position6"]
+margin_left = 18.0
+margin_top = 26.0
+margin_right = 58.0
+margin_bottom = 117.0
+custom_fonts/font = SubResource( 1 )
+text = "6"
+
+[node name="CityIcon" type="TextureRect" parent="LeaderboardDialog/Position6"]
+margin_left = 90.0
+margin_right = 218.0
+margin_bottom = 128.0
+texture = ExtResource( 2 )
+
+[node name="PlayerName" type="Label" parent="LeaderboardDialog/Position6"]
+margin_left = 260.0
+margin_top = 42.0
+margin_right = 712.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "Robot 99"
+
+[node name="VPs" type="Label" parent="LeaderboardDialog/Position6"]
+margin_left = 781.0
+margin_top = 42.0
+margin_right = 855.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "99"
+
+[node name="CoinsNode" type="Node2D" parent="LeaderboardDialog/Position6"]
+position = Vector2( 897, 37 )
+
+[node name="CoinsIcon" type="TextureRect" parent="LeaderboardDialog/Position6/CoinsNode"]
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 5 )
+
+[node name="CoinsValue" type="Label" parent="LeaderboardDialog/Position6/CoinsNode"]
+margin_left = 68.0
+margin_top = 13.0
+margin_right = 152.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 3 )
+text = "999"
+
+[node name="Position7" type="Node2D" parent="LeaderboardDialog"]
+position = Vector2( 40, 912 )
+
+[node name="Number" type="Label" parent="LeaderboardDialog/Position7"]
+margin_left = 18.0
+margin_top = 26.0
+margin_right = 58.0
+margin_bottom = 117.0
+custom_fonts/font = SubResource( 1 )
+text = "7"
+
+[node name="CityIcon" type="TextureRect" parent="LeaderboardDialog/Position7"]
+margin_left = 90.0
+margin_right = 218.0
+margin_bottom = 128.0
+texture = ExtResource( 2 )
+
+[node name="PlayerName" type="Label" parent="LeaderboardDialog/Position7"]
+margin_left = 260.0
+margin_top = 42.0
+margin_right = 712.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "Robot 99"
+
+[node name="VPs" type="Label" parent="LeaderboardDialog/Position7"]
+margin_left = 781.0
+margin_top = 42.0
+margin_right = 855.0
+margin_bottom = 102.0
+custom_fonts/font = SubResource( 2 )
+text = "99"
+
+[node name="CoinsNode" type="Node2D" parent="LeaderboardDialog/Position7"]
+position = Vector2( 897, 37 )
+
+[node name="CoinsIcon" type="TextureRect" parent="LeaderboardDialog/Position7/CoinsNode"]
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.125, 0.125 )
+texture = ExtResource( 5 )
+
+[node name="CoinsValue" type="Label" parent="LeaderboardDialog/Position7/CoinsNode"]
+margin_left = 68.0
+margin_top = 13.0
+margin_right = 152.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 3 )
+text = "999"
+
+[node name="ReshowLeaderboardButtonHolder" type="Node2D" parent="."]
+visible = false
+position = Vector2( 16, 997 )
+scale = Vector2( 0.5, 0.5 )
+
+[node name="ReshowLeaderboardButton" type="TextureButton" parent="ReshowLeaderboardButtonHolder"]
+margin_right = 128.0
+margin_bottom = 128.0
+texture_normal = ExtResource( 6 )
+texture_hover = ExtResource( 7 )

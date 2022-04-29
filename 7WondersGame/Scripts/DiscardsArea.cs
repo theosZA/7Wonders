@@ -85,7 +85,7 @@ public class DiscardsArea : Node2D
 		CardChosen?.Invoke(card.Card);
 	}
 
-	float requiredWidth;
-	float requiredHeight;
-	float startingLeft;
+	private float requiredWidth;
+	private float requiredHeight;
+	private float startingLeft;
 }

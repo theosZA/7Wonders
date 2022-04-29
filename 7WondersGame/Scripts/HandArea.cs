@@ -92,7 +92,7 @@ public class HandArea : Node2D
 
 	private PackedScene handCardAreaScene = ResourceLoader.Load<PackedScene>("res://Scenes/HandCardArea.tscn");
 
-	float requiredWidth;
-	float requiredHeight;
-	float startingLeft;
+	private float requiredWidth;
+	private float requiredHeight;
+	private float startingLeft;
 }

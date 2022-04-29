@@ -128,7 +128,11 @@ public class Gameplay : Node2D
 			GD.Print(game.GetLeaderboardText());
 			GD.Print();
 
-			if (!game.IsGameOver)
+			if (game.IsGameOver)
+			{
+				CallDeferred("ShowLeaderboard");
+			}
+			else
 			{
 				AdvanceGame();
 			}
@@ -145,6 +149,12 @@ public class Gameplay : Node2D
 				playerAreas[i].HandleAction(playerActionsArray[i]);
 			}
 		}
+	}
+
+	private void ShowLeaderboard()
+	{
+		var leaderboardNode = GetNode<Leaderboard>("Leaderboard");
+		leaderboardNode.ShowLeaderboard(game.Leaderboard);
 	}
 
 	private PlayerArea[] playerAreas;
