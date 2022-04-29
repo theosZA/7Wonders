@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scripts/PlayerArea.cs" type="Script" id=1]
 [ext_resource path="res://Art/PlayerBoard_Gizah_A.jpg" type="Texture" id=2]
@@ -8,12 +8,7 @@
 [ext_resource path="res://Art/Age1_Back.png" type="Texture" id=6]
 [ext_resource path="res://Art/Age2_Back.png" type="Texture" id=7]
 [ext_resource path="res://Art/Age3_Back.png" type="Texture" id=8]
-[ext_resource path="res://Art/Age3_Purple_StrategistsGuild.png" type="Texture" id=9]
-[ext_resource path="res://Art/Age1_Blue_Theater.png" type="Texture" id=10]
-[ext_resource path="res://Art/Age1_Red_Barracks.png" type="Texture" id=11]
-[ext_resource path="res://Art/Age1_Brown_StonePit.png" type="Texture" id=12]
-[ext_resource path="res://Art/Age1_Yellow_Tavern.png" type="Texture" id=13]
-[ext_resource path="res://Art/Age1_Green_Workshop.png" type="Texture" id=14]
+[ext_resource path="res://Scenes/CardStack.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Art/Icon_Free.png" type="Texture" id=15]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -36,9 +31,9 @@ font_data = ExtResource( 4 )
 script = ExtResource( 1 )
 
 [node name="PlayerBoard" type="TextureRect" parent="."]
-margin_left = -989.0
+margin_left = -896.0
 margin_top = -318.0
-margin_right = 481.0
+margin_right = 574.0
 margin_bottom = 318.0
 texture = ExtResource( 2 )
 expand = true
@@ -140,58 +135,34 @@ texture = ExtResource( 8 )
 position = Vector2( 0, -125 )
 z_index = -1
 
-[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/ProductionRoot"]
-visible = false
-margin_right = 375.0
-margin_bottom = 585.0
-texture = ExtResource( 12 )
+[node name="CardStack" parent="PlayerBoard/Cards/ProductionRoot" instance=ExtResource( 9 )]
 
 [node name="YellowRoot" type="Node2D" parent="PlayerBoard/Cards"]
 position = Vector2( 420, -240 )
 z_index = -1
 
-[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/YellowRoot"]
-visible = false
-margin_right = 375.0
-margin_bottom = 585.0
-texture = ExtResource( 13 )
+[node name="CardStack" parent="PlayerBoard/Cards/YellowRoot" instance=ExtResource( 9 )]
 
 [node name="RedRoot" type="Node2D" parent="PlayerBoard/Cards"]
 position = Vector2( 810, -240 )
 z_index = -1
 
-[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/RedRoot"]
-visible = false
-margin_right = 375.0
-margin_bottom = 585.0
-texture = ExtResource( 11 )
+[node name="CardStack" parent="PlayerBoard/Cards/RedRoot" instance=ExtResource( 9 )]
 
 [node name="GreenRoot" type="Node2D" parent="PlayerBoard/Cards"]
 position = Vector2( 1200, -240 )
 z_index = -1
 
-[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/GreenRoot"]
-visible = false
-margin_right = 375.0
-margin_bottom = 585.0
-texture = ExtResource( 14 )
+[node name="CardStack" parent="PlayerBoard/Cards/GreenRoot" instance=ExtResource( 9 )]
 
 [node name="BlueRoot" type="Node2D" parent="PlayerBoard/Cards"]
 position = Vector2( 1590, -240 )
-z_index = -1
+z_index = -10
 
-[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/BlueRoot"]
-visible = false
-margin_right = 375.0
-margin_bottom = 585.0
-texture = ExtResource( 10 )
+[node name="CardStack" parent="PlayerBoard/Cards/BlueRoot" instance=ExtResource( 9 )]
 
 [node name="PurpleRoot" type="Node2D" parent="PlayerBoard/Cards"]
-position = Vector2( 1980, -240 )
+position = Vector2( 1768, 75 )
 z_index = -1
 
-[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/PurpleRoot"]
-visible = false
-margin_right = 375.0
-margin_bottom = 585.0
-texture = ExtResource( 9 )
+[node name="CardStack" parent="PlayerBoard/Cards/PurpleRoot" instance=ExtResource( 9 )]

@@ -133,9 +133,11 @@ margin_bottom = 454.0
 color = Color( 1, 1, 0, 0.392157 )
 
 [node name="HandArea" parent="." instance=ExtResource( 3 )]
+visible = false
 position = Vector2( 967, 373 )
 
 [node name="DiscardsArea" parent="." instance=ExtResource( 4 )]
+visible = false
 position = Vector2( 597, 27 )
 
 [node name="HandIconNode" type="Node2D" parent="."]

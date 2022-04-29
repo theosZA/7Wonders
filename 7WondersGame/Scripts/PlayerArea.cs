@@ -15,6 +15,10 @@ public class PlayerArea : Node2D
 			var playerBoard = GetNode<TextureRect>("PlayerBoard");
 			playerBoard.Texture = GD.Load<Texture>($"res://Art/PlayerBoard_{Player.CityName}_A.jpg");
 		}
+
+		GetNode<CardStack>("PlayerBoard/Cards/ProductionRoot/CardStack").LatestToFront = false;
+		GetNode<CardStack>("PlayerBoard/Cards/PurpleRoot/CardStack").GrowUpwards = false;
+
 		OnGameUpdate();
 	}
 
@@ -38,16 +42,7 @@ public class PlayerArea : Node2D
 	{
 		cards.Add(card);
 
-		var terminalNode = (Node2D)GetTerminalNode(GetColumnRoot(card));
-		terminalNode.AddChild(Assets.CreateCardFront(card));
-		
-		var newTerminalNode = new Node2D()
-		{
-			Name = "next",
-			ZIndex = terminalNode.ZIndex - 1,	// next card goes behind this one...
-			Position = new Vector2(0, -125)		// ...and a bit up
-		};
-		terminalNode.AddChild(newTerminalNode);
+		GetCardStack(card).AddCard(card);
 	}
 
 	private void AddWonderStage(int age)
@@ -61,28 +56,28 @@ public class PlayerArea : Node2D
 		}
 	}
 
-	private Node GetColumnRoot(Card card)
+	private CardStack GetCardStack(Card card)
 	{
 		switch (card.Colour)
 		{
 			case Colour.Brown:
 			case Colour.Gray:
-				return FindNode("ProductionRoot");
+				return GetNode<CardStack>("PlayerBoard/Cards/ProductionRoot/CardStack");
 
 			case Colour.Yellow:
-				return FindNode("YellowRoot");
+				return GetNode<CardStack>("PlayerBoard/Cards/YellowRoot/CardStack");
 
 			case Colour.Red:
-				return FindNode("RedRoot");
+				return GetNode<CardStack>("PlayerBoard/Cards/RedRoot/CardStack");
 
 			case Colour.Green:
-				return FindNode("GreenRoot");
+				return GetNode<CardStack>("PlayerBoard/Cards/GreenRoot/CardStack");
 
 			case Colour.Blue:
-				return FindNode("BlueRoot");
+				return GetNode<CardStack>("PlayerBoard/Cards/BlueRoot/CardStack");
 
 			case Colour.Purple:
-				return FindNode("PurpleRoot");
+				return GetNode<CardStack>("PlayerBoard/Cards/PurpleRoot/CardStack");
 
 			default:
 				throw new System.Exception($"Unexpected card colour: {card.Colour}");

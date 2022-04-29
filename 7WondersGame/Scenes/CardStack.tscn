@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Art/Age1_Back.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/CardStack.cs" type="Script" id=2]
+
+[node name="CardStack" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="TestCard" type="TextureRect" parent="."]
+visible = false
+margin_right = 375.0
+margin_bottom = 585.0
+texture = ExtResource( 1 )
