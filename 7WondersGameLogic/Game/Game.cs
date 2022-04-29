@@ -39,17 +39,34 @@ namespace _7Wonders
 
         public GameTurn PlayTurn()
         {
-            // Actions
-
             var actions = players.GetActions().ToList();
+            var additionalPlayerActions = actions.Select(action => (IAction)null).ToList();
+
             players.ApplyActions(actions, discards);
 
-            // Check for end of age
+            if (players.CardsInHand == 1)
+            {   // Last card in hand is discarded.
+                discards.AddRange(players.DiscardHands());
+            }
+
+            // Any players who can build from the discards, does so now.
+            // There should only ever be one such player (Halikarnassos) so we only handle a single result.
+            var buildFromDiscards = players.GetBuildFromDiscards(discards);
+            if (buildFromDiscards.HasValue)
+            {
+                var action = new Build
+                                 {
+                                     Card = buildFromDiscards.Value.card,
+                                     BuiltFromDiscards = true
+                                 };
+                additionalPlayerActions[buildFromDiscards.Value.playerIndex] = action;
+                players.ApplyAction(buildFromDiscards.Value.playerIndex, action, discards);
+            }
 
             IReadOnlyCollection<MilitaryResult> militaryResults = null;
-            if (players.CardsInHand == 1)
-            {
-                militaryResults = EndAge().ToList();
+            if (players.CardsInHand == 0)
+            {   // End of Age.
+                militaryResults = players.EvaluateMilitaryBattles(scoreForVictory: (2 * Age) - 1, scoreForDefeat: -1).ToList();
                 if (Age < 3)
                 {
                     StartAge(Age + 1);
@@ -63,7 +80,8 @@ namespace _7Wonders
             return new GameTurn
             {
                 playerActions = actions,
-                militaryResults = militaryResults
+                militaryResults = militaryResults,
+                additionalPlayerActions = additionalPlayerActions
             };
         }
 
@@ -75,12 +93,6 @@ namespace _7Wonders
 
             var deck = CreateAgeDeck(newAge);
             players.DealDeck(deck);
-        }
-
-        private IEnumerable<MilitaryResult> EndAge()
-        {
-            discards.AddRange(players.DiscardHands());
-            return players.EvaluateMilitaryBattles(scoreForVictory: (2 * Age) - 1, scoreForDefeat: -1);
         }
 
         private Deck CreateAgeDeck(int age)

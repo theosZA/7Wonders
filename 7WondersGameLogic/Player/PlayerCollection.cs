@@ -31,10 +31,10 @@ namespace _7Wonders
         }
 
         public IReadOnlyCollection<(Player player, int victoryPoints)> Leaderboard => players.Select((player, i) => (player, player.CalculateVictoryPoints(GetLeftNeighbour(i), GetRightNeighbour(i))))
-                                                                                      .AsQueryable()
-                                                                                      .OrderByDescending(playerScore => playerScore.Item2)
-                                                                                      .ThenByDescending(playerScore => playerScore.player.Coins)
-                                                                                      .ToList();
+                                                                                             .AsQueryable()
+                                                                                             .OrderByDescending(playerScore => playerScore.Item2)
+                                                                                             .ThenByDescending(playerScore => playerScore.player.Coins)
+                                                                                             .ToList();
 
         public PlayerCollection(IReadOnlyCollection<PlayerAgent> playerAgents, IReadOnlyCollection<Tableau> availableTableaus, string firstCityOverride = null)
         {
@@ -126,21 +126,38 @@ namespace _7Wonders
         {
             for (int i = 0; i < Count; ++i)
             {
-                // Create a new sequence of players such that the current player is the first in the sequence.
-                var cycledPlayers = Enumerable.Range(0, Count)
-                                              .Select(offset => players[(i + offset) % Count]);
-
-                yield return players[i].GetAction(hands[i], cycledPlayers);
+                yield return players[i].GetAction(hands[i], CyclePlayers(i));
             }
         }
 
-        public void ApplyActions(IEnumerable<IAction> actions, IList<Card> discards)
+        public void ApplyActions(IList<IAction> actions, IList<Card> discards)
         {
-            var actionList = actions.ToList();
             for (int i = 0; i < Count; ++i)
             {
-                players[i].ApplyAction(actionList[i], GetLeftNeighbour(i), GetRightNeighbour(i), hands[i], discards);
+                ApplyAction(i, actions[i], discards);
             }
+        }
+
+        public void ApplyAction(int playerIndex, IAction action, IList<Card> discards)
+        {
+            players[playerIndex].ApplyAction(action, GetLeftNeighbour(playerIndex), GetRightNeighbour(playerIndex), hands[playerIndex], discards);
+        }
+
+        public (int playerIndex, Card card)? GetBuildFromDiscards(IList<Card> discards)
+        {
+            var playerIndex = players.FindIndex(player => player.PendingBuildFromDiscard);
+            if (!playerIndex.HasValue)
+            {
+                return null;
+            }
+
+            var cardToBuild = players[playerIndex.Value].GetBuildFromDiscards(discards, CyclePlayers(playerIndex.Value));
+            if (cardToBuild == null)
+            {
+                return null;
+            }
+
+            return (playerIndex.Value, cardToBuild);
         }
 
         public IEnumerable<MilitaryResult> EvaluateMilitaryBattles(int scoreForVictory, int scoreForDefeat)
@@ -172,6 +189,16 @@ namespace _7Wonders
         private static IEnumerable<Player> CreatePlayers(IEnumerable<PlayerAgent> playerAgents, IEnumerable<Tableau> tableaus)
         {
             return playerAgents.Zip(tableaus, (playerAgent, tableau) => new Player(playerAgent, tableau));
+        }
+
+        /// <summary>
+        /// Returns a new sequence of players where the first player corresponds to the player in the root index of our existing player array.
+        /// This new sequence can be passed down to that player who can think of themselves as player 0.
+        /// </summary>
+        private IEnumerable<Player> CyclePlayers(int rootIndex)
+        {
+            return Enumerable.Range(0, Count)
+                             .Select(offset => players[(rootIndex + offset) % Count]);
         }
 
         private Player[] players;

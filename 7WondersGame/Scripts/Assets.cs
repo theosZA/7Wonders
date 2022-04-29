@@ -20,6 +20,15 @@ public static class Assets
 		};
     }
 
+    public static TextureButton CreateCardButton(Card card)
+    {
+        return new TextureButton()
+        {
+            TextureNormal = Assets.LoadCardTexture(card, enabled: true),
+            TextureDisabled = Assets.LoadCardTexture(card, enabled: false),
+        };
+    }
+
     public static Texture LoadCardTexture(Card card, bool enabled = true)
     {
         string filename = $"Age{card.Age}_{ToTitleCase(card.Colour.ToString())}_{ToTitleCase(card.Name)}";

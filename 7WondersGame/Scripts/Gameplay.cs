@@ -11,13 +11,16 @@ public class Gameplay : Node2D
 		const int playerCount = 7;
 
 		// Either set the city board for the human to play, or set it to null for random.
-		//const string humanCity = "Olympia";
+		//const string humanCity = "Halikarnassos";
 		const string humanCity = null;
 
 		godotHumanPlayer = new GodotHumanPlayer("Human");
 		var handArea = GetNode<HandArea>("HandArea");
 		handArea.ActionChosen = godotHumanPlayer.OnActionChosen;
 		godotHumanPlayer.NewHand = handArea.OnNewHand;
+		var discardsArea = GetNode<DiscardsArea>("DiscardsArea");
+		discardsArea.CardChosen = godotHumanPlayer.OnDiscardBuildChosen;
+		godotHumanPlayer.DiscardsBuild = discardsArea.OnDiscardsBuild;
 
 		InitializeGame(playerCount, humanCity);
 		InitializePlayerAreas(playerCount);
@@ -100,11 +103,8 @@ public class Gameplay : Node2D
 		{
 			var gameTurn = game.PlayTurn();
 			
-			var playerActions = gameTurn.playerActions.ToArray();
-			for (int i = 0; i < playerActions.Length; ++i)
-			{
-				playerAreas[i].HandleAction(playerActions[i]);
-			}
+			HandleActions(gameTurn.playerActions);
+			HandleActions(gameTurn.additionalPlayerActions);
 
 			// TODO: Handle military results in the militaryResults property.
 
@@ -117,6 +117,18 @@ public class Gameplay : Node2D
 				AdvanceGame();
 			}
 		}).Start();
+	}
+
+	private void HandleActions(IReadOnlyCollection<IAction> playerActions)
+	{
+		var playerActionsArray = playerActions.ToArray();
+		for (int i = 0; i < playerActionsArray.Length; ++i)
+		{
+			if (playerActionsArray[i] != null)
+			{
+				playerAreas[i].HandleAction(playerActionsArray[i]);
+			}
+		}
 	}
 
 	private PlayerArea[] playerAreas;

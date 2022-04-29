@@ -19,6 +19,7 @@ namespace _7Wonders
         public Production Production { get; }
         public TradeBonus TradeBonus { get; }
         public int FreeBuildsPerAge { get; }
+        public bool BuildFromDiscards { get; }
 
         public IReadOnlyCollection<Gain> EvaluatedGains { get; }
 
@@ -36,7 +37,8 @@ namespace _7Wonders
             {
                 TradeBonus = new TradeBonus(tradeElement);
             }
-            FreeBuildsPerAge = xmlElement.GetAttribute_Int("freeBuildsPerAge");
+            FreeBuildsPerAge = xmlElement.GetAttribute_Int("freeBuildsPerAge");         // Olympia ability
+            BuildFromDiscards = xmlElement.GetAttribute_Int("buildFromDiscards") > 0;   // Halikarnassos ability
 
             EvaluatedGains = xmlElement.GetChildElements("Gain").Select(gainElement => new Gain(gainElement)).ToList();
         }
@@ -59,6 +61,11 @@ namespace _7Wonders
             foreach (var gain in EvaluatedGains)
             {
                 actingPlayer.AddCoins(gain.GetCoinsGained(actingPlayer, leftNeighbour, rightNeighbour));
+            }
+
+            if (BuildFromDiscards)
+            {
+                actingPlayer.PendingBuildFromDiscard = true;
             }
         }
     }

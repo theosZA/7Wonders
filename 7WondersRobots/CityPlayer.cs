@@ -23,6 +23,12 @@ namespace _7Wonders
             return playerAgent.GetAction(playerStates, hand);
         }
 
+        public Card GetBuildFromDiscards(IList<PlayerState> playerStates, IList<Card> discards)
+        {
+            var playerAgent = playerAgentsByCityName[playerStates[0].CityName];
+            return playerAgent.GetBuildFromDiscards(playerStates, discards);
+        }
+
         private IDictionary<string, PlayerAgent> playerAgentsByCityName;
     }
 }

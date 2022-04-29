@@ -31,6 +31,12 @@
             this.lblGeneration = new System.Windows.Forms.Label();
             this.txtGeneration = new System.Windows.Forms.TextBox();
             this.dgvPlayers = new System.Windows.Forms.DataGridView();
+            this.colGeneration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.City = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColDna = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGames = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPosition = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colVPs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nudGamesPlayed = new System.Windows.Forms.NumericUpDown();
             this.lblGamesPlayed = new System.Windows.Forms.Label();
             this.btnNextGeneration = new System.Windows.Forms.Button();
@@ -41,12 +47,6 @@
             this.lblAverageVPs = new System.Windows.Forms.Label();
             this.txtAverageVPs = new System.Windows.Forms.TextBox();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.colGeneration = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.City = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColDna = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colGames = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPosition = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colVPs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGamesPlayed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPlayers)).BeginInit();
@@ -89,19 +89,53 @@
             this.dgvPlayers.Size = new System.Drawing.Size(768, 786);
             this.dgvPlayers.TabIndex = 3;
             // 
+            // colGeneration
+            // 
+            this.colGeneration.HeaderText = "Generation";
+            this.colGeneration.Name = "colGeneration";
+            // 
+            // City
+            // 
+            this.City.HeaderText = "City";
+            this.City.Name = "City";
+            // 
+            // ColDna
+            // 
+            this.ColDna.HeaderText = "DNA";
+            this.ColDna.Name = "ColDna";
+            this.ColDna.ReadOnly = true;
+            // 
+            // colGames
+            // 
+            this.colGames.HeaderText = "Games";
+            this.colGames.Name = "colGames";
+            this.colGames.ReadOnly = true;
+            // 
+            // colPosition
+            // 
+            this.colPosition.HeaderText = "Avg Position";
+            this.colPosition.Name = "colPosition";
+            this.colPosition.ReadOnly = true;
+            // 
+            // colVPs
+            // 
+            this.colVPs.HeaderText = "Avg VPs";
+            this.colVPs.Name = "colVPs";
+            this.colVPs.ReadOnly = true;
+            // 
             // nudGamesPlayed
             // 
             this.nudGamesPlayed.Location = new System.Drawing.Point(384, 18);
             this.nudGamesPlayed.Maximum = new decimal(new int[] {
-            999,
+            9999,
             0,
             0,
             0});
             this.nudGamesPlayed.Name = "nudGamesPlayed";
-            this.nudGamesPlayed.Size = new System.Drawing.Size(44, 20);
+            this.nudGamesPlayed.Size = new System.Drawing.Size(54, 20);
             this.nudGamesPlayed.TabIndex = 4;
             this.nudGamesPlayed.Value = new decimal(new int[] {
-            500,
+            1000,
             0,
             0,
             0});
@@ -137,7 +171,7 @@
             this.nudPlayers.Size = new System.Drawing.Size(48, 20);
             this.nudPlayers.TabIndex = 8;
             this.nudPlayers.Value = new decimal(new int[] {
-            25,
+            40,
             0,
             0,
             0});
@@ -154,7 +188,7 @@
             // lblGenerations
             // 
             this.lblGenerations.AutoSize = true;
-            this.lblGenerations.Location = new System.Drawing.Point(537, 18);
+            this.lblGenerations.Location = new System.Drawing.Point(530, 18);
             this.lblGenerations.Name = "lblGenerations";
             this.lblGenerations.Size = new System.Drawing.Size(67, 13);
             this.lblGenerations.TabIndex = 10;
@@ -162,17 +196,17 @@
             // 
             // nudGenerations
             // 
-            this.nudGenerations.Location = new System.Drawing.Point(610, 15);
+            this.nudGenerations.Location = new System.Drawing.Point(603, 15);
             this.nudGenerations.Maximum = new decimal(new int[] {
-            999,
+            9999,
             0,
             0,
             0});
             this.nudGenerations.Name = "nudGenerations";
-            this.nudGenerations.Size = new System.Drawing.Size(47, 20);
+            this.nudGenerations.Size = new System.Drawing.Size(54, 20);
             this.nudGenerations.TabIndex = 11;
             this.nudGenerations.Value = new decimal(new int[] {
-            100,
+            250,
             0,
             0,
             0});
@@ -200,40 +234,6 @@
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
-            // 
-            // colGeneration
-            // 
-            this.colGeneration.HeaderText = "Generation";
-            this.colGeneration.Name = "colGeneration";
-            // 
-            // City
-            // 
-            this.City.HeaderText = "City";
-            this.City.Name = "City";
-            // 
-            // ColDna
-            // 
-            this.ColDna.HeaderText = "DNA";
-            this.ColDna.Name = "ColDna";
-            this.ColDna.ReadOnly = true;
-            // 
-            // colGames
-            // 
-            this.colGames.HeaderText = "Games";
-            this.colGames.Name = "colGames";
-            this.colGames.ReadOnly = true;
-            // 
-            // colPosition
-            // 
-            this.colPosition.HeaderText = "Avg Position";
-            this.colPosition.Name = "colPosition";
-            this.colPosition.ReadOnly = true;
-            // 
-            // colVPs
-            // 
-            this.colVPs.HeaderText = "Avg VPs";
-            this.colVPs.Name = "colVPs";
-            this.colVPs.ReadOnly = true;
             // 
             // Form1
             // 

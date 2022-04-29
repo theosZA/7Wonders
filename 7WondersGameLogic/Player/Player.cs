@@ -27,6 +27,8 @@ namespace _7Wonders
 
         public int FreeBuildsLeft => state.FreeBuildsLeft;
 
+        public bool PendingBuildFromDiscard => state.PendingBuildFromDiscard;
+
         public Player(PlayerAgent playerAgent, Tableau tableau)
         {
             agent = playerAgent;
@@ -71,15 +73,15 @@ namespace _7Wonders
         /// <summary>
         /// Given all the public information plus the player agent's hand, determines what action the player's agent will take.
         /// </summary>
-        /// <param name="playerStates">
+        /// <param name="hand">This player's hand.</param>
+        /// <param name="players">
         /// Each player in clockwise order. Requires at least 3 elements.
         /// The first item in the collection must be this player.
         /// The next item in the collection must be this player's left-hand neighbour.
         /// The last item in the collection must be this player's right-hand neightbour.
         /// </param>
-        /// <param name="hand">This player's hand.</param>
         /// <returns>The agent's chosen action.</returns>
-        public IAction GetAction(IList<Card> hand, IEnumerable<Player> players)
+        public IAction GetAction(IEnumerable<Card> hand, IEnumerable<Player> players)
         {
             return agent.GetAction(players.Select(player => new PlayerState(player.state)).ToList(), new List<Card>(hand));
         }
@@ -87,6 +89,23 @@ namespace _7Wonders
         public void ApplyAction(IAction action, Player leftNeighbour, Player rightNeighbour, IList<Card> hand, IList<Card> discards)
         {
             action.Apply(state, leftNeighbour.state, rightNeighbour.state, hand, discards);
+        }
+
+        /// <summary>
+        /// Given all the public information plus the discards available, which discard they will take to build for free.
+        /// </summary>
+        /// <param name="discards">All cards that have been discarded.</param>
+        /// <param name="players">
+        /// Each individual's player state in clockwise order. The collection will have at least 3 elements.
+        /// The first item in the collection is this player's state.
+        /// The next item in the collection is this player's left-hand neighbour.
+        /// The last item in the collection is this player's right-hand neightbour.
+        /// </param>
+        /// <returns>Any one card from the discards that has not already been built by the player.</returns>
+        /// <remarks>Can return null if there are no valid cards to build.</remarks>
+        public Card GetBuildFromDiscards(IEnumerable<Card> discards, IEnumerable<Player> players)
+        {
+            return agent.GetBuildFromDiscards(players.Select(player => new PlayerState(player.state)).ToList(), new List<Card>(discards));
         }
 
         private PlayerAgent agent;

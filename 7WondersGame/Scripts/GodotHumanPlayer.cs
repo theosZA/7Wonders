@@ -11,6 +11,9 @@ public class GodotHumanPlayer : PlayerAgent
 	public delegate void NewHandEventHandler(IList<Card> hand, IReadOnlyCollection<IAction> actions);
 	public NewHandEventHandler NewHand { get; set; }
 
+	public delegate void DiscardsBuildEventHandler(IReadOnlyCollection<Card> allDiscards, IReadOnlyCollection<Card> buildableCards);
+	public DiscardsBuildEventHandler DiscardsBuild {get; set; }
+
 	public string Name { get; }
 
 	public GodotHumanPlayer(string name)
@@ -28,17 +31,41 @@ public class GodotHumanPlayer : PlayerAgent
 
 		NewHand?.Invoke(hand, actions);
 
-		waitHandle.WaitOne();   // Blocks until OnActionChosen is called.
+		actionWaitHandle.WaitOne();   // Blocks until OnActionChosen is called.
 
 		return chosenAction;
+	}
+
+	public Card GetBuildFromDiscards(IList<PlayerState> playerStates, IList<Card> discards)
+	{
+		var buildableCards = playerStates[0].GetAllBuildableCards(discards).ToList();
+		if (!buildableCards.Any())
+		{
+			return null;
+		}
+
+		DiscardsBuild?.Invoke(discards.ToList(), buildableCards);
+
+		discardBuildWaitHandle.WaitOne();   // Blocks until OnDiscardBuildChosen is called.
+
+		return chosenDiscardBuild;
 	}
 
 	public void OnActionChosen(IAction action)
 	{
 		this.chosenAction = action;
-		waitHandle.Set();
+		actionWaitHandle.Set();
 	}
 
-	private AutoResetEvent waitHandle = new AutoResetEvent(false);
+	public void OnDiscardBuildChosen(Card card)
+	{
+		this.chosenDiscardBuild = card;
+		discardBuildWaitHandle.Set();
+	}
+
+	private AutoResetEvent actionWaitHandle = new AutoResetEvent(false);
 	private IAction chosenAction;
+
+	private AutoResetEvent discardBuildWaitHandle = new AutoResetEvent(false);
+	private Card chosenDiscardBuild;
 }

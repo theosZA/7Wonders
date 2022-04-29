@@ -66,7 +66,7 @@
       <Stage victoryPoints="3">
         <Cost clay="2"/>
       </Stage>
-      <Stage victoryPoints="5"><!-- Should be to build any 1 previously discarded card for free -->
+      <Stage buildFromDiscards="1">
         <Cost ore="3"/>
       </Stage>
       <Stage victoryPoints="7">

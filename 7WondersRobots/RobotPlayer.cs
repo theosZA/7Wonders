@@ -27,9 +27,28 @@ namespace _7Wonders
                                .MaxElement(action => Evaluate(action, new PlayerState(actingPlayer), new PlayerState(leftNeighbour), new PlayerState(rightNeighbour), new List<Card>(hand)));
         }
 
+        public Card GetBuildFromDiscards(IList<PlayerState> playerStates, IList<Card> discards)
+        {
+            var actingPlayer = playerStates[0];
+            var leftNeighbour = playerStates[1];
+            var rightNeighbour = playerStates[playerStates.Count - 1];
+
+            return actingPlayer.GetAllBuildableCards(discards)
+                               .Select(card => new Build
+                                                   {
+                                                       Card = card,
+                                                       BuiltFromDiscards = true
+                                                   })
+                               .MaxElement(action => Evaluate(action, new PlayerState(actingPlayer), new PlayerState(leftNeighbour), new PlayerState(rightNeighbour), null))
+                               ?.Card;
+        }
+
         private double Evaluate(IAction action, PlayerState actingPlayer, PlayerState leftNeighbour, PlayerState rightNeighbour, IList<Card> hand)
         {
-            int turn = ((hand[0].Age - 1) * 6) + (7 - hand.Count);
+            if (hand != null)
+            {
+                turn = ((hand[0].Age - 1) * 6) + (7 - hand.Count);
+            }
             int offset = weightsPerTurn * turn;
 
             action.Apply(actingPlayer, leftNeighbour, rightNeighbour, hand, discards: new List<Card>());
@@ -40,7 +59,8 @@ namespace _7Wonders
                  + weights[offset + 32] * actingPlayer.Coins
                  + weights[offset + 33] * actingPlayer.FreeBuildsLeft
                  + weights[offset + 34] * actingPlayer.FreeBuildsPerAge
-                 + weights[offset + 35] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
+                 + (actingPlayer.PendingBuildFromDiscard ? weights[offset + 35] : 0)
+                 + weights[offset + 36] * actingPlayer.CalculateVictoryPoints(leftNeighbour, rightNeighbour);
         }
 
         private double EvaluateResources(int resourceOffset, PlayerState actingPlayer)
@@ -68,7 +88,9 @@ namespace _7Wonders
                  + weights[scienceOffset + 0] * scienceSymbolCounts[2];
         }
 
-        const int weightsPerTurn = 36;
+        const int weightsPerTurn = 37;
         readonly int[] weights;
+
+        int turn = 0;
     }
 }

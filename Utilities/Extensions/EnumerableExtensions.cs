@@ -115,21 +115,5 @@ namespace Extensions
                 }
             }
         }
-
-        /// <summary>
-        /// Returns true if the pair at the given index is a minimal pair of the given collection of pairs. The minimal elements are those for
-        /// which there are no other elements less than them using the partial order (a, b) <= (c, d) iff (a <= c) and (b <= d).
-        /// </summary>
-        private static bool IsMinimalElement<T>(this IList<(T, T)> collection, int index) where T: IComparable
-        {
-            for (int i = 0; i < collection.Count; ++i)
-            {
-                if (i != index && collection[i].IsLessThan(collection[index]))
-                {   // There's at least one other pair that is less than the given pair.
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }

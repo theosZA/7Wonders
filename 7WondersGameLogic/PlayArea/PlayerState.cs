@@ -27,6 +27,8 @@ namespace _7Wonders
 
         public int FreeBuildsLeft => FreeBuildsPerAge - freeBuildsMadeThisAge;
 
+        public bool PendingBuildFromDiscard { get; set; } = false;
+
         public PlayerState(Tableau tableau)
         {
             this.tableau = tableau;
@@ -38,6 +40,7 @@ namespace _7Wonders
             MilitaryDefeats = source.MilitaryDefeats;
             MilitaryVictoryPoints = source.MilitaryVictoryPoints;
             freeBuildsMadeThisAge = source.freeBuildsMadeThisAge;
+            PendingBuildFromDiscard = source.PendingBuildFromDiscard;
 
             tableau = new Tableau(source.tableau);
         }
@@ -214,6 +217,12 @@ namespace _7Wonders
             }
 
             return actions;
+        }
+
+        public IEnumerable<Card> GetAllBuildableCards(IEnumerable<Card> cards)
+        {
+            return cards.Distinct()
+                        .Where(card => !tableau.Has(card.Name));
         }
 
         private IEnumerable<(int costToLeftNeighbour, int costToRightNeighbour)> CalculatePossibleTradeCosts(ResourceCollection requiredResources, PlayerState leftNeighbour, PlayerState rightNeighbour)

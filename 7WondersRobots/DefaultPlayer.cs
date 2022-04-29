@@ -23,5 +23,10 @@ namespace _7Wonders
 
             return actingPlayer.GetAllActions(hand, leftNeighbour, rightNeighbour).First();
         }
+
+        public Card GetBuildFromDiscards(IList<PlayerState> playerStates, IList<Card> discards)
+        {
+            return playerStates[0].GetAllBuildableCards(discards).FirstOrDefault();
+        }
     }
 }

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Art/wooden background.jpg" type="Texture" id=1]
 [ext_resource path="res://Scripts/Gameplay.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/HandArea.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/DiscardsArea.tscn" type="PackedScene" id=4]
 
 [node name="Gameplay" type="Node2D"]
 script = ExtResource( 2 )
@@ -55,7 +56,6 @@ scale = Vector2( 0.2, 0.2 )
 
 [node name="Opposite0" type="Node2D" parent="OppositePlayers"]
 position = Vector2( -3150, 0 )
-scale = Vector2( 1, 1 )
 
 [node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite0"]
 visible = false
@@ -67,7 +67,6 @@ color = Color( 1, 1, 0, 0.392157 )
 
 [node name="Opposite1" type="Node2D" parent="OppositePlayers"]
 position = Vector2( -2100, 0 )
-scale = Vector2( 1, 1 )
 
 [node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite1"]
 visible = false
@@ -79,7 +78,6 @@ color = Color( 0, 1, 1, 0.392157 )
 
 [node name="Opposite2" type="Node2D" parent="OppositePlayers"]
 position = Vector2( -1050, 0 )
-scale = Vector2( 1, 1 )
 
 [node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite2"]
 visible = false
@@ -90,7 +88,6 @@ margin_bottom = 454.0
 color = Color( 1, 1, 0, 0.392157 )
 
 [node name="Opposite3" type="Node2D" parent="OppositePlayers"]
-scale = Vector2( 1, 1 )
 
 [node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite3"]
 visible = false
@@ -102,7 +99,6 @@ color = Color( 0, 1, 1, 0.392157 )
 
 [node name="Opposite4" type="Node2D" parent="OppositePlayers"]
 position = Vector2( 1050, 0 )
-scale = Vector2( 1, 1 )
 
 [node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite4"]
 visible = false
@@ -114,7 +110,6 @@ color = Color( 1, 1, 0, 0.392157 )
 
 [node name="Opposite5" type="Node2D" parent="OppositePlayers"]
 position = Vector2( 2100, 0 )
-scale = Vector2( 1, 1 )
 
 [node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite5"]
 visible = false
@@ -126,7 +121,6 @@ color = Color( 0, 1, 1, 0.392157 )
 
 [node name="Opposite6" type="Node2D" parent="OppositePlayers"]
 position = Vector2( 3150, 0 )
-scale = Vector2( 1, 1 )
 
 [node name="TestBounds" type="ColorRect" parent="OppositePlayers/Opposite6"]
 visible = false
@@ -138,3 +132,6 @@ color = Color( 1, 1, 0, 0.392157 )
 
 [node name="HandArea" parent="." instance=ExtResource( 3 )]
 position = Vector2( 967, 373 )
+
+[node name="DiscardsArea" parent="." instance=ExtResource( 4 )]
+position = Vector2( 597, 27 )
