@@ -19,3 +19,5 @@ scale = Vector2( 0.6, 0.6 )
 margin_right = 375.0
 margin_bottom = 585.0
 texture = ExtResource( 2 )
+
+[connection signal="popup_hide" from="DiscardsDialog" to="." method="OnDiscardsDialogClosed"]

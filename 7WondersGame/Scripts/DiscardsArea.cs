@@ -9,6 +9,13 @@ public class DiscardsArea : Node2D
 	public delegate void CardChosenEventHandler(Card card);
 	public CardChosenEventHandler CardChosen { get; set; }
 
+	[Signal]
+	public delegate void DiscardsShown();
+	[Signal]
+	public delegate void DiscardsClosed();
+
+	public bool AwaitingChoice { get; private set; }
+
 	public void OnDiscardsBuild(IReadOnlyCollection<Card> allDiscards, IReadOnlyCollection<Card> buildableCards)
 	{
 		var dialog = GetNode<WindowDialog>("DiscardsDialog");
@@ -49,15 +56,36 @@ public class DiscardsArea : Node2D
 
 		int actualRows = (count - 1) / columns + 1;
 		int actualColumns = Math.Min(columns, count);
-		float height = actualRows * rowHeight;
-		float width = actualColumns * columnWidth;
-		float left = (GetViewportRect().Size.x - width) / 2;
-		dialog.Popup_(new Rect2(new Vector2(left, 10), new Vector2(width, height)));
+		requiredHeight = actualRows * rowHeight;
+		requiredWidth = actualColumns * columnWidth;
+		startingLeft = (GetViewportRect().Size.x - requiredWidth) / 2;
+		
+		AwaitingChoice = true;
+		ShowDiscards();
 	}
 
-	public void OnCardSelected(CardObject card)
+	private void ShowDiscards()
 	{
+		if (AwaitingChoice)
+		{
+			GetNode<WindowDialog>("DiscardsDialog").Popup_(new Rect2(new Vector2(startingLeft, 10), new Vector2(requiredWidth, requiredHeight)));
+			EmitSignal("DiscardsShown");
+		}
+	}
+
+	private void OnDiscardsDialogClosed()
+	{
+		EmitSignal("DiscardsClosed");
+	}
+
+	private void OnCardSelected(CardObject card)
+	{
+		AwaitingChoice = false;
 		GetNode<WindowDialog>("DiscardsDialog").Hide();
 		CardChosen?.Invoke(card.Card);
 	}
+
+	float requiredWidth;
+	float requiredHeight;
+	float startingLeft;
 }

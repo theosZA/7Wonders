@@ -13,3 +13,5 @@ margin_right = 664.0
 margin_bottom = 346.0
 popup_exclusive = true
 window_title = "Age X Turn Y"
+
+[connection signal="popup_hide" from="HandDialog" to="." method="OnHandDialogClosed"]

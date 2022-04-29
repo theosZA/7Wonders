@@ -15,17 +15,33 @@ public class Gameplay : Node2D
 		const string humanCity = null;
 
 		godotHumanPlayer = new GodotHumanPlayer("Human");
+
 		var handArea = GetNode<HandArea>("HandArea");
 		handArea.ActionChosen = godotHumanPlayer.OnActionChosen;
 		godotHumanPlayer.NewHand = handArea.OnNewHand;
+		handArea.Connect("HandShown", this, "OnHandShown");
+		handArea.Connect("HandClosed", this, "OnHandClosed");
+
 		var discardsArea = GetNode<DiscardsArea>("DiscardsArea");
 		discardsArea.CardChosen = godotHumanPlayer.OnDiscardBuildChosen;
 		godotHumanPlayer.DiscardsBuild = discardsArea.OnDiscardsBuild;
+		discardsArea.Connect("DiscardsShown", this, "OnHandShown");
+		discardsArea.Connect("DiscardsClosed", this, "OnHandClosed");
 
 		InitializeGame(playerCount, humanCity);
 		InitializePlayerAreas(playerCount);
 
 		AdvanceGame();
+	}
+
+	private void OnHandShown()
+	{
+		GetNode<Node2D>("HandIconNode").Visible = false;
+	}
+
+	private void OnHandClosed()
+	{
+		GetNode<Node2D>("HandIconNode").Visible = GetNode<HandArea>("HandArea").AwaitingChoice | GetNode<DiscardsArea>("DiscardsArea").AwaitingChoice;
 	}
 
 	private void InitializeGame(int playerCount, string humanCity)

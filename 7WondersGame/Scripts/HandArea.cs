@@ -8,6 +8,13 @@ public class HandArea : Node2D
 	public delegate void ActionChosenEventHandler(IAction action);
 	public ActionChosenEventHandler ActionChosen { get; set; }
 
+	[Signal]
+	public delegate void HandShown();
+	[Signal]
+	public delegate void HandClosed();
+
+	public bool AwaitingChoice { get; private set; }
+
 	public void OnNewHand(IList<Card> hand, IReadOnlyCollection<IAction> actions)
 	{
 		var dialog = GetNode<WindowDialog>("HandDialog");
@@ -32,10 +39,33 @@ public class HandArea : Node2D
 			dialog.AddChild(handCardArea);
 		}
 
-		float width = handCardAreas.Sum(handCardArea => handCardArea.RectSize.x);
-		float height = handCardAreas.Max(handCardArea => handCardArea.RectSize.y);
-		float left = (GetViewportRect().Size.x - width) / 2;
-		dialog.Popup_(new Rect2(new Vector2(left, 10), new Vector2(width, height)));
+		requiredWidth = handCardAreas.Sum(handCardArea => handCardArea.RectSize.x);
+		requiredHeight = handCardAreas.Max(handCardArea => handCardArea.RectSize.y);
+		startingLeft = (GetViewportRect().Size.x - requiredWidth) / 2;
+		
+		AwaitingChoice = true;
+		ShowHand();
+	}
+
+	private void ShowHand()
+	{
+		if (AwaitingChoice)
+		{
+			GetNode<WindowDialog>("HandDialog").Popup_(new Rect2(new Vector2(startingLeft, 10), new Vector2(requiredWidth, requiredHeight)));
+			EmitSignal("HandShown");
+		}
+	}
+
+	private void OnHandDialogClosed()
+	{
+		EmitSignal("HandClosed");
+	}
+
+	private void OnActionChosen(IAction action)
+	{
+		AwaitingChoice = false;
+		GetNode<WindowDialog>("HandDialog").Hide();
+		ActionChosen?.Invoke(action);
 	}
 
 	private IEnumerable<HandCardArea> CreateHandCardAreas(IList<Card> hand, IReadOnlyCollection<IAction> actions)
@@ -60,12 +90,9 @@ public class HandArea : Node2D
 		return handCardArea;
 	}
 
-	private void OnActionChosen(IAction action)
-	{
-		GetNode<WindowDialog>("HandDialog").Hide();
-		ActionChosen?.Invoke(action);
-	}
-
 	private PackedScene handCardAreaScene = ResourceLoader.Load<PackedScene>("res://Scenes/HandCardArea.tscn");
 
+	float requiredWidth;
+	float requiredHeight;
+	float startingLeft;
 }
