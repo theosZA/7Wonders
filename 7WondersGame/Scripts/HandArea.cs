@@ -3,68 +3,49 @@ using _7Wonders;
 using System.Collections.Generic;
 using System.Linq;
 
-public class HandArea : Node2D
+public class HandArea : WindowHolder
 {
 	public delegate void ActionChosenEventHandler(IAction action);
 	public ActionChosenEventHandler ActionChosen { get; set; }
 
-	[Signal]
-	public delegate void HandShown();
-	[Signal]
-	public delegate void HandClosed();
+	public bool AwaitingChoice => handCardAreas != null;
 
-	public bool AwaitingChoice { get; private set; }
-
-	public void OnNewHand(IList<Card> hand, IReadOnlyCollection<IAction> actions)
+	public void ShowNewHand(IList<Card> hand, IReadOnlyCollection<IAction> actions)
 	{
-		var dialog = GetNode<WindowDialog>("HandDialog");
-
 		// Update title.
 		int age = hand[0].Age;
 		int turn = 8 - hand.Count;
-		dialog.WindowTitle = $"Age {age} Turn {turn}";
-
-		// Remove all existing cards.
-		var oldHandCardAreas = dialog.GetChildren().Cast<Node>()
-												   .Where(node => node is HandCardArea);
-		foreach (var handCardArea in oldHandCardAreas)
-		{
-			dialog.RemoveChild(handCardArea);
-		}
+		GetWindowDialog().WindowTitle = $"Age {age} Turn {turn}";
 
 		// Add new cards.
-		var handCardAreas = CreateHandCardAreas(hand, actions).ToList();
+		handCardAreas = CreateHandCardAreas(hand, actions).ToList();
 		foreach (var handCardArea in handCardAreas)
 		{
-			dialog.AddChild(handCardArea);
+			GetWindowDialog().AddChild(handCardArea);
 		}
 
-		requiredWidth = handCardAreas.Sum(handCardArea => handCardArea.RectSize.x);
-		requiredHeight = handCardAreas.Max(handCardArea => handCardArea.RectSize.y);
-		startingLeft = (GetViewportRect().Size.x - requiredWidth) / 2;
-		
-		AwaitingChoice = true;
-		ShowHand();
+		ShowWindow();
 	}
 
-	private void ShowHand()
-	{
-		if (AwaitingChoice)
-		{
-			GetNode<WindowDialog>("HandDialog").Popup_(new Rect2(new Vector2(startingLeft, 10), new Vector2(requiredWidth, requiredHeight)));
-			EmitSignal("HandShown");
-		}
-	}
+	protected override WindowDialog GetWindowDialog() => GetNode<WindowDialog>("HandDialog");
+	protected override CanvasItem GetReshowButtonHolder() => GetNode<CanvasItem>("ReshowHandButtonHolder");
+	protected override BaseButton GetReshowButton() => GetNode<BaseButton>("ReshowHandButtonHolder/ReshowHandButton");
 
-	private void OnHandDialogClosed()
-	{
-		EmitSignal("HandClosed");
-	}
+	protected override float GetRequiredWidth() => handCardAreas?.Sum(handCardArea => handCardArea.RectSize.x) ?? 0;
+	protected override float GetRequiredHeight() => handCardAreas?.Max(handCardArea => handCardArea.RectSize.y) ?? 0;
+
+	protected override bool ShouldSuppressShow() => !AwaitingChoice;
 
 	private void OnActionChosen(IAction action)
 	{
-		AwaitingChoice = false;
-		GetNode<WindowDialog>("HandDialog").Hide();
+		// Remove all existing cards.
+		foreach (var handCardArea in handCardAreas)
+		{
+			GetWindowDialog().RemoveChild(handCardArea);
+		}
+		handCardAreas = null;
+
+		HideWindow();
 		ActionChosen?.Invoke(action);
 	}
 
@@ -92,7 +73,5 @@ public class HandArea : Node2D
 
 	private PackedScene handCardAreaScene = ResourceLoader.Load<PackedScene>("res://Scenes/HandCardArea.tscn");
 
-	private float requiredWidth;
-	private float requiredHeight;
-	private float startingLeft;
+	private IReadOnlyCollection<HandCardArea> handCardAreas;
 }

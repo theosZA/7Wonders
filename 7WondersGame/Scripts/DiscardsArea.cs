@@ -4,39 +4,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class DiscardsArea : Node2D
+public class DiscardsArea : WindowHolder
 {
 	public delegate void CardChosenEventHandler(Card card);
 	public CardChosenEventHandler CardChosen { get; set; }
 
-	[Signal]
-	public delegate void DiscardsShown();
-	[Signal]
-	public delegate void DiscardsClosed();
-
-	public bool AwaitingChoice { get; private set; }
+	public bool AwaitingChoice => cardButtons != null;
 
 	public void OnDiscardsBuild(IReadOnlyCollection<Card> allDiscards, IReadOnlyCollection<Card> buildableCards)
 	{
 		var dialog = GetNode<WindowDialog>("DiscardsDialog");
 
-		// Remove all existing cards.
-		var oldCardButtons = dialog.GetChildren().Cast<Node>()
-												 .Where(node => node is Node2D);
-		foreach (var cardButton in oldCardButtons)
-		{
-			dialog.RemoveChild(cardButton);
-		}
-
 		// Add new cards.
-		const int columns = 8;
-		const int columnWidth = 228;
-		const int rowHeight = 352;
-		int count = 0;
+		cardButtons = new List<Node2D>();
 		foreach (var card in allDiscards)
 		{
-			int column = count % columns;
-			int row = count / columns;
+			int column = cardButtons.Count % maxColumns;
+			int row = cardButtons.Count / maxColumns;
 
 			var cardNode = new Node2D()
 			{
@@ -51,41 +35,37 @@ public class DiscardsArea : Node2D
 			cardNode.AddChild(cardButton);
 			dialog.AddChild(cardNode);
 
-			++count;
+			cardButtons.Add(cardNode);
 		};
 
-		int actualRows = (count - 1) / columns + 1;
-		int actualColumns = Math.Min(columns, count);
-		requiredHeight = actualRows * rowHeight;
-		requiredWidth = actualColumns * columnWidth;
-		startingLeft = (GetViewportRect().Size.x - requiredWidth) / 2;
-		
-		AwaitingChoice = true;
-		ShowDiscards();
+		ShowWindow();
 	}
 
-	private void ShowDiscards()
-	{
-		if (AwaitingChoice)
-		{
-			GetNode<WindowDialog>("DiscardsDialog").Popup_(new Rect2(new Vector2(startingLeft, 10), new Vector2(requiredWidth, requiredHeight)));
-			EmitSignal("DiscardsShown");
-		}
-	}
+	protected override WindowDialog GetWindowDialog() => GetNode<WindowDialog>("DiscardsDialog");
+	protected override CanvasItem GetReshowButtonHolder() => GetNode<CanvasItem>("ReshowDiscardsButtonHolder");
+	protected override BaseButton GetReshowButton() => GetNode<BaseButton>("ReshowDiscardsButtonHolder/ReshowDiscardsButton");
 
-	private void OnDiscardsDialogClosed()
-	{
-		EmitSignal("DiscardsClosed");
-	}
+	protected override float GetRequiredWidth() => Math.Min(cardButtons.Count, maxColumns) * columnWidth;
+	protected override float GetRequiredHeight() => ((cardButtons.Count - 1) / maxColumns + 1) * rowHeight;
+
+	protected override bool ShouldSuppressShow() => !AwaitingChoice;
 
 	private void OnCardSelected(CardObject card)
 	{
-		AwaitingChoice = false;
-		GetNode<WindowDialog>("DiscardsDialog").Hide();
+		// Remove all existing cards.
+		foreach (var cardButton in cardButtons)
+		{
+			GetWindowDialog().RemoveChild(cardButton);
+		}
+		cardButtons = null;
+
+		HideWindow();
 		CardChosen?.Invoke(card.Card);
 	}
+	
+	private const int maxColumns = 8;
+	private const int columnWidth = 228;
+	private const int rowHeight = 352;
 
-	private float requiredWidth;
-	private float requiredHeight;
-	private float startingLeft;
+	private IList<Node2D> cardButtons;
 }

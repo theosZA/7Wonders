@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scripts/HandArea.cs" type="Script" id=1]
+[ext_resource path="res://Art/Icon_Hand.png" type="Texture" id=2]
+[ext_resource path="res://Art/Icon_Hand_Hover.png" type="Texture" id=3]
 
 [node name="HandArea" type="Node2D"]
 script = ExtResource( 1 )
@@ -14,4 +16,13 @@ margin_bottom = 346.0
 popup_exclusive = true
 window_title = "Age X Turn Y"
 
-[connection signal="popup_hide" from="HandDialog" to="." method="OnHandDialogClosed"]
+[node name="ReshowHandButtonHolder" type="Node2D" parent="."]
+visible = false
+position = Vector2( 16, 997 )
+scale = Vector2( 0.5, 0.5 )
+
+[node name="ReshowHandButton" type="TextureButton" parent="ReshowHandButtonHolder"]
+margin_right = 128.0
+margin_bottom = 128.0
+texture_normal = ExtResource( 2 )
+texture_hover = ExtResource( 3 )

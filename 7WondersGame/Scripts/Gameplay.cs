@@ -16,32 +16,11 @@ public class Gameplay : Node2D
 
 		godotHumanPlayer = new GodotHumanPlayer("Human");
 
-		var handArea = GetNode<HandArea>("HandArea");
-		handArea.ActionChosen = godotHumanPlayer.OnActionChosen;
-		godotHumanPlayer.NewHand = handArea.OnNewHand;
-		handArea.Connect("HandShown", this, "OnHandShown");
-		handArea.Connect("HandClosed", this, "OnHandClosed");
-
-		var discardsArea = GetNode<DiscardsArea>("DiscardsArea");
-		discardsArea.CardChosen = godotHumanPlayer.OnDiscardBuildChosen;
-		godotHumanPlayer.DiscardsBuild = discardsArea.OnDiscardsBuild;
-		discardsArea.Connect("DiscardsShown", this, "OnHandShown");
-		discardsArea.Connect("DiscardsClosed", this, "OnHandClosed");
-
 		InitializeGame(playerCount, humanCity);
 		InitializePlayerAreas(playerCount);
+		InitializeWindows();
 
 		AdvanceGame();
-	}
-
-	private void OnHandShown()
-	{
-		GetNode<Node2D>("HandIconNode").Visible = false;
-	}
-
-	private void OnHandClosed()
-	{
-		GetNode<Node2D>("HandIconNode").Visible = GetNode<HandArea>("HandArea").AwaitingChoice | GetNode<DiscardsArea>("DiscardsArea").AwaitingChoice;
 	}
 
 	private void InitializeGame(int playerCount, string humanCity)
@@ -113,6 +92,26 @@ public class Gameplay : Node2D
 		}
 	}
 
+	private void InitializeWindows()
+	{
+		var handAreaScene = ResourceLoader.Load<PackedScene>("res://Scenes/HandArea.tscn");
+		var discardsAreaScene = ResourceLoader.Load<PackedScene>("res://Scenes/DiscardsArea.tscn");
+		var leaderboardScene = ResourceLoader.Load<PackedScene>("res://Scenes/Leaderboard.tscn");
+
+		var handArea = handAreaScene.Instance<HandArea>();
+		handArea.ActionChosen = godotHumanPlayer.OnActionChosen;
+		godotHumanPlayer.NewHand = handArea.ShowNewHand;
+		AddChild(handArea);
+
+		var discardsArea = discardsAreaScene.Instance<DiscardsArea>();
+		discardsArea.CardChosen = godotHumanPlayer.OnDiscardBuildChosen;
+		godotHumanPlayer.DiscardsBuild = discardsArea.OnDiscardsBuild;
+		AddChild(discardsArea);
+
+		leaderboard = leaderboardScene.Instance<Leaderboard>();
+		AddChild(leaderboard);
+	}
+
 	private void AdvanceGame()
 	{
 		new System.Threading.Thread(() =>
@@ -123,10 +122,6 @@ public class Gameplay : Node2D
 			HandleActions(gameTurn.additionalPlayerActions);
 
 			// TODO: Handle military results in the militaryResults property.
-
-			// TODO: Display the leaderboard in a nice way. For now it goes to debug output.
-			GD.Print(game.GetLeaderboardText());
-			GD.Print();
 
 			if (game.IsGameOver)
 			{
@@ -153,11 +148,12 @@ public class Gameplay : Node2D
 
 	private void ShowLeaderboard()
 	{
-		var leaderboardNode = GetNode<Leaderboard>("Leaderboard");
-		leaderboardNode.ShowLeaderboard(game.Leaderboard);
+		leaderboard.ShowLeaderboard(game.Leaderboard);
 	}
 
 	private PlayerArea[] playerAreas;
+	private Leaderboard leaderboard;
+
 	private Game game;
 	private GodotHumanPlayer godotHumanPlayer;
 }

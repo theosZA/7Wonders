@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/DiscardsArea.cs" type="Script" id=1]
 [ext_resource path="res://Art/Age1_Brown_StonePit.png" type="Texture" id=2]
+[ext_resource path="res://Art/Icon_Hand.png" type="Texture" id=3]
+[ext_resource path="res://Art/Icon_Hand_Hover.png" type="Texture" id=4]
 
 [node name="DiscardsArea" type="Node2D"]
 script = ExtResource( 1 )
@@ -20,4 +22,13 @@ margin_right = 375.0
 margin_bottom = 585.0
 texture = ExtResource( 2 )
 
-[connection signal="popup_hide" from="DiscardsDialog" to="." method="OnDiscardsDialogClosed"]
+[node name="ReshowDiscardsButtonHolder" type="Node2D" parent="."]
+visible = false
+position = Vector2( 16, 997 )
+scale = Vector2( 0.5, 0.5 )
+
+[node name="ReshowDiscardsButton" type="TextureButton" parent="ReshowDiscardsButtonHolder"]
+margin_right = 128.0
+margin_bottom = 128.0
+texture_normal = ExtResource( 3 )
+texture_hover = ExtResource( 4 )

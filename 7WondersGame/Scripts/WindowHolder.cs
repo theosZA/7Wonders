@@ -23,6 +23,11 @@ public abstract class WindowHolder : Node2D
 		GetReshowButtonHolder().Visible = false;
 	}
 
+	public void HideWindow()
+	{
+		GetWindowDialog().Hide();
+	}
+
 	protected abstract WindowDialog GetWindowDialog();
 	protected abstract CanvasItem GetReshowButtonHolder();
 	protected abstract BaseButton GetReshowButton();
