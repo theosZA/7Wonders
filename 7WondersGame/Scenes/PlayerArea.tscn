@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scripts/PlayerArea.cs" type="Script" id=1]
 [ext_resource path="res://Art/PlayerBoard_Gizah_A.jpg" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Art/Age2_Back.png" type="Texture" id=7]
 [ext_resource path="res://Art/Age3_Back.png" type="Texture" id=8]
 [ext_resource path="res://Scenes/CardStack.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Art/Token_MilitaryVictory_Age3.png" type="Texture" id=10]
 [ext_resource path="res://Art/Icon_Free.png" type="Texture" id=15]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -166,3 +167,13 @@ position = Vector2( 1768, 75 )
 z_index = -1
 
 [node name="CardStack" parent="PlayerBoard/Cards/PurpleRoot" instance=ExtResource( 9 )]
+
+[node name="MilitaryResults" type="Node2D" parent="PlayerBoard"]
+position = Vector2( 20, 120 )
+scale = Vector2( 0.42, 0.42 )
+
+[node name="TestToken" type="TextureRect" parent="PlayerBoard/MilitaryResults"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 10 )

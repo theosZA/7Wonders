@@ -38,6 +38,23 @@ public class PlayerArea : Node2D
 		OnGameUpdate();
 	}
 
+	public void AddMilitaryResult(int age, bool victory)
+	{
+		const int maxColumns = 3;
+		int row = militaryTokens.Count / maxColumns;
+		int column = militaryTokens.Count % maxColumns;
+
+		var texture = Assets.LoadMilitaryToken(age, victory);
+		var militaryToken = new TextureRect()
+		{
+			Texture = texture,
+			RectPosition = new Vector2(column * texture.GetWidth(), row * texture.GetHeight())
+		};
+		
+		militaryTokens.Add(militaryToken);
+		GetNode("PlayerBoard/MilitaryResults").AddChild(militaryToken);
+	}
+
 	private void AddCard(Card card)
 	{
 		cards.Add(card);
@@ -116,5 +133,6 @@ public class PlayerArea : Node2D
 	}
 
 	private List<Card> cards = new List<Card>();
+	private List<TextureRect> militaryTokens = new List<TextureRect>();
 	int wonderStagesBuilt = 0;
 }

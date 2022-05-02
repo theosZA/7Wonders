@@ -8,10 +8,6 @@ A _7 Wonders_ game implemented in the Godot game engine. It has been tested with
 
 Currently the game supports a single human player (and all other seats are played by AI players). There is no game setup screen yet, so to tweak the setup you will need to adjust it in the `Gameplay._Ready` method (in `Gameplay.cs`). You can adjust the number of players (3-7) and if the human player has a specific city board or is assigned one at random.
 
-## PerformanceTester
-
-A small console application that determines how fast a _7 Wonders_ game can be played using AI players.
-
 ## 7WondersGameLogic
 
 A library for the underlying game logic of a _7 Wonders_ game independent of the actual implementation.
@@ -41,6 +37,10 @@ A library containing `PlayerAgent` implementations for AI-driven players. The su
 ## 7WondersEvolver
 
 A Windows application that can be used for generating new AI players using an evolutionary process. Individual player DNA codes can be copied into the `Robots.xml` file for use by the AIs.
+
+## PerformanceTester
+
+A small console application that determines how fast a _7 Wonders_ game can be played using AI players.
 
 ## Utilities
 

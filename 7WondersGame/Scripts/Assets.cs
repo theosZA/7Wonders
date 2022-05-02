@@ -49,6 +49,21 @@ public static class Assets
         return GD.Load<Texture>($"res://Art/Icon_City_{cityName}.png");
     }
 
+    public static Texture LoadMilitaryToken(int age, bool victory)
+    {
+        string filename = "res://Art/Token_Military";
+        if (victory)
+        {
+            filename += $"Victory_Age{age}.png";
+        }
+        else
+        {
+            filename += "Defeat.png";
+        }
+
+        return GD.Load<Texture>(filename);
+    }
+
 	private static string ToTitleCase(string text)
 	{
 		return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(text).Replace(" ", string.Empty);

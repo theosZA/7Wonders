@@ -121,7 +121,10 @@ public class Gameplay : Node2D
 			HandleActions(gameTurn.playerActions);
 			HandleActions(gameTurn.additionalPlayerActions);
 
-			// TODO: Handle military results in the militaryResults property.
+			if (gameTurn.militaryResults != null)
+			{
+				HandleMilitaryResults(gameTurn.militaryResults);
+			}
 
 			if (game.IsGameOver)
 			{
@@ -144,6 +147,28 @@ public class Gameplay : Node2D
 				playerAreas[i].HandleAction(playerActionsArray[i]);
 			}
 		}
+	}
+
+	private void HandleMilitaryResults(IReadOnlyCollection<MilitaryResult> militaryResults)
+	{
+		foreach (var militaryResult in militaryResults)
+		{
+			int age = (militaryResult.winningVictoryPoints + 1) / 2;
+			GetPlayerArea(militaryResult.winningPlayer).AddMilitaryResult(age, victory: true);
+			GetPlayerArea(militaryResult.losingPlayer).AddMilitaryResult(age, victory: false);
+		}
+	}
+
+	private PlayerArea GetPlayerArea(Player player)
+	{
+		for (int i = 0; i < playerAreas.Length; ++i)
+		{
+			if (game.GetPlayer(i).Name == player.Name)
+			{
+				return playerAreas[i];
+			}
+		}
+		throw new System.Exception($"Failed to find player area for player named '{player.Name}'");
 	}
 
 	private void ShowLeaderboard()
