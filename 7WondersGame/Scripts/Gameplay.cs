@@ -8,33 +8,13 @@ public class Gameplay : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		const int playerCount = 7;
-
-		// Either set the city board for the human to play, or set it to null for random.
-		//const string humanCity = "Halikarnassos";
-		const string humanCity = null;
-
 		godotHumanPlayer = new GodotHumanPlayer("Human");
+		game = GameFactory.CreateGame(godotHumanPlayer);
 
-		InitializeGame(playerCount, humanCity);
-		InitializePlayerAreas(playerCount);
+		InitializePlayerAreas(GameFactory.PlayerCount);
 		InitializeWindows();
 
 		AdvanceGame();
-	}
-
-	private void InitializeGame(int playerCount, string humanCity)
-	{
-		var availableTableaus = new StartingTableauCollection("..\\Cities.xml");
-		var allCards = new CardCollection("..\\Cards.xml");
-		var playerFactory = new RobotPlayerFactory("..\\Robots.xml");
-
-		var playerAgents = new List<PlayerAgent>();
-		playerAgents.Add(godotHumanPlayer);
-		playerAgents.AddRange(Enumerable.Range(0, playerCount - 1)
-									 	.Select(i => playerFactory.CreatePlayer($"Robot {i + 1}", 'A')));
-
-		game = new Game(playerAgents, availableTableaus, allCards, humanCity);
 	}
 
 	private void InitializePlayerAreas(int playerCount)

@@ -3,7 +3,6 @@
 [ext_resource path="res://Scripts/ChangeTradePopup.cs" type="Script" id=1]
 
 [node name="ChangeTradePopup" type="PopupDialog"]
-visible = true
 margin_right = 160.0
 margin_bottom = 40.0
 popup_exclusive = true

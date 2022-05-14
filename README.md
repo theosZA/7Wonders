@@ -6,7 +6,7 @@ This is an implementation of the [7 Wonders](https://boardgamegeek.com/boardgame
 
 A _7 Wonders_ game implemented in the Godot game engine. It has been tested with Godot version 3.4.4. The Godot scripts are implemented in C#. While these scripts can be edited in the Godot editor, I suggest using VS Code (with the C# and Godot extensions) instead.
 
-Currently the game supports a single human player (and all other seats are played by AI players). There is no game setup screen yet, so to tweak the setup you will need to adjust it in the `Gameplay._Ready` method (in `Gameplay.cs`). You can adjust the number of players (3-7) and if the human player has a specific city board or is assigned one at random.
+Currently the game supports a single human player (and all other seats are played by AI players). You can choose the number of players and which Wonder board the human player will use or have it be chosen randomly (default). Note that currently only the A-sides of the Wonder boards are implemented.
 
 ## 7WondersGameLogic
 
