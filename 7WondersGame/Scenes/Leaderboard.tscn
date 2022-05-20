@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scripts/Leaderboard.cs" type="Script" id=1]
 [ext_resource path="res://Art/Icon_City_Babylon.png" type="Texture" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://Art/Icon_Coins.png" type="Texture" id=5]
 [ext_resource path="res://Art/Icon_Leaderboard.png" type="Texture" id=6]
 [ext_resource path="res://Art/Icon_Leaderboard_Hover.png" type="Texture" id=7]
+[ext_resource path="res://Art/Icon_NewGame_Hover.png" type="Texture" id=8]
+[ext_resource path="res://Art/Icon_NewGame.png" type="Texture" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 100
@@ -387,13 +389,22 @@ margin_bottom = 57.0
 custom_fonts/font = SubResource( 3 )
 text = "999"
 
-[node name="ReshowLeaderboardButtonHolder" type="Node2D" parent="."]
+[node name="GameOverButtons" type="Node2D" parent="."]
 visible = false
 position = Vector2( 16, 997 )
 scale = Vector2( 0.5, 0.5 )
 
-[node name="ReshowLeaderboardButton" type="TextureButton" parent="ReshowLeaderboardButtonHolder"]
+[node name="NewGame" type="TextureButton" parent="GameOverButtons"]
 margin_right = 128.0
+margin_bottom = 128.0
+texture_normal = ExtResource( 9 )
+texture_hover = ExtResource( 8 )
+
+[node name="ReshowLeaderboard" type="TextureButton" parent="GameOverButtons"]
+margin_left = 133.0
+margin_right = 261.0
 margin_bottom = 128.0
 texture_normal = ExtResource( 6 )
 texture_hover = ExtResource( 7 )
+
+[connection signal="pressed" from="GameOverButtons/NewGame" to="." method="OnNewGamePressed"]

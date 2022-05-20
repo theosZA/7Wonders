@@ -44,13 +44,18 @@ public class Leaderboard : WindowHolder
 	}
 
 	protected override WindowDialog GetWindowDialog() => GetNode<WindowDialog>("LeaderboardDialog");
-	protected override CanvasItem GetReshowButtonHolder() => GetNode<CanvasItem>("ReshowLeaderboardButtonHolder");
-	protected override BaseButton GetReshowButton() => GetNode<BaseButton>("ReshowLeaderboardButtonHolder/ReshowLeaderboardButton");
+	protected override CanvasItem GetReshowButtonHolder() => GetNode<CanvasItem>("GameOverButtons");
+	protected override BaseButton GetReshowButton() => GetNode<BaseButton>("GameOverButtons/ReshowLeaderboard");
 
 	protected override float GetRequiredWidth() => 1127;
 	protected override float GetRequiredHeight() => 108 + 134 * leaderboard.Count;
 
 	protected override bool ShouldSuppressShow() => (leaderboard == null);
+
+	private void OnNewGamePressed()
+	{
+		GetTree().ChangeScene("res://Scenes/MainMenu.tscn");
+	}
 
 	private IList<(Player player, int victoryPoints)> leaderboard;
 }
