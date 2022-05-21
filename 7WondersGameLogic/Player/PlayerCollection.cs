@@ -143,6 +143,18 @@ namespace _7Wonders
             players[playerIndex].ApplyAction(action, GetLeftNeighbour(playerIndex), GetRightNeighbour(playerIndex), hands[playerIndex], discards);
         }
 
+        public (int playerIndex, IAction action)? GetExtraAgePlay()
+        {
+            var playerIndex = players.FindIndex(player => player.HasExtraAgePlay);
+            if (!playerIndex.HasValue)
+            {
+                return null;
+            }
+
+            int i = playerIndex.Value;
+            return (i, players[i].GetAction(hands[i], CyclePlayers(i)));
+        }
+
         public (int playerIndex, Card card)? GetBuildFromDiscards(IList<Card> discards)
         {
             var playerIndex = players.FindIndex(player => player.PendingBuildFromDiscard);

@@ -20,6 +20,7 @@ namespace _7Wonders
         public TradeBonus TradeBonus { get; }
         public int FreeBuildsPerAge { get; }
         public bool BuildFromDiscards { get; }
+        public bool ExtraAgePlay { get; }
 
         public IReadOnlyCollection<Gain> EvaluatedGains { get; }
         public IReadOnlyCollection<Copy> EvaluatedCopies { get; }
@@ -40,6 +41,7 @@ namespace _7Wonders
             }
             FreeBuildsPerAge = xmlElement.GetAttribute_Int("freeBuildsPerAge");         // Olympia (A) ability
             BuildFromDiscards = xmlElement.GetAttribute_Int("buildFromDiscards") > 0;   // Halikarnassos ability
+            ExtraAgePlay = xmlElement.GetAttribute_Int("extraAgePlay") > 0;             // Babylon (B) ability
 
             EvaluatedGains = xmlElement.GetChildElements("Gain").Select(gainElement => new Gain(gainElement)).ToList();
             EvaluatedCopies = xmlElement.GetChildElements("Copy").Select(copyElement => new Copy(copyElement)).ToList();    // Olympia (B) ability

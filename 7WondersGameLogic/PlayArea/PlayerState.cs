@@ -31,6 +31,8 @@ namespace _7Wonders
 
         public int FreeBuildsLeft => FreeBuildsPerAge - freeBuildsMadeThisAge;
 
+        public bool HasExtraAgePlay => tableau.AllowsExtraAgePlay;
+
         public bool PendingBuildFromDiscard { get; set; } = false;
 
         public PlayerState(Tableau tableau)

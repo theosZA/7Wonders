@@ -45,11 +45,21 @@ namespace _7Wonders
             players.ApplyActions(actions, discards);
 
             if (players.CardsInHand == 1)
-            {   // Last card in hand is discarded.
+            {
+                // Any player who is allowed an extra play in the age, makes that play now.
+                // There should only ever be one such player (Babylon) so we only handle a single result.
+                var extraAgePlay = players.GetExtraAgePlay();
+                if (extraAgePlay.HasValue)
+                {
+                    additionalPlayerActions[extraAgePlay.Value.playerIndex] = extraAgePlay.Value.action;
+                    players.ApplyAction(extraAgePlay.Value.playerIndex, extraAgePlay.Value.action, discards);
+                }
+
+                // Last card in hand is discarded.
                 discards.AddRange(players.DiscardHands());
             }
 
-            // Any players who can build from the discards, does so now.
+            // Any player who can build from the discards, does so now.
             // There should only ever be one such player (Halikarnassos) so we only handle a single result.
             var buildFromDiscards = players.GetBuildFromDiscards(discards);
             if (buildFromDiscards.HasValue)

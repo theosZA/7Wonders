@@ -124,17 +124,16 @@
     </Wonder>
   </City>
   <City name="Babylon" side="B">
-    <!-- Not implemented - just a copy of the A side -->
     <Production clay="1"/>
     <Wonder name="Hanging Gardens">
       <Stage victoryPoints="3">
-        <Cost clay="2"/>
+        <Cost clay="1" loom="1"/>
+      </Stage>
+      <Stage extraAgePlay="1">
+        <Cost wood="2" glass="1"/>
       </Stage>
       <Stage science="wild">
-        <Cost wood="3"/>
-      </Stage>
-      <Stage victoryPoints="7">
-        <Cost clay="4"/>
+        <Cost clay="3" papyrus="1"/>
       </Stage>
     </Wonder>
   </City>

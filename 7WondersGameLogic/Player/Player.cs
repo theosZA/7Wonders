@@ -33,6 +33,8 @@ namespace _7Wonders
 
         public int FreeBuildsLeft => state.FreeBuildsLeft;
 
+        public bool HasExtraAgePlay => state.HasExtraAgePlay;
+
         public bool PendingBuildFromDiscard => state.PendingBuildFromDiscard;
 
         public Player(PlayerAgent playerAgent, Tableau tableau)

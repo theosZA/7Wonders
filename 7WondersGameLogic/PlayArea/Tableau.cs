@@ -19,6 +19,8 @@ namespace _7Wonders
 
         public int FreeBuildsPerAge => builtElements.Sum(element => element.FreeBuildsPerAge);
 
+        public bool AllowsExtraAgePlay => builtElements.Any(element => element.ExtraAgePlay);
+
         public int WonderStagesBuilt => builtElements.Count(element => element is WonderStage);
 
         public int WonderStagesLeft => availableWonderStages.Count;
