@@ -64,9 +64,7 @@ public class PlayerArea : Node2D
 
 	private void AddWonderStage(int age)
 	{
-		++wonderStagesBuilt;
-
-		var positioningNode = FindNode($"WonderStage{wonderStagesBuilt}");
+		var positioningNode = FindNode($"WonderStage{Player.WonderStagesBuilt}of{Player.WonderStagesBuilt + Player.WonderStagesLeft}");
 		if (positioningNode != null)	// TODO: Handle wonders that have 2 or 4 stages. For now we assume 3 stages.
 		{
 			positioningNode.AddChild(Assets.CreateCardBack(age));
@@ -134,5 +132,4 @@ public class PlayerArea : Node2D
 
 	private List<Card> cards = new List<Card>();
 	private List<TextureRect> militaryTokens = new List<TextureRect>();
-	int wonderStagesBuilt = 0;
 }

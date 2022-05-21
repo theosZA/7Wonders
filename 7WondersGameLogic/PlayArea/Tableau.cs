@@ -21,6 +21,8 @@ namespace _7Wonders
 
         public int WonderStagesBuilt => builtElements.Count(element => element is WonderStage);
 
+        public int WonderStagesLeft => availableWonderStages.Count;
+
         public Tableau(XmlElement cityElement)
         {
             CityName = cityElement.GetAttribute("name");

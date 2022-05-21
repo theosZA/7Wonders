@@ -197,16 +197,12 @@
     </Wonder>
   </City>
   <City name="Rhodos" side="B">
-    <!-- Not implemented - just a copy of the A side -->
     <Production ore="1"/>
     <Wonder name="Colossus">
-      <Stage victoryPoints="3">
-        <Cost wood="2"/>
+      <Stage victoryPoints="3" military="1" coins="3">
+        <Cost stone="3"/>
       </Stage>
-      <Stage military="2">
-        <Cost clay="3"/>
-      </Stage>
-      <Stage victoryPoints="7">
+      <Stage victoryPoints="4" military="1" coins="4">
         <Cost ore="4"/>
       </Stage>
     </Wonder>

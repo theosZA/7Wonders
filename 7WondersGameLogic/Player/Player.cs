@@ -15,6 +15,10 @@ namespace _7Wonders
 
         public BoardSide BoardSide => state.BoardSide;
 
+        public int WonderStagesBuilt => state.WonderStagesBuilt;
+
+        public int WonderStagesLeft => state.WonderStagesLeft;
+
         public int Coins => state.Coins;
 
         public int Military => state.Military;

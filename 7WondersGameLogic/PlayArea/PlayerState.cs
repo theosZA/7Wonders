@@ -19,6 +19,8 @@ namespace _7Wonders
 
         public int WonderStagesBuilt => tableau.WonderStagesBuilt;
 
+        public int WonderStagesLeft => tableau.WonderStagesLeft;
+
         public int MilitaryVictoryPoints { get; private set; } = 0;
 
         public int TreasuryVictoryPoints => Coins / 3;
