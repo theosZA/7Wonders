@@ -86,13 +86,6 @@ namespace _7Wonders
             }
         }
 
-        private enum RelativePlayer
-        {
-            Left = -1,
-            Self = 0,
-            Right = +1
-        }
-
         private enum GainSource
         {
             Colour,

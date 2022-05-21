@@ -184,18 +184,19 @@
     </Wonder>
   </City>
   <City name="Olympia" side="B">
-    <!-- Not implemented - just a copy of the A side -->
     <Production wood="1"/>
     <Wonder name="Statue of Zeus">
-      <Stage victoryPoints="3">
+      <Stage>
         <Cost wood="2"/>
-      </Stage>
-      <Stage freeBuildsPerAge="1">
+		<Trade cost="1" direction="left,right" resources="wood,clay,ore,stone"/>
+	  </Stage>
+      <Stage victoryPoints="5">
         <Cost stone="2"/>
       </Stage>
-      <Stage victoryPoints="7">
-        <Cost ore="2"/>
-      </Stage>
+      <Stage>
+        <Cost ore="2" loom="1"/>
+		<Copy lookAt="left,right" colour="purple"/>
+	  </Stage>
     </Wonder>
   </City>
   <City name="Rhodos" side="B">

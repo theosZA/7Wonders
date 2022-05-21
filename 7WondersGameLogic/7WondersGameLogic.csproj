@@ -45,6 +45,7 @@
     <Compile Include="Actions\BuildWonderStage.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\Sell.cs" />
+    <Compile Include="Enums\RelativePlayer.cs" />
     <Compile Include="Enums\BoardSide.cs" />
     <Compile Include="Enums\Colour.cs" />
     <Compile Include="Enums\Direction.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="PlayArea\Card.cs" />
     <Compile Include="PlayArea\Cost.cs" />
     <Compile Include="PlayArea\DistributionHelper.cs" />
+    <Compile Include="PlayArea\Copy.cs" />
     <Compile Include="PlayArea\Gain.cs" />
     <Compile Include="PlayArea\PlayerState.cs" />
     <Compile Include="PlayArea\Production.cs" />

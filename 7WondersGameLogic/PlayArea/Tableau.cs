@@ -103,24 +103,24 @@ namespace _7Wonders
                                 .Min();
         }
 
-        public int CalculateWonderVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public int CalculateWonderVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
-            return builtElements.Sum(element => element is WonderStage ? element.EvaluateVictoryPoints(self, leftNeighbour, rightNeighbour) : 0);
+            return builtElements.Sum(element => element is WonderStage ? element.EvaluateVictoryPoints(self, leftNeighbour, rightNeighbour, includeCopyEffects) : 0);
         }
 
-        public int CalculateCivilianVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public int CalculateCivilianVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
-            return CalculateVictoryPointsForColour(Colour.Blue, self, leftNeighbour, rightNeighbour);
+            return CalculateVictoryPointsForColour(Colour.Blue, self, leftNeighbour, rightNeighbour, includeCopyEffects);
         }
 
-        public int CalculateCommercialVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public int CalculateCommercialVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
-            return CalculateVictoryPointsForColour(Colour.Yellow, self, leftNeighbour, rightNeighbour);
+            return CalculateVictoryPointsForColour(Colour.Yellow, self, leftNeighbour, rightNeighbour, includeCopyEffects);
         }
 
-        public int CalculateGuildVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public int CalculateGuildVictoryPoints(PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
-            return CalculateVictoryPointsForColour(Colour.Purple, self, leftNeighbour, rightNeighbour);
+            return CalculateVictoryPointsForColour(Colour.Purple, self, leftNeighbour, rightNeighbour, includeCopyEffects);
         }
 
         public int CalculateScienceVictoryPoints()
@@ -128,9 +128,15 @@ namespace _7Wonders
             return CalculateScienceVictoryPoints(GetScienceCountsWithWildsAllocated());
         }
 
-        private int CalculateVictoryPointsForColour(Colour colour, PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public IEnumerable<Card> GetCards(Colour colour)
         {
-            return builtElements.Sum(element => (element is Card card && card.Colour == colour) ? card.EvaluateVictoryPoints(self, leftNeighbour, rightNeighbour) : 0);
+            return builtElements.Where(element => element is Card card && card.Colour == colour)
+                                .Cast<Card>();
+        }
+
+        private int CalculateVictoryPointsForColour(Colour colour, PlayerState self, PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
+        {
+            return builtElements.Sum(element => (element is Card card && card.Colour == colour) ? card.EvaluateVictoryPoints(self, leftNeighbour, rightNeighbour, includeCopyEffects) : 0);
         }
 
         private static int CalculateScienceVictoryPoints(IReadOnlyCollection<int> scienceSymbolCounts)

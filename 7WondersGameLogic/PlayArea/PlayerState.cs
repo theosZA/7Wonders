@@ -54,35 +54,35 @@ namespace _7Wonders
             freeBuildsMadeThisAge = 0;
         }
 
-        public int CalculateVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public int CalculateVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
             return MilitaryVictoryPoints
                  + TreasuryVictoryPoints
-                 + CalculateWonderVictoryPoints(leftNeighbour, rightNeighbour)
-                 + CalculateCivilianVictoryPoints(leftNeighbour, rightNeighbour)
+                 + CalculateWonderVictoryPoints(leftNeighbour, rightNeighbour, includeCopyEffects)
+                 + CalculateCivilianVictoryPoints(leftNeighbour, rightNeighbour, includeCopyEffects)
                  + ScienceVictoryPoints
-                 + CalculateCommercialVictoryPoints(leftNeighbour, rightNeighbour)
-                 + CalculateGuildVictoryPoints(leftNeighbour, rightNeighbour);
+                 + CalculateCommercialVictoryPoints(leftNeighbour, rightNeighbour, includeCopyEffects)
+                 + CalculateGuildVictoryPoints(leftNeighbour, rightNeighbour, includeCopyEffects);
         }
 
-        public int CalculateWonderVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public int CalculateWonderVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
-            return tableau.CalculateWonderVictoryPoints(this, leftNeighbour, rightNeighbour);
+            return tableau.CalculateWonderVictoryPoints(this, leftNeighbour, rightNeighbour, includeCopyEffects);
         }
 
-        public int CalculateCivilianVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public int CalculateCivilianVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
-            return tableau.CalculateCivilianVictoryPoints(this, leftNeighbour, rightNeighbour);
+            return tableau.CalculateCivilianVictoryPoints(this, leftNeighbour, rightNeighbour, includeCopyEffects);
         }
 
-        public int CalculateCommercialVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public int CalculateCommercialVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
-            return tableau.CalculateCommercialVictoryPoints(this, leftNeighbour, rightNeighbour);
+            return tableau.CalculateCommercialVictoryPoints(this, leftNeighbour, rightNeighbour, includeCopyEffects);
         }
 
-        public int CalculateGuildVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour)
+        public int CalculateGuildVictoryPoints(PlayerState leftNeighbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
-            return tableau.CalculateGuildVictoryPoints(this, leftNeighbour, rightNeighbour);
+            return tableau.CalculateGuildVictoryPoints(this, leftNeighbour, rightNeighbour, includeCopyEffects);
         }
 
         public void AddCardToTableau(Card card)
@@ -227,6 +227,11 @@ namespace _7Wonders
         {
             return cards.Distinct()
                         .Where(card => !tableau.Has(card.Name));
+        }
+
+        public IEnumerable<Card> GetAllBuiltCards(Colour colour)
+        {
+            return tableau.GetCards(colour);
         }
 
         private IEnumerable<(int costToLeftNeighbour, int costToRightNeighbour)> CalculatePossibleTradeCosts(ResourceCollection requiredResources, PlayerState leftNeighbour, PlayerState rightNeighbour)

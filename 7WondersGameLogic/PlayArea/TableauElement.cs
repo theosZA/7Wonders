@@ -22,6 +22,7 @@ namespace _7Wonders
         public bool BuildFromDiscards { get; }
 
         public IReadOnlyCollection<Gain> EvaluatedGains { get; }
+        public IReadOnlyCollection<Copy> EvaluatedCopies { get; }
 
         public TableauElement(string name, XmlElement xmlElement)
         {
@@ -37,15 +38,21 @@ namespace _7Wonders
             {
                 TradeBonus = new TradeBonus(tradeElement);
             }
-            FreeBuildsPerAge = xmlElement.GetAttribute_Int("freeBuildsPerAge");         // Olympia ability
+            FreeBuildsPerAge = xmlElement.GetAttribute_Int("freeBuildsPerAge");         // Olympia (A) ability
             BuildFromDiscards = xmlElement.GetAttribute_Int("buildFromDiscards") > 0;   // Halikarnassos ability
 
             EvaluatedGains = xmlElement.GetChildElements("Gain").Select(gainElement => new Gain(gainElement)).ToList();
+            EvaluatedCopies = xmlElement.GetChildElements("Copy").Select(copyElement => new Copy(copyElement)).ToList();    // Olympia (B) ability
         }
 
-        public int EvaluateVictoryPoints(PlayerState actingPlayer, PlayerState leftNeightbour, PlayerState rightNeighbour)
+        public int EvaluateVictoryPoints(PlayerState actingPlayer, PlayerState leftNeightbour, PlayerState rightNeighbour, bool includeCopyEffects = true)
         {
-            return VictoryPoints + EvaluatedGains.Sum(gain => gain.GetVictoryPointsGained(actingPlayer, leftNeightbour, rightNeighbour));
+            int total = VictoryPoints + EvaluatedGains.Sum(gain => gain.GetVictoryPointsGained(actingPlayer, leftNeightbour, rightNeighbour));
+            if (includeCopyEffects)
+            {
+                total += EvaluatedCopies.Sum(copy => copy.GetVictoryPointsGained(actingPlayer, leftNeightbour, rightNeighbour));
+            }
+            return total;
         }
 
         /// <summary>
