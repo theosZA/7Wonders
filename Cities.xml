@@ -102,26 +102,29 @@
       </Stage>
     </Wonder>
   </City>
-  <!-- For now the B sides are just copies of the A sides. -->
   <City name="Alexandria" side="B">
     <Production glass="1"/>
     <Wonder name="Lighthouse">
-      <Stage victoryPoints="3">
-        <Cost stone="2"/>
-      </Stage>
       <Stage>
-        <Cost ore="2"/>
+        <Cost clay="2"/>
         <Production clay="1"/>
         <Production ore="1"/>
         <Production wood="1"/>
         <Production stone="1"/>
       </Stage>
+      <Stage>
+        <Cost wood="2"/>
+        <Production glass="1"/>
+        <Production loom="1"/>
+        <Production papyrus="1"/>
+      </Stage>
       <Stage victoryPoints="7">
-        <Cost glass="2"/>
+        <Cost stone="3"/>
       </Stage>
     </Wonder>
   </City>
   <City name="Babylon" side="B">
+    <!-- Not implemented - just a copy of the A side -->
     <Production clay="1"/>
     <Wonder name="Hanging Gardens">
       <Stage victoryPoints="3">
@@ -138,18 +141,19 @@
   <City name="Ephesos" side="B">
     <Production papyrus="1"/>
     <Wonder name="Temple of Artemis">
-      <Stage victoryPoints="3">
+      <Stage victoryPoints="2" coins="4">
         <Cost stone="2"/>
       </Stage>
-      <Stage coins="9">
+      <Stage victoryPoints="3" coins="4">
         <Cost wood="2"/>
       </Stage>
-      <Stage victoryPoints="7">
-        <Cost papyrus="2"/>
+      <Stage victoryPoints="5" coins="4">
+        <Cost papyrus="1" loom="1" glass="1"/>
       </Stage>
     </Wonder>
   </City>
   <City name="Gizah" side="B">
+    <!-- Not implemented - just a copy of the A side -->
     <Production stone="1"/>
     <Wonder name="Pyramids">
       <Stage victoryPoints="3">
@@ -166,18 +170,19 @@
   <City name="Halikarnassos" side="B">
     <Production loom="1"/>
     <Wonder name="Mausoleum">
-      <Stage victoryPoints="3">
-        <Cost clay="2"/>
+      <Stage victoryPoints="2" buildFromDiscards="1">
+        <Cost ore="2"/>
+      </Stage>
+      <Stage victoryPoints="1" buildFromDiscards="1">
+        <Cost clay="3"/>
       </Stage>
       <Stage buildFromDiscards="1">
-        <Cost ore="3"/>
-      </Stage>
-      <Stage victoryPoints="7">
-        <Cost loom="2"/>
+        <Cost papyrus="1" loom="1" glass="1"/>
       </Stage>
     </Wonder>
   </City>
   <City name="Olympia" side="B">
+    <!-- Not implemented - just a copy of the A side -->
     <Production wood="1"/>
     <Wonder name="Statue of Zeus">
       <Stage victoryPoints="3">
@@ -192,6 +197,7 @@
     </Wonder>
   </City>
   <City name="Rhodos" side="B">
+    <!-- Not implemented - just a copy of the A side -->
     <Production ore="1"/>
     <Wonder name="Colossus">
       <Stage victoryPoints="3">
