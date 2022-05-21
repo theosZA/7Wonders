@@ -1,4 +1,5 @@
 using Godot;
+using _7Wonders;
 
 public class MainMenu : Node2D
 {
@@ -20,6 +21,17 @@ public class MainMenu : Node2D
 		{
 			wonderChoice = value;
 			((TextureRect)FindNode("WonderChoiceImage")).Texture = Assets.LoadCityIcon(wonderChoice);
+		}
+	}
+
+	public BoardSide BoardSide
+	{
+		get => ((BaseButton)FindNode("BoardSideA")).Pressed ? BoardSide.A : BoardSide.B;
+
+		set
+		{
+			((BaseButton)FindNode("BoardSideA")).Pressed = (value == BoardSide.A);
+			((BaseButton)FindNode("BoardSideB")).Pressed = (value == BoardSide.B);
 		}
 	}
 
@@ -55,12 +67,14 @@ public class MainMenu : Node2D
 	{
 		PlayerCount = GameFactory.PlayerCount;
 		WonderChoice = GameFactory.WonderChoice ?? "Random";
+		BoardSide = GameFactory.BoardSide;	
 	}
 
 	private void WriteSettings()
 	{
 		GameFactory.PlayerCount = PlayerCount;
 		GameFactory.WonderChoice = (WonderChoice == "Random" ? null : WonderChoice);
+		GameFactory.BoardSide = BoardSide;
 	}
 
 	private string wonderChoice;

@@ -45,6 +45,7 @@
     <Compile Include="Actions\BuildWonderStage.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\Sell.cs" />
+    <Compile Include="Enums\BoardSide.cs" />
     <Compile Include="Enums\Colour.cs" />
     <Compile Include="Enums\Direction.cs" />
     <Compile Include="Enums\Resource.cs" />

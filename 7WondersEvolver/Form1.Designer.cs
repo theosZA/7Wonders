@@ -47,6 +47,8 @@
             this.lblAverageVPs = new System.Windows.Forms.Label();
             this.txtAverageVPs = new System.Windows.Forms.TextBox();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.lblBoardSide = new System.Windows.Forms.Label();
+            this.cbBoardSide = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGamesPlayed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPlayers)).BeginInit();
@@ -235,11 +237,34 @@
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
+            // lblBoardSide
+            // 
+            this.lblBoardSide.AutoSize = true;
+            this.lblBoardSide.Location = new System.Drawing.Point(530, 63);
+            this.lblBoardSide.Name = "lblBoardSide";
+            this.lblBoardSide.Size = new System.Drawing.Size(60, 13);
+            this.lblBoardSide.TabIndex = 14;
+            this.lblBoardSide.Text = "Board side:";
+            // 
+            // cbBoardSide
+            // 
+            this.cbBoardSide.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBoardSide.FormattingEnabled = true;
+            this.cbBoardSide.Items.AddRange(new object[] {
+            "A",
+            "B"});
+            this.cbBoardSide.Location = new System.Drawing.Point(596, 59);
+            this.cbBoardSide.Name = "cbBoardSide";
+            this.cbBoardSide.Size = new System.Drawing.Size(33, 21);
+            this.cbBoardSide.TabIndex = 15;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(820, 887);
+            this.Controls.Add(this.cbBoardSide);
+            this.Controls.Add(this.lblBoardSide);
             this.Controls.Add(this.txtAverageVPs);
             this.Controls.Add(this.lblAverageVPs);
             this.Controls.Add(this.nudGenerations);
@@ -284,6 +309,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colGames;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPosition;
         private System.Windows.Forms.DataGridViewTextBoxColumn colVPs;
+        private System.Windows.Forms.Label lblBoardSide;
+        private System.Windows.Forms.ComboBox cbBoardSide;
     }
 }
 

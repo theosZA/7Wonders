@@ -10,7 +10,8 @@ namespace _7Wonders
     /// </summary>
     public class StartingTableauCollection
     {
-        public IEnumerable<string> CityNames => tableaus.Select(tableau => tableau.CityName);
+        public IEnumerable<string> CityNames => tableaus.Select(tableau => tableau.CityName)
+                                                        .Distinct();
 
         public StartingTableauCollection(string citiesXmlFileName)
         {
@@ -24,9 +25,10 @@ namespace _7Wonders
             tableaus = ReadCitiesFromXml(citiesElement).ToList();
         }
 
-        public IEnumerable<Tableau> GetCopyOfTableaus()
+        public IEnumerable<Tableau> GetTableausForSide(BoardSide boardSide)
         {
-            return tableaus.Select(tableau => new Tableau(tableau));
+            return tableaus.Where(tableau => tableau.BoardSide == boardSide)
+                           .Select(tableau => new Tableau(tableau));
         }
 
         private static IEnumerable<Tableau> ReadCitiesFromXml(XmlElement citiesElement)

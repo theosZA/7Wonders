@@ -102,4 +102,107 @@
       </Stage>
     </Wonder>
   </City>
+  <!-- For now the B sides are just copies of the A sides. -->
+  <City name="Alexandria" side="B">
+    <Production glass="1"/>
+    <Wonder name="Lighthouse">
+      <Stage victoryPoints="3">
+        <Cost stone="2"/>
+      </Stage>
+      <Stage>
+        <Cost ore="2"/>
+        <Production clay="1"/>
+        <Production ore="1"/>
+        <Production wood="1"/>
+        <Production stone="1"/>
+      </Stage>
+      <Stage victoryPoints="7">
+        <Cost glass="2"/>
+      </Stage>
+    </Wonder>
+  </City>
+  <City name="Babylon" side="B">
+    <Production clay="1"/>
+    <Wonder name="Hanging Gardens">
+      <Stage victoryPoints="3">
+        <Cost clay="2"/>
+      </Stage>
+      <Stage science="wild">
+        <Cost wood="3"/>
+      </Stage>
+      <Stage victoryPoints="7">
+        <Cost clay="4"/>
+      </Stage>
+    </Wonder>
+  </City>
+  <City name="Ephesos" side="B">
+    <Production papyrus="1"/>
+    <Wonder name="Temple of Artemis">
+      <Stage victoryPoints="3">
+        <Cost stone="2"/>
+      </Stage>
+      <Stage coins="9">
+        <Cost wood="2"/>
+      </Stage>
+      <Stage victoryPoints="7">
+        <Cost papyrus="2"/>
+      </Stage>
+    </Wonder>
+  </City>
+  <City name="Gizah" side="B">
+    <Production stone="1"/>
+    <Wonder name="Pyramids">
+      <Stage victoryPoints="3">
+        <Cost stone="2"/>
+      </Stage>
+      <Stage victoryPoints="5">
+        <Cost wood="3"/>
+      </Stage>
+      <Stage victoryPoints="7">
+        <Cost stone="4"/>
+      </Stage>
+    </Wonder>
+  </City>
+  <City name="Halikarnassos" side="B">
+    <Production loom="1"/>
+    <Wonder name="Mausoleum">
+      <Stage victoryPoints="3">
+        <Cost clay="2"/>
+      </Stage>
+      <Stage buildFromDiscards="1">
+        <Cost ore="3"/>
+      </Stage>
+      <Stage victoryPoints="7">
+        <Cost loom="2"/>
+      </Stage>
+    </Wonder>
+  </City>
+  <City name="Olympia" side="B">
+    <Production wood="1"/>
+    <Wonder name="Statue of Zeus">
+      <Stage victoryPoints="3">
+        <Cost wood="2"/>
+      </Stage>
+      <Stage freeBuildsPerAge="1">
+        <Cost stone="2"/>
+      </Stage>
+      <Stage victoryPoints="7">
+        <Cost ore="2"/>
+      </Stage>
+    </Wonder>
+  </City>
+  <City name="Rhodos" side="B">
+    <Production ore="1"/>
+    <Wonder name="Colossus">
+      <Stage victoryPoints="3">
+        <Cost wood="2"/>
+      </Stage>
+      <Stage military="2">
+        <Cost clay="3"/>
+      </Stage>
+      <Stage victoryPoints="7">
+        <Cost ore="4"/>
+      </Stage>
+    </Wonder>
+  </City>
 </Cities>

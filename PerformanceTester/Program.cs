@@ -10,7 +10,7 @@ namespace PerformanceTester
         static void Main()
         {
             const int playerCount = 7;
-            const char citySide = 'A';
+            const BoardSide boardSide = BoardSide.A;
 
             var availableTableaus = new StartingTableauCollection("..\\..\\..\\Cities.xml");
             var allCards = new CardCollection("..\\..\\..\\Cards.xml");
@@ -26,9 +26,9 @@ namespace PerformanceTester
                 for (int g = 0; g < 10; ++g)
                 {
                     var playerAgents = Enumerable.Range(1, playerCount)
-                                                 .Select(i => (PlayerAgent)playerFactory.CreatePlayer($"Robot {i}", citySide))
+                                                 .Select(i => (PlayerAgent)playerFactory.CreatePlayer($"Robot {i}", boardSide))
                                                  .ToList();
-                    var game = new Game(playerAgents, availableTableaus, allCards);
+                    var game = new Game(playerAgents, availableTableaus, allCards, boardSide);
                     while (!game.IsGameOver)
                     {
                         game.PlayTurn();

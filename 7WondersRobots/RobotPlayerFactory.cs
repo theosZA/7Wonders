@@ -19,31 +19,31 @@ namespace _7Wonders
             weights = ReadRobotsFromXml(xmlDocument.DocumentElement);
         }
 
-        public RobotPlayer CreateRobotPlayer(string playerName, string cityName, char citySide)
+        public RobotPlayer CreateRobotPlayer(string playerName, string cityName, BoardSide boardSide)
         {
-            return new RobotPlayer(playerName, weights[(cityName, citySide)]);
+            return new RobotPlayer(playerName, weights[(cityName, boardSide)]);
         }
 
-        public CityPlayer CreatePlayer(string playerName, char citySide)
+        public CityPlayer CreatePlayer(string playerName, BoardSide boardSide)
         {
             // Create one RobotPlayer for each city (of the matching side).
-            var robotPlayers = weights.Where(mapping => mapping.Key.side == citySide)
+            var robotPlayers = weights.Where(mapping => mapping.Key.boardSide == boardSide)
                                       .ToDictionary(mapping => mapping.Key.cityName,
                                                     mapping => (PlayerAgent)new RobotPlayer(playerName, mapping.Value));
             return new CityPlayer(playerName, robotPlayers);
         }
 
-        private static IDictionary<(string cityName, char side), IReadOnlyCollection<int>> ReadRobotsFromXml(XmlElement robotsElement)
+        private static IDictionary<(string cityName, BoardSide boardSide), IReadOnlyCollection<int>> ReadRobotsFromXml(XmlElement robotsElement)
         {
             return robotsElement.GetChildElements("Robot").Select(ReadRobotInfoFromXml)
-                                                          .ToDictionary(robotInfo => (robotInfo.cityName, robotInfo.side),
+                                                          .ToDictionary(robotInfo => (robotInfo.cityName, robotInfo.boardSide),
                                                                         robotInfo => robotInfo.weights);
         }
 
-        private static (string cityName, char side, IReadOnlyCollection<int> weights) ReadRobotInfoFromXml(XmlElement robotElement)
+        private static (string cityName, BoardSide boardSide, IReadOnlyCollection<int> weights) ReadRobotInfoFromXml(XmlElement robotElement)
         {
             return (robotElement.GetAttribute("city"),
-                    robotElement.GetAttribute("side")[0],
+                    robotElement.GetAttribute_Enum<BoardSide>("side").Value,
                     ReadWeights(robotElement.FirstChild.Value).ToList());
         }
 
@@ -53,6 +53,6 @@ namespace _7Wonders
                               .Select(weightText => int.Parse(weightText, NumberStyles.HexNumber));
         }
 
-        private readonly IDictionary<(string cityName, char side), IReadOnlyCollection<int>> weights;
+        private readonly IDictionary<(string cityName, BoardSide boardSide), IReadOnlyCollection<int>> weights;
     }
 }

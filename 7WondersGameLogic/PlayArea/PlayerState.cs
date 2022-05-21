@@ -9,6 +9,8 @@ namespace _7Wonders
     {
         public string CityName => tableau.CityName;
 
+        public BoardSide BoardSide => tableau.BoardSide;
+
         public int Coins { get; private set; } = 3;
 
         public int Military => tableau.Military;

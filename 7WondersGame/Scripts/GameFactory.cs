@@ -25,6 +25,16 @@ public sealed class GameFactory
         }
     }
 
+    public static BoardSide BoardSide
+    {
+        get => instance.boardSide;
+
+        set
+        {
+            instance.boardSide = value;
+        }
+    }
+
     public static IEnumerable<string> AvailableWonders => instance.availableTableaus.CityNames;
 
     public static Game CreateGame(PlayerAgent humanPlayer)
@@ -32,9 +42,9 @@ public sealed class GameFactory
 		var playerAgents = new List<PlayerAgent>();
 		playerAgents.Add(humanPlayer);
 		playerAgents.AddRange(Enumerable.Range(0, instance.playerCount - 1)
-									 	.Select(i =>instance.robotPlayerFactory.CreatePlayer($"Robot {i + 1}", 'A')));
+									 	.Select(i =>instance.robotPlayerFactory.CreatePlayer($"Robot {i + 1}", instance.boardSide)));
 
-		return new Game(playerAgents, instance.availableTableaus, instance.allCards, instance.wonderChoice);
+		return new Game(playerAgents, instance.availableTableaus, instance.allCards, instance.boardSide, instance.wonderChoice);
     }
 
     private static readonly GameFactory instance = new GameFactory();
@@ -47,6 +57,7 @@ public sealed class GameFactory
 
     private int playerCount = 7;
     private string wonderChoice;
+    private BoardSide boardSide = BoardSide.A;
 
     private StartingTableauCollection availableTableaus = File.Exists("Cities.xml") ? new StartingTableauCollection("Cities.xml") : new StartingTableauCollection("..\\Cities.xml");
     private CardCollection allCards = File.Exists("Cards.xml") ? new CardCollection("Cards.xml") : new CardCollection("..\\Cards.xml");

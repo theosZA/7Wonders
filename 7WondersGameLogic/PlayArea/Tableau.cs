@@ -13,6 +13,8 @@ namespace _7Wonders
     {
         public string CityName { get; private set; }
 
+        public BoardSide BoardSide { get; private set; }
+
         public int Military => builtElements.Sum(element => element.Military);
 
         public int FreeBuildsPerAge => builtElements.Sum(element => element.FreeBuildsPerAge);
@@ -22,6 +24,7 @@ namespace _7Wonders
         public Tableau(XmlElement cityElement)
         {
             CityName = cityElement.GetAttribute("name");
+            BoardSide = cityElement.GetAttribute_Enum<BoardSide>("side").Value;
             cityProduction = new Production(cityElement.GetChildElements("Production"));
             AddProduction(cityProduction, availableForTrade: true);
             var wonderElement = cityElement.GetChildElement("Wonder");
@@ -33,6 +36,7 @@ namespace _7Wonders
         public Tableau(Tableau tableau)
         {
             CityName = tableau.CityName;
+            BoardSide = tableau.BoardSide;
             cityProduction = new Production(tableau.cityProduction);
             availableWonderStages = new List<WonderStage>(tableau.availableWonderStages);
             builtElements = new List<TableauElement>(tableau.builtElements);

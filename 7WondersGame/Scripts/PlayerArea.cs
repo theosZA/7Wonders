@@ -13,7 +13,7 @@ public class PlayerArea : Node2D
 		if (Player != null)
 		{
 			var playerBoard = GetNode<TextureRect>("PlayerBoard");
-			playerBoard.Texture = GD.Load<Texture>($"res://Art/PlayerBoard_{Player.CityName}_A.jpg");
+			playerBoard.Texture = Assets.LoadCityBoard(Player.CityName, Player.BoardSide);
 		}
 
 		GetNode<CardStack>("PlayerBoard/Cards/ProductionRoot/CardStack").LatestToFront = false;

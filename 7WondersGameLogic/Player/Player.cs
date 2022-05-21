@@ -13,6 +13,8 @@ namespace _7Wonders
 
         public string CityName => state.CityName;
 
+        public BoardSide BoardSide => state.BoardSide;
+
         public int Coins => state.Coins;
 
         public int Military => state.Military;

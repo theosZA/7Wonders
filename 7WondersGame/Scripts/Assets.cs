@@ -44,6 +44,11 @@ public static class Assets
         return GD.Load<Texture>($"res://Art/Age{age}_Back.png");
     }
 
+    public static Texture LoadCityBoard(string cityName, BoardSide boardSide)
+    {
+        return GD.Load<Texture>($"res://Art/PlayerBoard_{cityName}_{boardSide}.jpg");
+    }
+
     public static Texture LoadCityIcon(string cityName)
     {
         return GD.Load<Texture>($"res://Art/Icon_City_{cityName}.png");

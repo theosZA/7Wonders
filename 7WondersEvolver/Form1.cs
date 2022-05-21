@@ -10,11 +10,13 @@ namespace _7Wonders
         public Form1()
         {
             InitializeComponent();
+            cbBoardSide.SelectedIndex = 1;
         }
 
         private void btnNextGeneration_Click(object sender, EventArgs e)
         {
-            var evolution = new Evolution((int)nudPlayers.Value, (int)nudGamesPlayed.Value);
+            BoardSide boardSide = (cbBoardSide.SelectedIndex == 0 ? BoardSide.A : BoardSide.B);
+            var evolution = new Evolution((int)nudPlayers.Value, (int)nudGamesPlayed.Value, boardSide);
             backgroundWorker.RunWorkerAsync((evolution, (int)nudGenerations.Value));
         }
 

@@ -26,11 +26,11 @@ namespace _7Wonders
                                 .ToList();
         }
 
-        public void PlayGamesWithRandomPlayers(int gameCount, int playerCount, StartingTableauCollection availableTableaus, CardCollection allCards)
+        public void PlayGamesWithRandomPlayers(int gameCount, int playerCount, StartingTableauCollection availableTableaus, CardCollection allCards, BoardSide boardSide)
         {
             for (int i = 0; i < gameCount; ++i)
             {
-                PlayGameWithRandomPlayers(playerCount, availableTableaus, allCards);
+                PlayGameWithRandomPlayers(playerCount, availableTableaus, allCards, boardSide);
             }
         }
 
@@ -49,17 +49,17 @@ namespace _7Wonders
                                    .ToList();
         }
 
-        private void PlayGameWithRandomPlayers(int playerCount, StartingTableauCollection availableTableaus, CardCollection allCards)
+        private void PlayGameWithRandomPlayers(int playerCount, StartingTableauCollection availableTableaus, CardCollection allCards, BoardSide boardSide)
         {
             // For each city pick the player who has played the fewest games so far (to balance it out).
             var fewestGamePlayers = players.GroupBy(player => player.CityName)
                                            .Select(cityPlayers => cityPlayers.MinElementRandom(player => player.Games))
                                            .ToList();
 
-            PlayGame(playerCount, fewestGamePlayers, availableTableaus, allCards);
+            PlayGame(playerCount, fewestGamePlayers, availableTableaus, allCards, boardSide);
         }
 
-        private static void PlayGame(int playerCount, IReadOnlyCollection<EvolvingPlayer> cityPlayers, StartingTableauCollection availableTableaus, CardCollection allCards)
+        private static void PlayGame(int playerCount, IReadOnlyCollection<EvolvingPlayer> cityPlayers, StartingTableauCollection availableTableaus, CardCollection allCards, BoardSide boardSide)
         {
             // Set up player agents. We need to wrap the individual city-specific agents in a smart agent that will select
             // the city-specific agent based on which city it is playing.
@@ -70,7 +70,7 @@ namespace _7Wonders
                                         .ToList();
 
             // Play the game.
-            var game = new Game(gamePlayers, availableTableaus, allCards);
+            var game = new Game(gamePlayers, availableTableaus, allCards, boardSide);
             while (!game.IsGameOver)
             {
                 game.PlayTurn();

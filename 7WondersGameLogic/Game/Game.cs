@@ -20,10 +20,10 @@ namespace _7Wonders
 
         public IReadOnlyCollection<(Player player, int victoryPoints)> Leaderboard => players.Leaderboard;
 
-        public Game(IReadOnlyCollection<PlayerAgent> playerAgents, StartingTableauCollection availableTableaus, CardCollection allCards, string firstCityOverride = null)
+        public Game(IReadOnlyCollection<PlayerAgent> playerAgents, StartingTableauCollection availableTableaus, CardCollection allCards, BoardSide boardSide, string firstCityOverride = null)
         {
             this.allCards = allCards;
-            players = new PlayerCollection(playerAgents, availableTableaus.GetCopyOfTableaus().ToList(), firstCityOverride);
+            players = new PlayerCollection(playerAgents, availableTableaus.GetTableausForSide(boardSide).ToList(), firstCityOverride);
             StartAge(1);
         }
 
