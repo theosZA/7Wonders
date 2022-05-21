@@ -65,7 +65,7 @@ public class PlayerArea : Node2D
 	private void AddWonderStage(int age)
 	{
 		var positioningNode = FindNode($"WonderStage{Player.WonderStagesBuilt}of{Player.WonderStagesBuilt + Player.WonderStagesLeft}");
-		if (positioningNode != null)	// TODO: Handle wonders that have 2 or 4 stages. For now we assume 3 stages.
+		if (positioningNode != null)
 		{
 			positioningNode.AddChild(Assets.CreateCardBack(age));
 		}

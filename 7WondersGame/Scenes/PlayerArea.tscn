@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scripts/PlayerArea.cs" type="Script" id=1]
-[ext_resource path="res://Art/PlayerBoard_Rhodos_B.jpg" type="Texture" id=2]
+[ext_resource path="res://Art/PlayerBoard_Gizah_B.jpg" type="Texture" id=2]
 [ext_resource path="res://Art/Icon_VPs.png" type="Texture" id=3]
 [ext_resource path="res://Fonts/Mont-HeavyDEMO.otf" type="DynamicFontData" id=4]
 [ext_resource path="res://Art/Icon_Coins.png" type="Texture" id=5]
@@ -159,6 +159,50 @@ visible = false
 margin_right = 379.0
 margin_bottom = 586.0
 texture = ExtResource( 8 )
+
+[node name="WonderStage1of4" type="Node2D" parent="PlayerBoard/Cards/WonderStages"]
+position = Vector2( -140, 0 )
+scale = Vector2( 1, 1 )
+z_index = -1
+
+[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/WonderStages/WonderStage1of4"]
+visible = false
+margin_right = 375.0
+margin_bottom = 585.0
+texture = ExtResource( 6 )
+
+[node name="WonderStage2of4" type="Node2D" parent="PlayerBoard/Cards/WonderStages"]
+position = Vector2( 310, 0 )
+scale = Vector2( 1, 1 )
+z_index = -1
+
+[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/WonderStages/WonderStage2of4"]
+visible = false
+margin_right = 375.0
+margin_bottom = 585.0
+texture = ExtResource( 6 )
+
+[node name="WonderStage3of4" type="Node2D" parent="PlayerBoard/Cards/WonderStages"]
+position = Vector2( 770, 0 )
+scale = Vector2( 1, 1 )
+z_index = -1
+
+[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/WonderStages/WonderStage3of4"]
+visible = false
+margin_right = 375.0
+margin_bottom = 585.0
+texture = ExtResource( 6 )
+
+[node name="WonderStage4of4" type="Node2D" parent="PlayerBoard/Cards/WonderStages"]
+position = Vector2( 1220, 0 )
+scale = Vector2( 1, 1 )
+z_index = -1
+
+[node name="TestCard" type="TextureRect" parent="PlayerBoard/Cards/WonderStages/WonderStage4of4"]
+visible = false
+margin_right = 375.0
+margin_bottom = 585.0
+texture = ExtResource( 6 )
 
 [node name="ProductionRoot" type="Node2D" parent="PlayerBoard/Cards"]
 position = Vector2( 0, -125 )
